@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1017174757548",
+    "firebase_url": "https://myfitnessbuddy-3dae5.firebaseio.com",
+    "project_id": "myfitnessbuddy-3dae5",
+    "storage_bucket": "myfitnessbuddy-3dae5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017174757548:android:93c5e1e861d92131824f09",
+        "android_client_info": {
+          "package_name": "com.example.myfitnessbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017174757548-657ulgvojh96g4vs8j9ai7rrlj6lkvi3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myfitnessbuddy",
+            "certificate_hash": "a6c76e2a0d0740ad8e41c82103800cd78f0ce990"
+          }
+        },
+        {
+          "client_id": "1017174757548-8odcamimdn4uk7nbna6pg278rlug8vd4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnFLrQtGUPj6hgoU9f3mk9JHo_dxF5N8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017174757548-8odcamimdn4uk7nbna6pg278rlug8vd4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

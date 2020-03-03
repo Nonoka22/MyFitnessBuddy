@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MyFitnessBuddy</string>
+    <string name="firstFragmentText">Phone Number</string>
+    <string name="secondFragmentText">Name</string>
+    <string name="thirdFragmentText">Birth Date</string>
+    <string name="fourthFragmentText">Gender</string>
+    <string name="fifthFragmentText">User Type</string>
+</resources>

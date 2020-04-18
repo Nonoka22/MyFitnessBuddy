@@ -48,7 +48,7 @@
 
     </com.google.android.material.tabs.TabLayout>
 
-    <com.example.myfitnessbuddy.CustomViewPager
+    <com.example.myfitnessbuddy.models.CustomViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/viewPager"/>

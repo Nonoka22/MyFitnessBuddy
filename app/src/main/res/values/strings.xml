@@ -1,8 +1,16 @@
 <resources>
-    <string name="app_name">MyFitnessBuddy</string>
+    <string name="app_name">My Fitness Buddy</string>
     <string name="firstFragmentText">Phone Number</string>
     <string name="secondFragmentText">Name</string>
     <string name="thirdFragmentText">Birth Date</string>
     <string name="fourthFragmentText">Gender</string>
     <string name="fifthFragmentText">User Type</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
+    <string name="title_activity_interior">InteriorActivity</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
 </resources>

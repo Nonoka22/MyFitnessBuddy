@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if (user != null) {
             // User is signed in
-            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            startActivity(new Intent(MainActivity.this, InteriorActivity.class));
 
         } else {
             // No user is signed in

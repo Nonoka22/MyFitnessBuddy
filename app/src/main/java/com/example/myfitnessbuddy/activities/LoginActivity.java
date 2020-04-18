@@ -29,7 +29,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.concurrent.TimeUnit;
 
 
-public class LoginActivity extends AppCompatActivity /*implements EnterCodeDialog.Communicator*/ {
+public class LoginActivity extends AppCompatActivity  {
     EditText phoneField;
     FirebaseAuth firebaseAuth;
     String codeSent;
@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity /*implements EnterCodeDialo
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.i("Noemi","Login successful");
-                            startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                            startActivity(new Intent(LoginActivity.this, InteriorActivity.class));
 
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {

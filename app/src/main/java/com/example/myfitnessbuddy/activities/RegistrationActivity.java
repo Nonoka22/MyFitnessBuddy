@@ -1,6 +1,5 @@
 package com.example.myfitnessbuddy.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.myfitnessbuddy.CustomViewPager;
+import com.example.myfitnessbuddy.models.CustomViewPager;
 import com.example.myfitnessbuddy.R;
-import com.example.myfitnessbuddy.SectionStatePagerAdapter;
+import com.example.myfitnessbuddy.models.SectionStatePagerAdapter;
 import com.example.myfitnessbuddy.events.CodeEvent;
 import com.example.myfitnessbuddy.events.PassingUserArgumentsEvent;
 import com.example.myfitnessbuddy.events.RegisterEvent;
@@ -62,15 +61,9 @@ public class RegistrationActivity extends AppCompatActivity  {
     DatabaseReference usersRef;
     Map<String, User> users = new HashMap<>();
 
-    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try
-        {
-            this.getSupportActionBar().hide();
-        }
-        catch (NullPointerException e){}
         setContentView(R.layout.activity_registration);
 
         tabLayout = findViewById(R.id.tabLayout);
@@ -162,8 +155,8 @@ public class RegistrationActivity extends AppCompatActivity  {
                             users.put(currentUser.getUid(), user);
                             usersRef.setValue(users);
 
-                            Log.i("Noemi","Login successful");
-                            startActivity(new Intent(RegistrationActivity.this, ProfileActivity.class));
+                            Log.i("Noemi","Reg and Login successful");
+                            startActivity(new Intent(RegistrationActivity.this, InteriorActivity.class));
 
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {

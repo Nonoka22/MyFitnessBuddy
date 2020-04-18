@@ -1,4 +1,4 @@
-package com.example.myfitnessbuddy;
+package com.example.myfitnessbuddy.models;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

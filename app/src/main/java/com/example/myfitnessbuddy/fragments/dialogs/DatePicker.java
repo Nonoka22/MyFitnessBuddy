@@ -1,5 +1,4 @@
-package com.example.myfitnessbuddy.fragments;
-
+package com.example.myfitnessbuddy.fragments.dialogs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,7 +26,6 @@ public class DatePicker extends DialogFragment implements View.OnClickListener{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.calendar_dialog,null);
 
-        //Log.i("Noemi","I am on DatePicker dialog...");
         setCancelable(false);
         Button selectDate = view.findViewById(R.id.selectDateButton);
         selectDate.setOnClickListener(this);
@@ -38,7 +36,6 @@ public class DatePicker extends DialogFragment implements View.OnClickListener{
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 month = month +1;
                 date = year + "/" + month + "/" + dayOfMonth;
-                //Log.i("Noemi","Selecting date " + date);
             }
         });
         return view;
@@ -46,7 +43,6 @@ public class DatePicker extends DialogFragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        //Log.i("Noemi","What is the date here? ..." +date);
         EventBus.getDefault().post(new DateEvent(date));
         dismiss();
     }

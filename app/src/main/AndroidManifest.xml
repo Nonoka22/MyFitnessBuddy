@@ -13,8 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".activities.InteriorActivity"
-            ></activity>
+        <activity android:name=".activities.BaseActivity"/>
+        <activity android:name=".activities.CriteriasActivity"/>
+        <activity android:name=".activities.InteriorActivity" />
         <activity android:name=".activities.RegistrationActivity" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.MainActivity">

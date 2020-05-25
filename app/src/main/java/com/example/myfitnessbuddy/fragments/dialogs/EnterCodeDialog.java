@@ -1,4 +1,4 @@
-package com.example.myfitnessbuddy.fragments;
+package com.example.myfitnessbuddy.fragments.dialogs;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,9 +10,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.myfitnessbuddy.R;
+import com.example.myfitnessbuddy.databinding.PopupWindowBinding;
 import com.example.myfitnessbuddy.events.CodeEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,12 +25,15 @@ public class EnterCodeDialog extends DialogFragment implements View.OnClickListe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View enterCodeView = inflater.inflate(R.layout.popup_window,null);
+        PopupWindowBinding binding = DataBindingUtil.inflate(
+                inflater, R.layout.popup_window, container, false);
+        View view = binding.getRoot();
+
         setCancelable(false);
-        Button buttonSignIn = enterCodeView.findViewById(R.id.signInButton);
-        verificationCode = enterCodeView.findViewById(R.id.fieldLoginVerifCode);
+        Button buttonSignIn = binding.signInButton;
+        verificationCode = binding.fieldLoginVerifCode;
         buttonSignIn.setOnClickListener(this);
-        return enterCodeView;
+        return view;
     }
 
     @Override
@@ -36,13 +41,10 @@ public class EnterCodeDialog extends DialogFragment implements View.OnClickListe
         String code = verificationCode.getText().toString();
 
         if(!code.isEmpty()){
-            //Log.i("Noemi", "Verification code entered"+code);
-            //communicator.onDialogMessage(code);
             EventBus.getDefault().post(new CodeEvent(code));
             dismiss();
         }
         else{
-            //Log.i("Noemi", "No verification code entered");
             Toast.makeText(getContext(), "Please enter the verification code", Toast.LENGTH_SHORT).show();
         }
 

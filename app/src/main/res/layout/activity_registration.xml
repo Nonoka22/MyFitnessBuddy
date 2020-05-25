@@ -1,56 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.RegistrationActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabSelectedTextColor="@android:color/holo_green_dark"
-        app:tabTextColor="@android:color/black"
-        app:tabIndicatorHeight="0dp"
-        tools:ignore="MissingConstraints">
+    </data>
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabPhoneNum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Phone Number"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Birth Date"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabGender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Gender"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tabUserType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="User Type"/>
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <com.example.myfitnessbuddy.models.CustomViewPager
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/viewPager"/>
+        tools:context=".activities.RegistrationActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayoutRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabSelectedTextColor="@android:color/holo_green_dark"
+            app:tabTextColor="@android:color/black"
+            app:tabIndicatorHeight="0dp"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabPhoneNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone Number" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Birth Date" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gender" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabUserType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Type" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <com.example.myfitnessbuddy.models.CustomViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/viewPagerRegistration" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -46,4 +46,8 @@ public class FragmentCriteriasNutritionist extends BaseFragment<CriteriasNutriti
             }
         });
     }
+
+    public static FragmentCriteriasNutritionist getInstance(){
+        return new FragmentCriteriasNutritionist();
+    }
 }

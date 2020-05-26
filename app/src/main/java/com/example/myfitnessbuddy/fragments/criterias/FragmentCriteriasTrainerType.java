@@ -58,4 +58,8 @@ public class FragmentCriteriasTrainerType extends BaseFragment<CriteriasTrainert
             }
         });
     }
+
+    public static FragmentCriteriasTrainerType getInstance(){
+        return new FragmentCriteriasTrainerType();
+    }
 }

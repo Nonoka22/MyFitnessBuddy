@@ -38,4 +38,8 @@ public class FragmentCriteriasLocation extends BaseFragment<CriteriasLocationFra
             }
         });
     }
+
+    public static FragmentCriteriasLocation getInstance(){
+        return new FragmentCriteriasLocation();
+    }
 }

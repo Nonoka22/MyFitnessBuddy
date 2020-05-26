@@ -77,4 +77,7 @@ public class FragmentCriteriasCriterias extends BaseFragment<CriteriasCriteriasF
         }
     };
 
+    public static FragmentCriteriasCriterias getInstance(){
+        return new FragmentCriteriasCriterias();
+    }
 }

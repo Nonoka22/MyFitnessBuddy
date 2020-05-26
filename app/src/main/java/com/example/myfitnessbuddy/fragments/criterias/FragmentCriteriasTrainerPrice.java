@@ -43,4 +43,8 @@ public class FragmentCriteriasTrainerPrice extends BaseFragment<CriteriasTrainer
             }
         });
     }
+
+    public static FragmentCriteriasTrainerPrice getInstance(){
+        return new FragmentCriteriasTrainerPrice();
+    }
 }

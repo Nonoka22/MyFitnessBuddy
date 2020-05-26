@@ -58,4 +58,8 @@ public class FragmentRegisterUserType extends BaseFragment<RegisterUserTypeFragm
         });
 
     }
+
+    public static FragmentRegisterUserType getInstance(){
+        return new FragmentRegisterUserType();
+    }
 }

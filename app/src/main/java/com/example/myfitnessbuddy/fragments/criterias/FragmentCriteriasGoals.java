@@ -70,5 +70,8 @@ public class FragmentCriteriasGoals extends BaseFragment<CriteriasGoalsFragmentB
         });
     }
 
+    public static FragmentCriteriasGoals getInstance(){
+        return new FragmentCriteriasGoals();
+    }
 }
 

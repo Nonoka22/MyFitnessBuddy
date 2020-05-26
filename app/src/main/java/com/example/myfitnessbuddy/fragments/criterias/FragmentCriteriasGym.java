@@ -87,4 +87,8 @@ public class FragmentCriteriasGym extends BaseFragment<CriteriasGymFragmentBindi
             }
         });
     }
+
+    public static FragmentCriteriasGym getInstance(){
+        return new FragmentCriteriasGym();
+    }
 }

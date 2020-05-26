@@ -110,8 +110,8 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
                     binding.viewStubCriterias.getViewStub().inflate();
 
                     //add fragments
-                    fragmentList = new ArrayList<Fragment>(Arrays.asList(new FragmentCriteriasGoals(),new FragmentCriteriasLocation(),new FragmentCriteriasTrainerType(),
-                            new FragmentCriteriasTraineePrice(),new FragmentCriteriasNutritionist(),new FragmentCriteriasCriterias(),new FragmentCriteriasTraineeIntroduction()));
+                    fragmentList = new ArrayList<Fragment>(Arrays.asList(FragmentCriteriasGoals.getInstance(),FragmentCriteriasLocation.getInstance(),FragmentCriteriasTrainerType.getInstance(),
+                            FragmentCriteriasTraineePrice.getInstance(), FragmentCriteriasNutritionist.getInstance(), FragmentCriteriasCriterias.getInstance(), FragmentCriteriasTraineeIntroduction.getInstance()));
 
                 }
                 else if(userType.equals("Trainer")){
@@ -128,7 +128,7 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
                     binding.viewStubCriterias.getViewStub().inflate();
 
                     //add fragments
-                    fragmentList = new ArrayList<Fragment>(Arrays.asList(new FragmentCriteriasSpecialty(),new FragmentCriteriasGym(),new FragmentCriteriasType(), new FragmentCriteriasTrainerPrice(),new FragmentCriteriasTrainerIntroduction()));
+                    fragmentList = new ArrayList<Fragment>(Arrays.asList( FragmentCriteriasSpecialty.getInstance(), FragmentCriteriasGym.getInstance(), FragmentCriteriasType.getInstance(),  FragmentCriteriasTrainerPrice.getInstance(), FragmentCriteriasTrainerIntroduction.getInstance()));
                 }
 
                 setPagerAdapter(viewPager, tabLayout, fragmentList);
@@ -233,4 +233,6 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
         currentUser.child("criterias").setValue(user.getCriterias());
         startActivity(new Intent(CriteriasActivity.this,InteriorActivity.class));
     }
+
+
 }

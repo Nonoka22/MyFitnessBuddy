@@ -84,4 +84,7 @@ public class FragmentRegisterBirthday extends BaseFragment<RegisterBirthdayFragm
         EventBus.getDefault().unregister(this);
     }
 
+    public static FragmentRegisterBirthday getInstance(){
+        return new FragmentRegisterBirthday();
+    }
 }

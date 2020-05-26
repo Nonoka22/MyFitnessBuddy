@@ -45,4 +45,7 @@ public class FragmentRegisterPhoneNumber extends BaseFragment<RegisterPhoneNumbe
         });
     }
 
+    public static FragmentRegisterPhoneNumber getInstance(){
+        return new FragmentRegisterPhoneNumber();
+    }
 }

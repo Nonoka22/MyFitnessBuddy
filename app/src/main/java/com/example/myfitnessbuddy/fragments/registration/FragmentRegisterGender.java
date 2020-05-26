@@ -57,4 +57,8 @@ public class FragmentRegisterGender extends BaseFragment<RegisterGenderFragmentB
         });
     }
 
+    public static FragmentRegisterGender getInstance(){
+        return new FragmentRegisterGender();
+    }
+
 }

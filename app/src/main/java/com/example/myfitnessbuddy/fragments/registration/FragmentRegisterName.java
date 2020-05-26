@@ -59,5 +59,7 @@ public class FragmentRegisterName extends BaseFragment<RegisterNameFragmentBindi
         });
     }
 
-
+    public static FragmentRegisterName getInstance(){
+        return new FragmentRegisterName();
+    }
 }

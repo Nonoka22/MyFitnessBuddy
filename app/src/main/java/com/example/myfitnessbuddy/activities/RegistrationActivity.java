@@ -47,7 +47,8 @@ public class RegistrationActivity extends BaseAuthenticationActivity<ActivityReg
         tabLayout = binding.tabLayoutRegister;
         viewPager = binding.viewPagerRegistration;
 
-        fragmentList = new ArrayList<Fragment>(Arrays.asList(new FragmentRegisterPhoneNumber(),new FragmentRegisterName(),new FragmentRegisterBirthday(),new FragmentRegisterGender(),new FragmentRegisterUserType()));
+        fragmentList = new ArrayList<Fragment>(Arrays.asList(FragmentRegisterPhoneNumber.getInstance(),FragmentRegisterName.getInstance(),
+                FragmentRegisterBirthday.getInstance(),FragmentRegisterGender.getInstance(), FragmentRegisterUserType.getInstance()));
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         dbReference = firebaseDatabase.getReference();
@@ -106,4 +107,5 @@ public class RegistrationActivity extends BaseAuthenticationActivity<ActivityReg
     public void onActionRecieved(RegisterEvent registerEvent){
         sendVerificationCode(user.getPhoneNumber());
     }
+
 }

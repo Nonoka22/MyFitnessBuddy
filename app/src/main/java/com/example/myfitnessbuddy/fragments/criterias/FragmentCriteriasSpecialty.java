@@ -73,4 +73,7 @@ public class FragmentCriteriasSpecialty extends BaseFragment<CriteriasSpecialtyF
             }
         });
     }
+    public static FragmentCriteriasSpecialty getInstance(){
+        return new FragmentCriteriasSpecialty();
+    }
 }

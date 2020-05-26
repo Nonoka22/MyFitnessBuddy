@@ -68,5 +68,9 @@ public class FragmentCriteriasTrainerIntroduction extends BaseFragment<Criterias
         activityResult(requestCode,resultCode,data,imageView);
 
     }
+
+    public static FragmentCriteriasTrainerIntroduction getInstance(){
+        return new FragmentCriteriasTrainerIntroduction();
+    }
 }
 

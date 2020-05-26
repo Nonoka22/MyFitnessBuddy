@@ -59,4 +59,8 @@ public class FragmentCriteriasType extends BaseFragment<CriteriasTypeFragmentBin
             }
         });
     }
+
+    public static FragmentCriteriasType getInstance(){
+        return new FragmentCriteriasType();
+    }
 }

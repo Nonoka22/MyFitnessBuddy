@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textSpecialty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="@string/select_your_main_goal"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/gridLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <GridLayout
+            android:id="@+id/gridLayout2"
+            android:layout_width="257dp"
+            android:layout_height="454dp"
+            android:columnCount="2"
+            app:layout_constraintBottom_toTopOf="@+id/nextButtonGoals"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textSpecialty">
+
+            <ToggleButton
+                android:id="@+id/weightTB"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="#4CAF50"
+                android:text="@string/lose_weight"
+                android:textOff="@string/lose_weight"
+                android:textOn="@string/lose_weight"
+                android:textSize="10sp" />
+
+            <ToggleButton
+                android:id="@+id/muscleTB"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="#4CAF50"
+                android:text="@string/build_muscle"
+                android:textOff="@string/build_muscle"
+                android:textOn="@string/build_muscle"
+                android:textSize="10sp" />
+
+            <ToggleButton
+                android:id="@+id/enduranceTB"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="#4CAF50"
+                android:text="@string/improve_endurance"
+                android:textOff="@string/improve_endurance"
+                android:textOn="@string/improve_endurance"
+                android:textSize="10sp" />
+
+            <ToggleButton
+                android:id="@+id/athleticTB"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="#4CAF50"
+                android:text="@string/improve_athletic_skills"
+                android:textOff="@string/improve_athletic_skills"
+                android:textOn="@string/improve_athletic_skills"
+                android:textSize="10sp" />
+
+            <ToggleButton
+                android:id="@+id/flexibilityTB"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="#4CAF50"
+                android:text="@string/improve_flexibility"
+                android:textOff="@string/improve_flexibility"
+                android:textOn="@string/improve_flexibility"
+                android:textSize="10sp" />
+
+            <ToggleButton
+                android:id="@+id/composotionTB"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="#4CAF50"
+                android:text="@string/body_composition"
+                android:textOff="@string/body_composition"
+                android:textOn="@string/body_composition"
+                android:textSize="10sp" />
+
+            <ToggleButton
+                android:id="@+id/agilityTB"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="#4CAF50"
+                android:text="@string/improve_agility"
+                android:textOff="@string/improve_agility"
+                android:textOn="@string/improve_agility"
+                android:textSize="10sp" />
+
+            <ToggleButton
+                android:id="@+id/staminaTB"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="#4CAF50"
+                android:text="@string/improve_stamina"
+                android:textOff="@string/improve_stamina"
+                android:textOn="@string/improve_stamina"
+                android:textSize="10sp" />
+
+            <ToggleButton
+                android:id="@+id/painfreeTB"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="#4CAF50"
+                android:text="@string/freedom_from_pain"
+                android:textOff="@string/freedom_from_pain"
+                android:textOn="@string/freedom_from_pain"
+                android:textSize="10sp" />
+
+            <ToggleButton
+                android:id="@+id/fizioTB"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="#4CAF50"
+                android:text="@string/fiziotherapy"
+                android:textOff="@string/fiziotherapy"
+                android:textOn="@string/fiziotherapy"
+                android:textSize="10sp" />
+        </GridLayout>
+
+        <ImageView
+            android:id="@+id/nextButtonGoals"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:alpha="0.8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/gridLayout2"
+            app:srcCompat="@drawable/nextbtn" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

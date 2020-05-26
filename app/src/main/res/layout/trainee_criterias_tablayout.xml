@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayoutTraineeCriterias"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tabSelectedTextColor="@android:color/holo_green_dark"
+            app:tabTextColor="@android:color/black"
+            app:tabIndicatorHeight="0dp"
+            app:tabMode="scrollable"
+            app:tabGravity="center"
+            tools:ignore="MissingConstraints">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabGoals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Goals" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabTrainerType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trainer type" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabTraineePrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabNutritionist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nutritionist" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabCriterias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Criterias" />
+
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tabTraineeIntroduction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Introduction" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+    </LinearLayout>
+</layout>

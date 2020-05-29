@@ -7,21 +7,23 @@ public class User {
     private String birthDate;
     private String gender;
     private String userType;
+    private String introduction;
+    private String imageURL;
+    private Criterias criterias;
 
-    public User(String phoneNumber, String firstName, String lastName, String birthDate, String gender, String userType) {
+    public User() {
+    }
+
+    public User(String phoneNumber, String firstName, String lastName, String birthDate, String gender, String userType, String introduction, String imageURL, Criterias criterias) {
         this.phoneNumber = phoneNumber;
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthDate = birthDate;
         this.gender = gender;
         this.userType = userType;
-    }
-
-    public User(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public User() {
+        this.introduction = introduction;
+        this.imageURL = imageURL;
+        this.criterias = criterias;
     }
 
     public String getPhoneNumber() {
@@ -72,6 +74,30 @@ public class User {
         this.userType = userType;
     }
 
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
+    }
+
+    public Criterias getCriterias() {
+        return criterias;
+    }
+
+    public void setCriterias(Criterias criterias) {
+        this.criterias = criterias;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -81,7 +107,9 @@ public class User {
                 ", birthDate='" + birthDate + '\'' +
                 ", gender='" + gender + '\'' +
                 ", userType='" + userType + '\'' +
+                ", introduction='" + introduction + '\'' +
+                ", imageURL='" + imageURL + '\'' +
+                ", criterias=" + criterias +
                 '}';
     }
-
 }

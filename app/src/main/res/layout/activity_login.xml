@@ -1,67 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/login"
-    android:backgroundTint="#20FFFFFF"
-    android:backgroundTintMode="src_over"
-    tools:context=".activities.LoginActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/textViewLoginTitle"
-        android:layout_width="99dp"
-        android:layout_height="54dp"
-        android:alpha="0.8"
-        android:fontFamily="sans-serif"
-        android:text="Login"
-        android:textColor="@android:color/black"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/textViewLoginDescription"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <data>
 
-    <TextView
-        android:id="@+id/textViewLoginDescription"
-        android:layout_width="331dp"
-        android:layout_height="50dp"
-        android:fontFamily="sans-serif-condensed"
-        android:text="Please enter your phone number! You will receive a verification code..."
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/fieldLoginPhone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLoginTitle" />
+    </data>
 
-    <EditText
-        android:id="@+id/fieldLoginPhone"
-        android:layout_width="322dp"
-        android:layout_height="47dp"
-        android:ems="10"
-        android:hint="Phone number"
-        android:inputType="phone"
-        android:textColorHint="@android:color/background_dark"
-        app:layout_constraintBottom_toTopOf="@+id/sendCodeButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLoginDescription" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login"
+        android:backgroundTint="#20FFFFFF"
+        android:backgroundTintMode="src_over"
+        tools:context=".activities.LoginActivity">
 
-    <Button
-        android:id="@+id/sendCodeButton"
-        android:layout_width="168dp"
-        android:layout_height="78dp"
-        android:alpha="0.7"
-        android:background="@drawable/rounded_button"
-        android:text="Send Code"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fieldLoginPhone" />
+        <TextView
+            android:id="@+id/textViewLoginTitle"
+            android:layout_width="99dp"
+            android:layout_height="54dp"
+            android:alpha="0.8"
+            android:fontFamily="sans-serif"
+            android:text="Login"
+            android:textColor="@android:color/black"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toTopOf="@+id/textViewLoginDescription"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewLoginDescription"
+            android:layout_width="331dp"
+            android:layout_height="50dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Please enter your phone number! You will receive a verification code..."
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/fieldLoginPhone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewLoginTitle" />
+
+        <EditText
+            android:id="@+id/fieldLoginPhone"
+            android:layout_width="322dp"
+            android:layout_height="47dp"
+            android:ems="10"
+            android:hint="Phone number"
+            android:inputType="phone"
+            android:textColorHint="@android:color/background_dark"
+            app:layout_constraintBottom_toTopOf="@+id/sendCodeButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewLoginDescription" />
+
+        <Button
+            android:id="@+id/sendCodeButton"
+            android:layout_width="168dp"
+            android:layout_height="78dp"
+            android:alpha="0.7"
+            android:background="@drawable/rounded_button"
+            android:text="Send Code"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fieldLoginPhone" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

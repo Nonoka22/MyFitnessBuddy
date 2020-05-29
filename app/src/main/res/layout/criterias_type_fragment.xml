@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textSpecialty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/type_trainer_text_view"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/personalTrainerTrainerTB"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ToggleButton
+            android:id="@+id/groupInstructorTrainerTB"
+            android:layout_width="106dp"
+            android:layout_height="48dp"
+            android:background="#4CAF50"
+            android:padding="5dp"
+            android:text="@string/group_instructor"
+            android:textOff="@string/group_instructor"
+            android:textOn="@string/group_instructor"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toTopOf="@+id/nextButtonTypeTrainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/personalTrainerTrainerTB" />
+
+        <ToggleButton
+            android:id="@+id/personalTrainerTrainerTB"
+            android:layout_width="103dp"
+            android:layout_height="48dp"
+            android:background="#4CAF50"
+            android:padding="5dp"
+            android:text="@string/personal_trainer"
+            android:textOff="@string/personal_trainer"
+            android:textOn="@string/personal_trainer"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toTopOf="@+id/groupInstructorTrainerTB"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textSpecialty" />
+
+        <ImageView
+            android:id="@+id/nextButtonTypeTrainer"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:alpha="0.8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/groupInstructorTrainerTB"
+            app:srcCompat="@drawable/nextbtn" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

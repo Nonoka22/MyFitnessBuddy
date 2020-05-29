@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textSpecialty"
+            android:layout_width="179dp"
+            android:layout_height="27dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/gym_location_text_view"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/spinnerLocationTrainer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/spinnerLocationTrainer"
+            android:layout_width="300dp"
+            android:layout_height="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/spinnerGym"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textSpecialty" />
+
+        <Spinner
+            android:id="@+id/spinnerGym"
+            android:layout_width="300dp"
+            android:layout_height="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/nextButtonGym"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerLocationTrainer" />
+
+        <ImageView
+            android:id="@+id/nextButtonGym"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:alpha="0.8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerGym"
+            app:srcCompat="@drawable/nextbtn" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

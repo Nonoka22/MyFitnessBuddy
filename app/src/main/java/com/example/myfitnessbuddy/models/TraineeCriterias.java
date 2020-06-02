@@ -5,7 +5,7 @@ import java.util.List;
 public class TraineeCriterias extends Criterias {
 
     private String goal;
-    private boolean needsNutritionist;
+    private boolean nutritionistNeeded;
     private List<String> criterias;
 
     public TraineeCriterias(){
@@ -15,7 +15,7 @@ public class TraineeCriterias extends Criterias {
     public TraineeCriterias(String city, List<String> trainerType, Price price, String goal, boolean needsNutritionist, List<String> criterias) {
         super(city, trainerType, price);
         this.goal = goal;
-        this.needsNutritionist = needsNutritionist;
+        this.nutritionistNeeded = needsNutritionist;
         this.criterias = criterias;
     }
 
@@ -27,12 +27,12 @@ public class TraineeCriterias extends Criterias {
         this.goal = goal;
     }
 
-    public boolean needsNutritionist() {
-        return needsNutritionist;
+    public boolean isNutritionistNeeded() {
+        return nutritionistNeeded;
     }
 
-    public void setNeedsNutritionist(boolean needsNutritionist) {
-        this.needsNutritionist = needsNutritionist;
+    public void setNutritionistNeeded(boolean needsNutritionist) {
+        this.nutritionistNeeded = needsNutritionist;
     }
 
     public List<String> getCriterias() {
@@ -48,7 +48,7 @@ public class TraineeCriterias extends Criterias {
     public String toString() {
         return "TraineeCriterias{" +
                 "goal='" + goal + '\'' +
-                ", needsNutritionist=" + needsNutritionist +
+                ", needsNutritionist=" + nutritionistNeeded +
                 ", criterias=" + criterias +
                 ", city=" + super.getCity() +
                 ", trainerType=" + super.getTrainerType() +

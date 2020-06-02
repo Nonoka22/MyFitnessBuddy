@@ -13,6 +13,10 @@ public class UserProfileFragment extends BaseFragment<FragmentUserProfileBinding
 
     @Override
     protected void initFragmentImpl() {
+        //This will be the same for both users
+    }
 
+    public static UserProfileFragment getInstance(){
+        return new UserProfileFragment();
     }
 }

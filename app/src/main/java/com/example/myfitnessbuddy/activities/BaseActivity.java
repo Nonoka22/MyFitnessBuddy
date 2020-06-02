@@ -7,12 +7,14 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.adapters.SectionStatePagerAdapter;
 import com.example.myfitnessbuddy.models.CustomViewPager;
 import com.google.android.material.tabs.TabLayout;
@@ -63,17 +65,18 @@ public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatA
 //                    }});
     }
 
-    protected void setFragment(String action,Fragment fragment, int container){
+    protected void setFragment(String action,Fragment fragment, int container, Toolbar toolbar,String title){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        if(action.equals("replace")){
+        if(action.equals(Constants.REPLACE)){
             fragmentTransaction.replace(container,fragment);
         }
-        else if(action.equals("add")){
+        else if(action.equals(Constants.ADD)){
             fragmentTransaction.add(container,fragment);
         }
 
         fragmentTransaction.commit();
+        toolbar.setTitle(title);
     }
 
     protected void setNextFragment(CustomViewPager viewPager){

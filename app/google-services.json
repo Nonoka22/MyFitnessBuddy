@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1017174757548-eqdtpsmui511gb0suu22b7ffc89n2enj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myfitnessbuddy",
+            "certificate_hash": "59a94bedbaf306aa8f7a8484fb702c7542415d74"
+          }
+        },
+        {
           "client_id": "1017174757548-657ulgvojh96g4vs8j9ai7rrlj6lkvi3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -47,7 +47,7 @@ public class FragmentCriteriasTraineeIntroduction extends BaseFragment<Criterias
             @Override
             public void onClick(View v) {
                 final String intro = introduction.getText().toString();
-                uploadImage(imageUri,progressBar);
+                uploadImages(imageUri,progressBar);
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override

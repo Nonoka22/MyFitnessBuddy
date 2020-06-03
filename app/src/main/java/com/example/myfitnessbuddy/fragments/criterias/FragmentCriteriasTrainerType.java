@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasTrainertypeFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTraineeCriteriasEvent;
@@ -53,7 +54,7 @@ public class FragmentCriteriasTrainerType extends BaseFragment<CriteriasTrainert
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new PassingTraineeCriteriasEvent("TrainerType",selectedButtons));
+                EventBus.getDefault().post(new PassingTraineeCriteriasEvent(Constants.TRAINER_TYPE_FRAGMENT,selectedButtons));
                 EventBus.getDefault().post(new SetNextFragmentEvent());
             }
         });

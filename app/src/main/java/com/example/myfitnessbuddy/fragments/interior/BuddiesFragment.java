@@ -1,18 +1,24 @@
 package com.example.myfitnessbuddy.fragments.interior;
 
+import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
+import com.example.myfitnessbuddy.adapters.BuddyAdapter;
 import com.example.myfitnessbuddy.databinding.FragmentBuddiesBinding;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
 import com.example.myfitnessbuddy.models.Match;
+import com.example.myfitnessbuddy.models.MatchedBuddy;
 import com.example.myfitnessbuddy.models.Matcher;
 import com.example.myfitnessbuddy.models.Price;
 import com.example.myfitnessbuddy.models.TraineeCriterias;
@@ -25,7 +31,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
 
@@ -41,6 +52,10 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
     private ArrayList<String> criteriasList = new ArrayList<>();
     private Matcher matcher;
     private boolean matchedWithTrainer;
+    private RecyclerView recyclerView;
+    private List<MatchedBuddy> matchedBuddyList;
+    private List<String> matchedBuddyIds;
+    private BuddyAdapter adapter;
     private User user = new User();
     private User trainer = new User();
     private TraineeCriterias traineeCriterias = new TraineeCriterias();
@@ -53,13 +68,16 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
 
     @Override
     protected void initFragmentImpl() {
-
-        final RecyclerView recyclerView = binding.recyclerViewBuddies;
+        recyclerView = binding.recyclerViewBuddies;
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        matchedBuddyList = new ArrayList<>();
+        matchedBuddyIds = new ArrayList<>();
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         final String currentUserId = firebaseAuth.getCurrentUser().getUid();
+
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -68,6 +86,13 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                 userType = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.USER_TYPE).getValue().toString();
 
                 if(userType.equals(Constants.TRAINEE)){
+                    Log.i("Noemi","Trainee ");
+                    for(DataSnapshot dataSnap : dataSnapshot.child(Constants.MATCHES).getChildren()) {
+                        if (dataSnap.child(Constants.TRAINEE_ID).getValue().toString().equals(currentUserId)) {
+                            matchedBuddyIds.add(dataSnap.child(Constants.TRAINER_ID).getValue().toString());
+                            Log.i("Noemi",matchedBuddyIds.toString());
+                        }
+                    }
 
                     ConstraintLayout parentLayout = binding.buddiesFragment;
                     final ConstraintSet set = new ConstraintSet();
@@ -125,7 +150,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                                     for(int i = 0; i < 4; i++ ){
                                         switch (criteriasList.get(i)){//criteriasList.get(i)
                                             case Constants.GOAL_CRITERIA:
-                                               // Log.i("Noemi","Goal crit.");
+                                                //Log.i("Noemi","Goal crit.");
                                                 //the goal the user selected..
                                                 goal = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.GOAL).getValue().toString();
 
@@ -145,7 +170,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                                                 break;
 
                                             case Constants.PRICE_CRITERIA:
-                                               // Log.i("Noemi","Price crit.");
+                                                //Log.i("Noemi","Price crit.");
                                                 //the hour and cost the user selected
                                                 float traineeHour = Float.parseFloat(dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.PRICE).child(Constants.HOURS).getValue().toString());
                                                 float traineeX = (float) 1/traineeHour;
@@ -164,7 +189,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                                                 }
                                                 break;
                                             case Constants.NUTRITIONIST_CRITERIA:
-                                               // Log.i("Noemi","Nutritionist crit.");
+                                                //Log.i("Noemi","Nutritionist crit.");
                                                 //check if user needs nutritionist or not..
                                                 needsNutritionist = (boolean) dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.NUTRITIONIST_NEEDED).getValue();
 
@@ -217,6 +242,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                                     //save the match into the Matches table
                                     Match match = new Match(currentUserId,trainerId,matcher.getMatchCounter());
                                     databaseReference.child(Constants.MATCHES).push().setValue(match);
+                                    adapter.notifyDataSetChanged();
                                 }
                                 else {
                                    // Log.i("Noemi","Matcher is not set...");
@@ -225,6 +251,33 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                         }
                     });
                 }
+                else {
+                    //The user is a trainer..
+                    for(DataSnapshot dataSnap : dataSnapshot.child(Constants.MATCHES).getChildren()) {
+                        if (dataSnap.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId)) {
+                            matchedBuddyIds.add(dataSnap.child(Constants.TRAINEE_ID).getValue().toString());
+                        }
+                    }
+                }
+
+               // Log.i("Noemi","buddy list : " + matchedBuddyIds.toString());
+
+                for(String s : matchedBuddyIds){
+                    MatchedBuddy matchedBuddy = new MatchedBuddy();
+                    //User matchedUser = new User();
+                    User matchedUser = dataSnapshot.child(Constants.USERS).child(s).getValue(User.class);
+                   // Log.i("Noemi","MatchedUser: " + matchedUser.getFirstName());
+                    matchedBuddy.setFirstName(matchedUser.getFirstName());
+                    matchedBuddy.setLastName(matchedUser.getLastName());
+                    matchedBuddy.setId(s);
+                    matchedBuddy.setImageUrl(matchedUser.getImageURL());
+                    matchedBuddyList.add(matchedBuddy);
+                   // Log.i("Noemi","URL: " + matchedUser.getImageURL());
+                }
+
+                //Log.i("Noemi",matchedBuddyList.toString());
+                adapter = new BuddyAdapter(matchedBuddyList);
+                recyclerView.setAdapter(adapter);
             }
 
             @Override

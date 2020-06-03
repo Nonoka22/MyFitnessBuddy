@@ -182,7 +182,7 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
     public void onSomeActionEventRecieved(PassingTrainerCriteriasEvent event){
 
         switch (event.getFragmentName()) {
-            case Constants.SPECIALTIES:
+            case Constants.SPECIALTIES_FRAGMENT:
                 trainerCriterias.setSpecialties(event.getListData());
                 break;
             case Constants.GYM_FRAGMENT:

@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasNutritionistFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTraineeCriteriasEvent;
@@ -41,7 +42,7 @@ public class FragmentCriteriasNutritionist extends BaseFragment<CriteriasNutriti
                     nutritionistNeeded = "yes";
                 }
 
-                EventBus.getDefault().post(new PassingTraineeCriteriasEvent("Nutritionist", nutritionistNeeded));
+                EventBus.getDefault().post(new PassingTraineeCriteriasEvent(Constants.NUTRITIONIST_FRAGMENT, nutritionistNeeded));
                 EventBus.getDefault().post(new SetNextFragmentEvent());
             }
         });

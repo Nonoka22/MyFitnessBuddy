@@ -1,10 +1,12 @@
 package com.example.myfitnessbuddy.fragments.criterias;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasSpecialtyFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTrainerCriteriasEvent;
@@ -67,7 +69,7 @@ public class FragmentCriteriasSpecialty extends BaseFragment<CriteriasSpecialtyF
                     Toast.makeText(getActivity(), "At least 1 has to be selected.", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    EventBus.getDefault().post(new PassingTrainerCriteriasEvent("Specialties",selectedButtons));
+                    EventBus.getDefault().post(new PassingTrainerCriteriasEvent(Constants.SPECIALTIES_FRAGMENT,selectedButtons));
                     EventBus.getDefault().post(new SetNextFragmentEvent());
                 }
             }

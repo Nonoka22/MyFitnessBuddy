@@ -51,7 +51,7 @@ public class FragmentCriteriasCriterias extends BaseFragment<CriteriasCriteriasF
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new PassingTraineeCriteriasEvent("Criterias", criterias));
+                EventBus.getDefault().post(new PassingTraineeCriteriasEvent(Constants.CRITERIAS_FRAGMENT, criterias));
                 EventBus.getDefault().post(new SetNextFragmentEvent());
             }
         });

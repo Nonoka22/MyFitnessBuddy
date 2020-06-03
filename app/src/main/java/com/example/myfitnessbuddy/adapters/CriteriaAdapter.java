@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.DataBinderMapperImpl;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriaRowBinding;
 
@@ -46,7 +45,7 @@ public class CriteriaAdapter extends RecyclerView.Adapter<CriteriaAdapter.ViewHo
 
         TextView textView;
 
-      public ViewHolder(@NonNull View itemView) {
+      ViewHolder(@NonNull View itemView) {
           super(itemView);
 
           textView = binding.criteriaItem;

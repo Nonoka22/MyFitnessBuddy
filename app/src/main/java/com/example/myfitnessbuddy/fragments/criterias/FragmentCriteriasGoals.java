@@ -5,6 +5,9 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.cardview.widget.CardView;
+
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasGoalsFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTraineeCriteriasEvent;
@@ -63,7 +66,7 @@ public class FragmentCriteriasGoals extends BaseFragment<CriteriasGoalsFragmentB
                     Toast.makeText(getActivity(), "It is mandatory.", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    EventBus.getDefault().post(new PassingTraineeCriteriasEvent("Goal", selectedGoal));
+                    EventBus.getDefault().post(new PassingTraineeCriteriasEvent(Constants.GOAL_FRAGMENT, selectedGoal));
                     EventBus.getDefault().post(new SetNextFragmentEvent());
                 }
             }

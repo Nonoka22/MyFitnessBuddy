@@ -26,8 +26,11 @@ import com.example.myfitnessbuddy.models.CustomViewPager;
 import com.example.myfitnessbuddy.models.TraineeCriterias;
 import com.example.myfitnessbuddy.models.TrainerCriterias;
 import com.example.myfitnessbuddy.models.User;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -38,6 +41,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.concurrent.CountDownLatch;
@@ -99,25 +103,40 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
         return mime.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
-    protected void uploadImage(Uri imageUri, final ProgressBar progressBar){
+
+    protected void uploadImages(Uri imageUri, final ProgressBar progressBar){
         if(imageUri != null){
-            StorageReference storageRef = storageReference.child(System.currentTimeMillis()+ "." + getFileExtension(imageUri));
-            storageRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            final StorageReference storageRef = storageReference.child(System.currentTimeMillis()+ "." + getFileExtension(imageUri));
+            StorageTask<UploadTask.TaskSnapshot> uploadTask = storageRef.putFile(imageUri);
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i("Noemi","Uploading image successful");
-                    imageUrl = taskSnapshot.getMetadata().getReference().getDownloadUrl().toString();
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if(!task.isSuccessful()){
+                        throw task.getException();
+                    }
+                    return storageRef.getDownloadUrl();
                 }
-            }).addOnFailureListener(new OnFailureListener() {
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+
                 @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.i("Noemi","Error uploading image: "+e.getMessage());
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()){
+                        Uri downloadUri = task.getResult();
+                        Log.i("Noemi", "Uploading image successful: " + downloadUri);
+                        imageUrl = downloadUri.toString();
+                    }
+                    else {
+                        Log.i("Noemi", "Error uploading image: ");
+
+                    }
                 }
-            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            });
+
+            uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
                     progressBar.setVisibility(View.VISIBLE);
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount());
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                     progressBar.setProgress((int) progress);
                 }
             });

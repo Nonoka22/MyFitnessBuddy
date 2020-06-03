@@ -5,6 +5,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasTrainerPriceFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTrainerCriteriasEvent;
@@ -38,7 +39,7 @@ public class FragmentCriteriasTrainerPrice extends BaseFragment<CriteriasTrainer
                 String selectedHour = pickerValues[selected];
                 String cost = lei.getText().toString();
 
-                EventBus.getDefault().post(new PassingTrainerCriteriasEvent("TrainerPrice",selectedHour,cost));
+                EventBus.getDefault().post(new PassingTrainerCriteriasEvent(Constants.TRAINER_PRICE_FRAGMENT,selectedHour,cost));
                 EventBus.getDefault().post(new SetNextFragmentEvent());
             }
         });

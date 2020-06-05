@@ -1,18 +1,15 @@
 package com.example.myfitnessbuddy.fragments.interior;
 
-import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myfitnessbuddy.Constants;
+import com.example.myfitnessbuddy.PubNubUtils;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.adapters.BuddyAdapter;
 import com.example.myfitnessbuddy.databinding.FragmentBuddiesBinding;
@@ -31,10 +28,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +79,10 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                 userType = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.USER_TYPE).getValue().toString();
 
                 if(userType.equals(Constants.TRAINEE)){
+
                     Log.i("Noemi","Trainee ");
+
+                    //get the trainerIds, which the user already matched with for the listing...
                     for(DataSnapshot dataSnap : dataSnapshot.child(Constants.MATCHES).getChildren()) {
                         if (dataSnap.child(Constants.TRAINEE_ID).getValue().toString().equals(currentUserId)) {
                             matchedBuddyIds.add(dataSnap.child(Constants.TRAINER_ID).getValue().toString());
@@ -94,22 +90,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                         }
                     }
 
-                    ConstraintLayout parentLayout = binding.buddiesFragment;
-                    final ConstraintSet set = new ConstraintSet();
-
-                    findBuddies = new Button(getContext());
-                    findBuddies.setText(Constants.FIND_BUDDY);
-                    // set view id, else getId() returns -1
-                    findBuddies.setId(View.generateViewId());
-                    parentLayout.addView(findBuddies, 0);
-
-                    set.clone(parentLayout);
-                    set.connect(findBuddies.getId(), ConstraintSet.TOP, recyclerView.getId(), ConstraintSet.BOTTOM, 60);
-                    set.connect(findBuddies.getId(), ConstraintSet.LEFT, parentLayout.getId(), ConstraintSet.LEFT, 60);
-                    set.connect(findBuddies.getId(), ConstraintSet.RIGHT, parentLayout.getId(), ConstraintSet.RIGHT, 60);
-                    set.connect(findBuddies.getId(), ConstraintSet.BOTTOM, parentLayout.getId(), ConstraintSet.BOTTOM, 60);
-                    set.applyTo(parentLayout);
-
+                    findBuddies.setVisibility(View.VISIBLE);
 
                     findBuddies.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -243,6 +224,13 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                                     Match match = new Match(currentUserId,trainerId,matcher.getMatchCounter());
                                     databaseReference.child(Constants.MATCHES).push().setValue(match);
                                     adapter.notifyDataSetChanged();
+
+                                    //create PubNub channel between the two users
+                                    PubNubUtils.setPubNubChannel(currentUserId + trainerId,"Chatroom");
+                                    //add message listener first!
+                                    PubNubUtils.addMessageListener();
+                                    //subscribe the user to the channel
+                                    PubNubUtils.subscribeToChannel(currentUserId + trainerId);
                                 }
                                 else {
                                    // Log.i("Noemi","Matcher is not set...");
@@ -263,6 +251,9 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                // Log.i("Noemi","buddy list : " + matchedBuddyIds.toString());
 
                 for(String s : matchedBuddyIds){
+                    //for each one of them, check if the user has subscribed yet to their channel
+
+
                     MatchedBuddy matchedBuddy = new MatchedBuddy();
                     //User matchedUser = new User();
                     User matchedUser = dataSnapshot.child(Constants.USERS).child(s).getValue(User.class);

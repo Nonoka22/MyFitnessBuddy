@@ -38,40 +38,7 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MatchedBuddy matchedBuddy = matchedBuddies.get(position);
-            holder.textViewName.setText(matchedBuddy.getFirstName() + " " + matchedBuddy.getLastName());
-            Picasso.get()
-                    .load(matchedBuddy.getImageUrl())
-                    .placeholder(R.mipmap.ic_launcher)
-                    .fit()
-                    .into(holder.imageViewPicture);
-
-        holder.imageViewPicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("Noemi","I have to navigate to the buddy's profile page.");
-            }
-        });
-
-        holder.textViewName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("Noemi","Navigate to the buddy's profile screen.");
-            }
-        });
-
-        holder.imageViewChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("Noemi","Navigate into Chat room.");
-            }
-        });
-
-        holder.imageViewTrash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("Noemi","Remove buddy from list.");
-            }
-        });
+        holder.bindViewHolder(matchedBuddy);
     }
 
     @Override
@@ -94,6 +61,49 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
             imageViewChat = binding.chatIcon;
             imageViewTrash = binding.trashIcon;
 
+        }
+
+        void bindViewHolder(final MatchedBuddy matchedBuddy){
+            final String buddyName = matchedBuddy.getFirstName() + " " + matchedBuddy.getLastName();
+            textViewName.setText(buddyName);
+            Picasso.get()
+                    .load(matchedBuddy.getImageUrl())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .fit()
+                    .into(imageViewPicture);
+
+            imageViewPicture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("Noemi","I have to navigate to the buddy's profile page.");
+                }
+            });
+
+            textViewName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("Noemi","Navigate to the buddy's profile screen.");
+                }
+            });
+
+            imageViewChat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Intent intent = new Intent(imageViewChat.getContext(), ChatActivity.class);
+//                    intent.putExtra(Constants.BUDDY_NAME_INTENT_EXTRA,buddyName);
+//                    intent.putExtra(Constants.BUDDY_ID_INTENT_EXTRA,matchedBuddy.getId());
+                    // intent.putExtra(Constants.CURRENT_USER_ID_INTENT_EXTRA,);
+                   // itemView.getContext().startActivity(intent);
+                    Log.i("Noemi","Navigate into Chat room.");
+                }
+            });
+
+            imageViewTrash.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("Noemi","Remove buddy from list.");
+                }
+            });
         }
     }
 }

@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
-import com.example.myfitnessbuddy.adapters.RecyclerAdapter;
+import com.example.myfitnessbuddy.adapters.CriteriaAdapter;
 import com.example.myfitnessbuddy.databinding.CriteriasCriteriasFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTraineeCriteriasEvent;
 import com.example.myfitnessbuddy.events.SetNextFragmentEvent;
@@ -34,15 +35,15 @@ public class FragmentCriteriasCriterias extends BaseFragment<CriteriasCriteriasF
     protected void initFragmentImpl() {
         ImageView nextButton = binding.nextButtonCriterias;
 
-        criterias = new ArrayList<>(Arrays.asList("Your Goal", "The Training Price","Group Instructor or Personal Trainer",
-                "Nutritionist or Not"));
+        criterias = new ArrayList<>(Arrays.asList(Constants.GOAL_CRITERIA, Constants.PRICE_CRITERIA,Constants.TRAINER_TYPE_CRITERIA,
+                Constants.NUTRITIONIST_CRITERIA));
 
         RecyclerView recyclerView = binding.recyclerViewCriterias;
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(criterias);
+        CriteriaAdapter criteriaAdapter = new CriteriaAdapter(criterias);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setAdapter(criteriaAdapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -50,7 +51,7 @@ public class FragmentCriteriasCriterias extends BaseFragment<CriteriasCriteriasF
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new PassingTraineeCriteriasEvent("Criterias", criterias));
+                EventBus.getDefault().post(new PassingTraineeCriteriasEvent(Constants.CRITERIAS_FRAGMENT, criterias));
                 EventBus.getDefault().post(new SetNextFragmentEvent());
             }
         });

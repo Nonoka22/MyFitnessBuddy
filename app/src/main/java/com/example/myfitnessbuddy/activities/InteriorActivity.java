@@ -14,6 +14,7 @@ import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.ActivityInteriorBinding;
 import com.example.myfitnessbuddy.fragments.interior.BuddiesFragment;
 import com.example.myfitnessbuddy.fragments.interior.HomeFragment;
+import com.example.myfitnessbuddy.fragments.interior.UserProfileFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -34,7 +35,7 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
     protected void initActivityImpl() {
         drawerLayout = binding.drawer;
         toolbar = binding.toolbar.toolbar;
-        toolbar.setTitle("");
+        toolbar.setTitle(Constants.HOME);
         navigationView = binding.navigationDrawer;
         containerId = R.id.interior_fragment_container;
 
@@ -47,7 +48,7 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
-        setFragment(Constants.ADD,new HomeFragment(),containerId);
+        setFragment(Constants.ADD,new HomeFragment(),containerId,toolbar,Constants.HOME);
     }
 
     @Override
@@ -55,13 +56,13 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
         drawerLayout.closeDrawer(GravityCompat.START);
         switch(menuItem.getItemId()){
             case R.id.nav_home:
-                setFragment(Constants.REPLACE,new HomeFragment(),containerId);
+                setFragment(Constants.REPLACE,HomeFragment.getInstance(),containerId,toolbar,Constants.HOME);
                 break;
             case R.id.nav_profile:
-                setFragment(Constants.REPLACE,new BuddiesFragment(),containerId);
+                setFragment(Constants.REPLACE,UserProfileFragment.getInstance() ,containerId,toolbar,Constants.PROFILE);
                 break;
             case R.id.nav_buddies:
-                setFragment(Constants.REPLACE,new BuddiesFragment(),containerId);
+                setFragment(Constants.REPLACE,BuddiesFragment.getInstance(),containerId,toolbar,Constants.BUDDIES);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();

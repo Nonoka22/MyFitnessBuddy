@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasLocationFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTraineeCriteriasEvent;
@@ -33,7 +34,7 @@ public class FragmentCriteriasLocation extends BaseFragment<CriteriasLocationFra
         binding.nextButtonLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new PassingTraineeCriteriasEvent("Location", citySpinner.getSelectedItem().toString()));
+                EventBus.getDefault().post(new PassingTraineeCriteriasEvent(Constants.LOCATION_FRAGMENT, citySpinner.getSelectedItem().toString()));
                 EventBus.getDefault().post(new SetNextFragmentEvent());
             }
         });

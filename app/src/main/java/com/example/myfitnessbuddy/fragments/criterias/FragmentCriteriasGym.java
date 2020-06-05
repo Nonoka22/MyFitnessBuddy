@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasGymFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTrainerCriteriasEvent;
@@ -82,7 +83,7 @@ public class FragmentCriteriasGym extends BaseFragment<CriteriasGymFragmentBindi
             public void onClick(View v) {
                 String city = citySpinner.getSelectedItem().toString();
                 String gym = gymSpinner.getSelectedItem().toString();
-                EventBus.getDefault().post(new PassingTrainerCriteriasEvent("Gym",city,gym));
+                EventBus.getDefault().post(new PassingTrainerCriteriasEvent(Constants.GYM_FRAGMENT,city,gym));
                 EventBus.getDefault().post(new SetNextFragmentEvent());
             }
         });

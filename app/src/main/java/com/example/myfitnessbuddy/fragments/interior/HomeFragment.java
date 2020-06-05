@@ -55,5 +55,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> {
         });
     }
 
-
+    public static HomeFragment getInstance(){
+        return new HomeFragment();
+    }
 }

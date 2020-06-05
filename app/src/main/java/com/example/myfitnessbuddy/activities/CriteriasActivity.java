@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.ActivityCriteriasBinding;
 import com.example.myfitnessbuddy.databinding.TraineeCriteriasTablayoutBinding;
@@ -64,6 +65,8 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
     private User user = new User();
     TraineeCriterias traineeCriterias = new TraineeCriterias();
     TrainerCriterias trainerCriterias = new TrainerCriterias();
+    private String currentUserId;
+    Handler handler = new Handler();
 
     @Override
     protected int getActivityLayout() {
@@ -74,10 +77,11 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
     protected void initActivityImpl() {
 
         firebaseAuth = FirebaseAuth.getInstance();
+        currentUserId= firebaseAuth.getCurrentUser().getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference().child("Users");
-        currentUser = databaseReference.child(firebaseAuth.getCurrentUser().getUid());
-        userTypeRef = currentUser.child("userType");
+        databaseReference = firebaseDatabase.getReference();
+        currentUser = databaseReference.child(Constants.USERS).child(currentUserId);
+        userTypeRef = currentUser.child(Constants.USER_TYPE);
 
         viewPager = binding.viewPagerCriterias;
 
@@ -93,11 +97,10 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
             }
         });
 
-        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(userType.equals("Trainee")){
+                if(userType.equals(Constants.TRAINEE)){
 
                     binding.viewStubCriterias.setOnInflateListener(new ViewStub.OnInflateListener() {
                         @Override
@@ -114,7 +117,7 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
                             FragmentCriteriasTraineePrice.getInstance(), FragmentCriteriasNutritionist.getInstance(), FragmentCriteriasCriterias.getInstance(), FragmentCriteriasTraineeIntroduction.getInstance()));
 
                 }
-                else if(userType.equals("Trainer")){
+                else if(userType.equals(Constants.TRAINER)){
 
                     binding.viewStubCriterias.setOnInflateListener(new ViewStub.OnInflateListener() {
                         @Override
@@ -140,33 +143,33 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
     public void onSomeActionEventRecieved(PassingTraineeCriteriasEvent event){
 
         switch (event.getFragmentName()) {
-            case "Goal":
+            case Constants.GOAL_FRAGMENT:
                 traineeCriterias.setGoal(event.getData());
                 break;
-            case "Location":
+            case Constants.LOCATION_FRAGMENT:
                 traineeCriterias.setCity(event.getData());
                 break;
-            case "TrainerType":
+            case Constants.TRAINER_TYPE_FRAGMENT:
                 traineeCriterias.setTrainerType(event.getListData());
                 break;
-            case "TraineePrice":
+            case Constants.TRAINEE_PRICE_FRAGMENT:
                 Price price = new Price();
                 price.setHours(event.getData());
                 price.setCost(event.getAdditionalData());
                 traineeCriterias.setPrice(price);
                 break;
-            case "Nutritionist":
-                if(event.getData().equals("no")){
-                    traineeCriterias.setNeedsNutritionist(false);
+            case Constants.NUTRITIONIST_FRAGMENT:
+                if(event.getData().equals(Constants.NO)){
+                    traineeCriterias.setNutritionistNeeded(false);
                 }
-                else if(event.getData().equals("yes")){
-                    traineeCriterias.setNeedsNutritionist(true);
+                else if(event.getData().equals(Constants.YES)){
+                    traineeCriterias.setNutritionistNeeded(true);
                 }
                 break;
-            case "Criterias":
+            case Constants.CRITERIAS_FRAGMENT:
                 traineeCriterias.setCriterias(event.getListData());
                 break;
-            case "TraineeIntroduction":
+            case Constants.TRAINEE_INTRODUCTION_FRAGMENT:
                 user.setImageURL(event.getData());
                 user.setIntroduction(event.getAdditionalData());
                 break;
@@ -179,23 +182,23 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
     public void onSomeActionEventRecieved(PassingTrainerCriteriasEvent event){
 
         switch (event.getFragmentName()) {
-            case "Specialties":
+            case Constants.SPECIALTIES_FRAGMENT:
                 trainerCriterias.setSpecialties(event.getListData());
                 break;
-            case "Gym":
+            case Constants.GYM_FRAGMENT:
                 trainerCriterias.setCity(event.getData());
                 trainerCriterias.setGym(event.getAdditionalData());
                 break;
-            case "TrainerType":
+            case Constants.TRAINER_TYPE_FRAGMENT:
                 trainerCriterias.setTrainerType(event.getListData());
                 break;
-            case "TrainerPrice":
+            case Constants.TRAINER_PRICE_FRAGMENT:
                 Price price = new Price();
                 price.setHours(event.getData());
                 price.setCost(event.getAdditionalData());
                 trainerCriterias.setPrice(price);
                 break;
-            case "TrainerIntroduction":
+            case Constants.TRAINER_INTRODUCTION_FRAGMENT:
                 user.setImageURL(event.getData());
                 user.setIntroduction(event.getAdditionalData());
                 break;
@@ -228,11 +231,14 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
 
     @Subscribe
     public void onActionRecieved(SaveCriteriasEvent event){
-        currentUser.child("introduction").setValue(user.getIntroduction());
-        currentUser.child("imageURL").setValue(user.getImageURL());
-        currentUser.child("criterias").setValue(user.getCriterias());
-        startActivity(new Intent(CriteriasActivity.this,InteriorActivity.class));
-    }
+        currentUser.child(Constants.INTRODUCTION).setValue(user.getIntroduction());
+        currentUser.child(Constants.IMAGE_URL).setValue(user.getImageURL());
+        currentUser.child(Constants.CRITERIAS).setValue(user.getCriterias());
+        if(userType.equals(Constants.TRAINER)){
+            //updates the old one every time
+            databaseReference.child(Constants.TRAINER_LOCATIONS).child(user.getCriterias().getCity()).push().setValue(currentUserId);
+        }
+        startActivity(new Intent(CriteriasActivity.this,InteriorActivity.class)); }
 
 
 }

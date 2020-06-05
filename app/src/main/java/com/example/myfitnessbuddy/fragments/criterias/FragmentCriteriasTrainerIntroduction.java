@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasTrainerIntroductionFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTrainerCriteriasEvent;
@@ -48,12 +49,12 @@ public class FragmentCriteriasTrainerIntroduction extends BaseFragment<Criterias
             @Override
             public void onClick(View v) {
                 final String intro = introduction.getText().toString();
-                uploadImage(imageUri,progressBar);
+                uploadImages(imageUri,progressBar);
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        EventBus.getDefault().post(new PassingTrainerCriteriasEvent("TrainerIntroduction", imageUrl ,intro));
+                        EventBus.getDefault().post(new PassingTrainerCriteriasEvent(Constants.TRAINER_INTRODUCTION_FRAGMENT, imageUrl ,intro));
                         EventBus.getDefault().post(new SaveCriteriasEvent());
                     }
                 },5000);

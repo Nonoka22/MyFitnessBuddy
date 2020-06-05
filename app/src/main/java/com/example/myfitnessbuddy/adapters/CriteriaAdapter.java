@@ -6,28 +6,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myfitnessbuddy.R;
+import com.example.myfitnessbuddy.databinding.CriteriaRowBinding;
 
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class CriteriaAdapter extends RecyclerView.Adapter<CriteriaAdapter.ViewHolder> {
 
-    List<String> criterias;
+    private List<String> criterias;
+    private CriteriaRowBinding binding;
 
-    public RecyclerAdapter(List<String> criterias) {
+    public CriteriaAdapter(List<String> criterias) {
         this.criterias = criterias;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.criteria_row,parent,false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),R.layout.criteria_row, parent,false);
 
-        return viewHolder;
+        return new ViewHolder(binding.getRoot());
     }
 
     @Override
@@ -44,10 +45,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         TextView textView;
 
-      public ViewHolder(@NonNull View itemView) {
+      ViewHolder(@NonNull View itemView) {
           super(itemView);
 
-          textView = itemView.findViewById(R.id.criteria_item);
+          textView = binding.criteriaItem;
       }
   }
 }

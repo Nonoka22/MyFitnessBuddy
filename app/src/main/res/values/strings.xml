@@ -21,14 +21,14 @@
     <string name="performance_trainer">Performance trainer</string>
     <string name="zumba">Zumba</string>
     <string name="flexibility_specialist">Flexibility specialist</string>
-    <string name="fiziotherapist">Fiziotherapist</string>
+    <string name="fiziotherapist">Physiotherapist</string>
     <string name="nutritionist">Nutritionist</string>
     <string name="aerobics">Aerobics</string>
     <string name="yoga">Yoga</string>
     <string name="pilates">Pilates</string>
     <string name="kettlebells">Kettlebells</string>
     <string name="cardio">Cardio</string>
-    <string name="body_builder">Body builder</string>
+    <string name="body_builder">Body building</string>
     <string name="select_specialties_text_view">Select your specialties</string>
     <string name="gym_location_text_view">Where do you train?</string>
     <string name="trainer_price_text_view">How much does your class cost?</string>
@@ -40,16 +40,16 @@
     <string name="trainer_introduction_text_view">Please introduce yourself!</string>
     <string name="choose_image">Choose Image</string>
     <string name="save_data">Save Data</string>
-    <string name="lose_weight">Lose weight</string>
-    <string name="build_muscle">Build muscle</string>
-    <string name="improve_endurance">Improve endurance</string>
-    <string name="improve_athletic_skills">Improve athletic skills</string>
-    <string name="improve_flexibility">Improve flexibility</string>
-    <string name="body_composition">Body composition</string>
-    <string name="improve_agility">Improve agility</string>
-    <string name="improve_stamina">Improve stamina</string>
-    <string name="freedom_from_pain">Freedom from pain</string>
-    <string name="fiziotherapy">Fiziotherapy</string>
+    <string name="lose_weight">Lose Weight</string>
+    <string name="build_muscle">Build Muscle</string>
+    <string name="improve_endurance">Improve Endurance</string>
+    <string name="improve_athletic_skills">Improve Athletic Skills</string>
+    <string name="improve_flexibility">Improve Flexibility</string>
+    <string name="body_composition">Body Composition</string>
+    <string name="improve_agility">Improve Agility</string>
+    <string name="improve_stamina">Improve Stamina</string>
+    <string name="freedom_from_pain">Freedom from Pain</string>
+    <string name="fiziotherapy">Physiotherapy</string>
     <string name="select_your_main_goal">Select your main goal</string>
     <string name="location_text_view">Where would you like to train?</string>
     <string name="trainer_type_text_view">Would you like to have a personal trainer or a group instructor?</string>
@@ -68,6 +68,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="select_birth_date_TV">Please select your date of birth!</string>
+    <string name="find_new_buddies">Find New Buddies</string>
 
 
 </resources>

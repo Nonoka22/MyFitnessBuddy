@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.ActivityRegistrationBinding;
 import com.example.myfitnessbuddy.events.PassingUserArgumentsEvent;
@@ -52,7 +53,7 @@ public class RegistrationActivity extends BaseAuthenticationActivity<ActivityReg
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         dbReference = firebaseDatabase.getReference();
-        usersRef = dbReference.child("Users");
+        usersRef = dbReference.child(Constants.USERS);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = new User();

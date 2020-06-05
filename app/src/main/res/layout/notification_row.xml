@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-
-    </data>
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -21,7 +17,7 @@
             android:textColor="@color/colorBlack"
             android:layout_margin="5dp"
             android:textStyle="bold"
-            android:id="@+id/notification_title" />
+            android:id="@+id/notificationTitle" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,7 +27,7 @@
             android:textColor="@color/colorBlack"
             android:layout_margin="5dp"
             android:textStyle="italic"
-            android:id="@+id/notification_subtitle" />
+            android:id="@+id/notificationSubtitle" />
 
 
     </LinearLayout>

@@ -46,7 +46,8 @@ public class Criterias {
         return "Criterias{" +
                 "city='" + city + '\'' +
                 ", trainerType=" + trainerType +
-                ", price=" + price +
+                ", priceHours=" + price.getHours() +
+                ", priceCost=" + price.getCost() +
                 '}';
     }
 }

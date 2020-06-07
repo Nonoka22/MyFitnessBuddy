@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.example.myfitnessbuddy.Constants;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasNutritionistFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTraineeCriteriasEvent;

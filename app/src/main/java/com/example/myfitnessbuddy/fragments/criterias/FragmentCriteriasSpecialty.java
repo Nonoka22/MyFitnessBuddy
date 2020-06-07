@@ -1,12 +1,11 @@
 package com.example.myfitnessbuddy.fragments.criterias;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.myfitnessbuddy.Constants;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasSpecialtyFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTrainerCriteriasEvent;

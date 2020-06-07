@@ -3,10 +3,9 @@ package com.example.myfitnessbuddy.fragments.criterias;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.myfitnessbuddy.Constants;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasTrainertypeFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTraineeCriteriasEvent;
@@ -17,7 +16,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class FragmentCriteriasTrainerType extends BaseFragment<CriteriasTrainertypeFragmentBinding> {
 

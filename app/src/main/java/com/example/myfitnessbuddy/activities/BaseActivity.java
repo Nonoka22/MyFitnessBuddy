@@ -14,9 +14,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.adapters.SectionStatePagerAdapter;
 import com.example.myfitnessbuddy.models.CustomViewPager;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -86,4 +86,6 @@ public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatA
     protected void setPreviousFragment(CustomViewPager viewPager){
         viewPager.setCurrentItem(viewPager.getCurrentItem()-1);
     }
+
+
 }

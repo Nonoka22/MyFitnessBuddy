@@ -4,7 +4,8 @@ import android.app.Activity;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.myfitnessbuddy.Constants;
+import com.example.myfitnessbuddy.utils.CometChatUtil;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.ActivityRegistrationBinding;
 import com.example.myfitnessbuddy.events.PassingUserArgumentsEvent;
@@ -37,6 +38,7 @@ public class RegistrationActivity extends BaseAuthenticationActivity<ActivityReg
     DatabaseReference dbReference;
     DatabaseReference usersRef;
     ArrayList<Fragment> fragmentList;
+    String currentUserId;
 
     @Override
     protected int getActivityLayout() {
@@ -68,7 +70,16 @@ public class RegistrationActivity extends BaseAuthenticationActivity<ActivityReg
 
     @Override
     protected void signInSuccessful() {
-        usersRef.child(firebaseAuth.getCurrentUser().getUid()).setValue(user);
+        currentUserId = firebaseAuth.getCurrentUser().getUid();
+
+        //cometChatUser can be created here...
+        CometChatUtil.createCometChatUser(currentUserId,user.getFirstName());
+
+        //login CometChatUser
+        CometChatUtil.loginCometChatUser(currentUserId);
+
+        //save user to Firebase database
+        usersRef.child(currentUserId).setValue(user);
     }
 
     @Subscribe

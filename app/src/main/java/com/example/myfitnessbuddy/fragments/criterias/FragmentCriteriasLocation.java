@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.example.myfitnessbuddy.Constants;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasLocationFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTraineeCriteriasEvent;

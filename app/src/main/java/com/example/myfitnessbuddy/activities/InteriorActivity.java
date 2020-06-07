@@ -9,7 +9,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.myfitnessbuddy.Constants;
+import com.example.myfitnessbuddy.utils.CometChatUtil;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.ActivityInteriorBinding;
 import com.example.myfitnessbuddy.fragments.interior.BuddiesFragment;
@@ -66,6 +67,7 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
+                CometChatUtil.logoutCometChat();
                 startActivity(new Intent(InteriorActivity.this, MainActivity.class));
         }
 

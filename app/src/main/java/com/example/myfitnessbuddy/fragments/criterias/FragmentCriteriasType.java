@@ -5,10 +5,9 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ToggleButton;
 
-import com.example.myfitnessbuddy.Constants;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasTypeFragmentBinding;
-import com.example.myfitnessbuddy.events.PassingTraineeCriteriasEvent;
 import com.example.myfitnessbuddy.events.PassingTrainerCriteriasEvent;
 import com.example.myfitnessbuddy.events.SetNextFragmentEvent;
 import com.example.myfitnessbuddy.fragments.BaseFragment;

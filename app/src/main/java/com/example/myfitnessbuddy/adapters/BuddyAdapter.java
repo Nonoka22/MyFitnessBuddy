@@ -68,6 +68,7 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
 
         void bindViewHolder(MatchedBuddy matchedBuddy){
             textViewName.setText(matchedBuddy.getFirstName() + " " + matchedBuddy.getLastName());
+  
             Picasso.get()
                     .load(matchedBuddy.getImageUrl())
                     .placeholder(R.mipmap.ic_launcher)
@@ -91,6 +92,7 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
             imageViewChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                  
                     Log.i("Noemi","Navigate into Chat room.");
                     Intent intent = new Intent(imageViewChat.getContext(), ChatActivity.class);
                     intent.putExtra(Constants.BUDDY_NAME_INTENT_EXTRA,matchedBuddy.getFirstName());

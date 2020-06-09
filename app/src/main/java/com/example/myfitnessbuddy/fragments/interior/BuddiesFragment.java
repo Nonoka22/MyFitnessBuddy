@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myfitnessbuddy.Constants;
+
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.adapters.BuddyAdapter;
 import com.example.myfitnessbuddy.databinding.FragmentBuddiesBinding;
@@ -240,6 +242,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                                     else {
                                         Log.i("Noemi","Matcher is not set...");
                                     }
+
                                 }
                             }
                         }

@@ -1,7 +1,5 @@
 package com.example.myfitnessbuddy.adapters;
 
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myfitnessbuddy.OnBuddyClickedListener;
 import com.example.myfitnessbuddy.R;
-import com.example.myfitnessbuddy.activities.ChatActivity;
 import com.example.myfitnessbuddy.databinding.BuddyRowBinding;
 import com.example.myfitnessbuddy.models.MatchedBuddy;
-import com.example.myfitnessbuddy.utils.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -25,17 +22,48 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
 
     private List<MatchedBuddy> matchedBuddies;
     private BuddyRowBinding binding;
+    private OnBuddyClickedListener listener;
 
-    public BuddyAdapter(List<MatchedBuddy> matchedBuddies) {
+    public BuddyAdapter(List<MatchedBuddy> matchedBuddies, OnBuddyClickedListener listener) {
         this.matchedBuddies = matchedBuddies;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.buddy_row,parent,false);
+        ViewHolder viewHolder = new ViewHolder(binding.getRoot());
 
-        return new ViewHolder(binding.getRoot());
+        viewHolder.imageViewChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.buddyChatClicked(viewHolder.getAdapterPosition());
+            }
+        });
+
+        viewHolder.textViewName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.buddyNameClicked(viewHolder.getAdapterPosition());
+            }
+        });
+
+        viewHolder.imageViewPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.buddyPictureClicked(viewHolder.getAdapterPosition());
+            }
+        });
+
+        viewHolder.imageViewTrash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.buddyTrashClicked(viewHolder.getAdapterPosition());
+            }
+        });
+
+        return viewHolder;
     }
 
     @Override
@@ -73,39 +101,7 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
                     .placeholder(R.mipmap.ic_launcher)
                     .fit()
                     .into(imageViewPicture);
-
-            imageViewPicture.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("Noemi","I have to navigate to the buddy's profile page.");
-                }
-            });
-
-            textViewName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("Noemi","Navigate to the buddy's profile screen.");
-                }
-            });
-
-            imageViewChat.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("Noemi","Navigate into Chat room.");
-                    Intent intent = new Intent(imageViewChat.getContext(), ChatActivity.class);
-                    intent.putExtra(Constants.BUDDY_NAME_INTENT_EXTRA,matchedBuddy.getFirstName());
-                    intent.putExtra(Constants.BUDDY_ID_INTENT_EXTRA,matchedBuddy.getId());
-                    // intent.putExtra(Constants.CURRENT_USER_ID_INTENT_EXTRA,);
-                     itemView.getContext().startActivity(intent);
-                }
-            });
-
-            imageViewTrash.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("Noemi","Remove buddy from list.");
-                }
-            });
         }
+
     }
 }

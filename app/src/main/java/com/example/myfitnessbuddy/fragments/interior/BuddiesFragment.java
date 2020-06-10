@@ -1,5 +1,6 @@
 package com.example.myfitnessbuddy.fragments.interior;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -8,7 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myfitnessbuddy.OnBuddyClickedListener;
 import com.example.myfitnessbuddy.R;
+import com.example.myfitnessbuddy.activities.ChatActivity;
 import com.example.myfitnessbuddy.adapters.BuddyAdapter;
 import com.example.myfitnessbuddy.databinding.FragmentBuddiesBinding;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
@@ -30,7 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
+public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implements OnBuddyClickedListener {
 
     private String userType;
     private Button findBuddies;
@@ -54,6 +57,8 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
     private TrainerCriterias trainerCriterias = new TrainerCriterias();
     private MatchedBuddy matchedBuddy;
     private User matchedUser;
+    private MatchedBuddy buddy;
+
 
     @Override
     protected int getFragmentLayout() {
@@ -62,6 +67,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
 
     @Override
     protected void initFragmentImpl() {
+
         recyclerView = binding.recyclerViewBuddies;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         matchedBuddyList = new ArrayList<>();
@@ -235,7 +241,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                                         Match match = new Match(currentUserId,trainerId,matcher.getMatchCounter());
                                         databaseReference.child(Constants.MATCHES).push().setValue(match);
                                         Log.i("Noemi","SAved to database: " + trainerId);
-                                        
+
                                     }
                                     else {
                                         Log.i("Noemi","Matcher is not set...");
@@ -277,7 +283,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                 }
 
                 //Log.i("Noemi",matchedBuddyList.toString());
-                adapter = new BuddyAdapter(matchedBuddyList);
+                adapter = new BuddyAdapter(matchedBuddyList,BuddiesFragment.this);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -306,5 +312,37 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
             matcher.setMatchCounter(matcher.getMatchCounter()+1);
         }
     }
+
+
+    @Override
+    public void buddyChatClicked(int position) {
+        buddy = matchedBuddyList.get(position);
+        Log.i("Noemi","Navigate into Chat room.");
+        Intent intent = new Intent(getContext(), ChatActivity.class);
+        intent.putExtra(Constants.BUDDY_NAME_INTENT_EXTRA, buddy.getFirstName());
+        intent.putExtra(Constants.BUDDY_ID_INTENT_EXTRA, buddy.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void buddyNameClicked(int position) {
+        buddy = matchedBuddyList.get(position);
+        Log.i("Noemi","Navigate to the buddy's profile screen.");
+
+    }
+
+    @Override
+    public void buddyPictureClicked(int position) {
+        buddy = matchedBuddyList.get(position);
+        Log.i("Noemi","I have to navigate to the buddy's profile page.");
+
+    }
+
+    @Override
+    public void buddyTrashClicked(int position) {
+        buddy = matchedBuddyList.get(position);
+        Log.i("Noemi","Remove buddy from list.");
+    }
+
 
 }

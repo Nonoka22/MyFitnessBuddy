@@ -1,11 +1,9 @@
 package com.example.myfitnessbuddy.fragments;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +16,15 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
-import com.example.myfitnessbuddy.Constants;
 import com.example.myfitnessbuddy.models.Criterias;
-import com.example.myfitnessbuddy.models.CustomViewPager;
 import com.example.myfitnessbuddy.models.TraineeCriterias;
 import com.example.myfitnessbuddy.models.TrainerCriterias;
 import com.example.myfitnessbuddy.models.User;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,8 +35,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-
-import java.util.concurrent.CountDownLatch;
 
 import static android.app.Activity.RESULT_OK;
 

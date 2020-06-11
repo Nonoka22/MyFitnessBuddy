@@ -1,5 +1,6 @@
 package com.example.myfitnessbuddy.fragments.interior;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -8,9 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.Constants;
-import com.example.myfitnessbuddy.PubNubUtils;
+import com.example.myfitnessbuddy.OnBuddyClickedListener;
 import com.example.myfitnessbuddy.R;
+import com.example.myfitnessbuddy.activities.ChatActivity;
 import com.example.myfitnessbuddy.adapters.BuddyAdapter;
 import com.example.myfitnessbuddy.databinding.FragmentBuddiesBinding;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
@@ -21,6 +22,7 @@ import com.example.myfitnessbuddy.models.Price;
 import com.example.myfitnessbuddy.models.TraineeCriterias;
 import com.example.myfitnessbuddy.models.TrainerCriterias;
 import com.example.myfitnessbuddy.models.User;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,7 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
+public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implements OnBuddyClickedListener {
 
     private String userType;
     private Button findBuddies;
@@ -53,6 +55,10 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
     private User trainer = new User();
     private TraineeCriterias traineeCriterias = new TraineeCriterias();
     private TrainerCriterias trainerCriterias = new TrainerCriterias();
+    private MatchedBuddy matchedBuddy;
+    private User matchedUser;
+    private MatchedBuddy buddy;
+
 
     @Override
     protected int getFragmentLayout() {
@@ -61,10 +67,12 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
 
     @Override
     protected void initFragmentImpl() {
+
         recyclerView = binding.recyclerViewBuddies;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         matchedBuddyList = new ArrayList<>();
         matchedBuddyIds = new ArrayList<>();
+        findBuddies = binding.findBuddiesButton;
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
@@ -72,11 +80,13 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
         final String currentUserId = firebaseAuth.getCurrentUser().getUid();
 
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 userType = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.USER_TYPE).getValue().toString();
+
+                matchedBuddyIds.clear();
 
                 if(userType.equals(Constants.TRAINEE)){
 
@@ -104,26 +114,28 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                             }
 
                             //get the location of the user, where he/she wants to train...
-                             location = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.CITY).getValue().toString();
+                            location = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.CITY).getValue().toString();
 
                             //check in TrainerLocations if, the there are trainers and if they match the user's criterias
                             for(DataSnapshot snapshot : dataSnapshot.child(Constants.TRAINER_LOCATIONS).child(location).getChildren()){//location
 
                                 //initialize matcher and boolean match checker
-                                matcher = new Matcher();
+
                                 matchedWithTrainer = false;
 
                                 //get the current trainer's id
                                 trainerId = snapshot.getValue().toString();
+                                Log.i("Noemi",trainerId);
 
                                 //check if the user already matched with the current trainer
-                                for(DataSnapshot dSnap : dataSnapshot.child(Constants.MATCHES).getChildren()){
-                                    if(dSnap.child(Constants.TRAINEE_ID).getValue().toString().equals(currentUserId) &&
-                                            dSnap.child(Constants.TRAINER_ID).getValue().toString().equals(trainerId)){
+                                for(String st: matchedBuddyIds){
+                                    if(st.equals(trainerId)){
                                         matchedWithTrainer = true;
                                     }
+
                                 }
 
+                                matcher = new Matcher();
                                 //if the user hasn't matched with the trainer
                                 if(!matchedWithTrainer){
 
@@ -131,7 +143,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                                     for(int i = 0; i < 4; i++ ){
                                         switch (criteriasList.get(i)){//criteriasList.get(i)
                                             case Constants.GOAL_CRITERIA:
-                                                //Log.i("Noemi","Goal crit.");
+                                                Log.i("Noemi","Goal crit.");
                                                 //the goal the user selected..
                                                 goal = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.GOAL).getValue().toString();
 
@@ -141,17 +153,17 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                                                     for(DataSnapshot snap2 : dataSnapshot.child(Constants.GOALS).child(goal).getChildren()){
                                                         //if it finds one specialty, that matches, than it is a match
                                                         if(snap2.getValue().toString().equals(snap1.getValue().toString())){
+                                                            Log.i("Noemi", "Goal crit match");
                                                             setMatch(i);
                                                             break specialtyloop;
                                                         }
                                                     }
                                                 }
 
-
                                                 break;
 
                                             case Constants.PRICE_CRITERIA:
-                                                //Log.i("Noemi","Price crit.");
+                                                Log.i("Noemi","Price crit.");
                                                 //the hour and cost the user selected
                                                 float traineeHour = Float.parseFloat(dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.PRICE).child(Constants.HOURS).getValue().toString());
                                                 float traineeX = (float) 1/traineeHour;
@@ -165,12 +177,12 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
 //
                                                 //if the trainer is cheaper or equal or max 10 leis more expensive than the user's price it is a match
                                                 if(trainerCost <= (traineeCost + 10)){
-                                                   // Log.i("Noemi","Price crit match");
+                                                    Log.i("Noemi","Price crit match");
                                                     setMatch(i);
                                                 }
                                                 break;
                                             case Constants.NUTRITIONIST_CRITERIA:
-                                                //Log.i("Noemi","Nutritionist crit.");
+                                                Log.i("Noemi","Nutritionist crit.");
                                                 //check if user needs nutritionist or not..
                                                 needsNutritionist = (boolean) dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.NUTRITIONIST_NEEDED).getValue();
 
@@ -179,6 +191,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                                                     //check if Nutritionist is in the trainer's specialty list...
                                                     for(DataSnapshot snap3 : dataSnapshot.child(Constants.USERS).child(trainerId).child(Constants.CRITERIAS).child(Constants.SPECIALTIES).getChildren()){
                                                         if(snap3.getValue().toString().equals(Constants.NUTRITIONIST)){
+                                                            Log.i("Noemi","Nutri crit match");
                                                             setMatch(i);
                                                             break;
                                                         }
@@ -186,14 +199,15 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
 
                                                 }
                                                 else{
+                                                    Log.i("Noemi","Nutri not needed crit match");
                                                     setMatch(i); // probably will be changed
                                                 }
                                                 break;
 
                                             case Constants.TRAINER_TYPE_CRITERIA:
-                                               // Log.i("Noemi","TrainerType crit.");
+                                                Log.i("Noemi","TrainerType crit.");
 
-                                                 trainerType.clear();
+                                                trainerType.clear();
                                                 //get what the user selected..
                                                 for(DataSnapshot snap4 : dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.TRAINER_TYPE).getChildren()){
                                                     trainerType.add(snap4.getValue().toString());
@@ -201,11 +215,13 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
 
                                                 //if user selected both types, than it is already a match...
                                                 if(trainerType.size() == 2){//trainerType.size() == 2
+                                                    Log.i("Noemi","TrainerType default crit match");
                                                     setMatch(i);
                                                 }
                                                 else { //check if the trainer is the specific type
                                                     for(DataSnapshot snap5 : dataSnapshot.child(Constants.USERS).child(trainerId).child(Constants.CRITERIAS).child(Constants.TRAINER_TYPE).getChildren()){
                                                         if(snap5.getValue().toString().equals(trainerType.get(0))){
+                                                            Log.i("Noemi","TrainerType crit match");
                                                             setMatch(i);
                                                         }
                                                     }
@@ -216,24 +232,20 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
 
                                 }
                                 else{
-                                    //Log.i("Noemi","They already matched...");
+                                    Log.i("Noemi","They already matched...");
                                 }
 
-                                if(matcher.isFirstCriteria() && matcher.isSecondCriteria()){
-                                    //save the match into the Matches table
-                                    Match match = new Match(currentUserId,trainerId,matcher.getMatchCounter());
-                                    databaseReference.child(Constants.MATCHES).push().setValue(match);
-                                    adapter.notifyDataSetChanged();
+                                if(matcher != null){
+                                    if(matcher.isFirstCriteria() && matcher.isSecondCriteria()){
+                                        //save the match into the Matches table
+                                        Match match = new Match(currentUserId,trainerId,matcher.getMatchCounter());
+                                        databaseReference.child(Constants.MATCHES).push().setValue(match);
+                                        Log.i("Noemi","SAved to database: " + trainerId);
 
-                                    //create PubNub channel between the two users
-                                    PubNubUtils.setPubNubChannel(currentUserId + trainerId,"Chatroom");
-                                    //add message listener first!
-                                    PubNubUtils.addMessageListener();
-                                    //subscribe the user to the channel
-                                    PubNubUtils.subscribeToChannel(currentUserId + trainerId);
-                                }
-                                else {
-                                   // Log.i("Noemi","Matcher is not set...");
+                                    }
+                                    else {
+                                        Log.i("Noemi","Matcher is not set...");
+                                    }
                                 }
                             }
                         }
@@ -248,26 +260,30 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
                     }
                 }
 
-               // Log.i("Noemi","buddy list : " + matchedBuddyIds.toString());
+                Log.i("Noemi","buddy list : " + matchedBuddyIds.toString());
 
+                matchedBuddyList.clear();
                 for(String s : matchedBuddyIds){
+
                     //for each one of them, check if the user has subscribed yet to their channel
 
+                    matchedBuddy = new MatchedBuddy();
+                    matchedUser = new User();
+                    matchedUser = dataSnapshot.child(Constants.USERS).child(s).getValue(User.class);
 
-                    MatchedBuddy matchedBuddy = new MatchedBuddy();
-                    //User matchedUser = new User();
-                    User matchedUser = dataSnapshot.child(Constants.USERS).child(s).getValue(User.class);
-                   // Log.i("Noemi","MatchedUser: " + matchedUser.getFirstName());
+                    Log.i("Noemi","MatchedUser: " + matchedUser.getFirstName());
+
                     matchedBuddy.setFirstName(matchedUser.getFirstName());
                     matchedBuddy.setLastName(matchedUser.getLastName());
                     matchedBuddy.setId(s);
                     matchedBuddy.setImageUrl(matchedUser.getImageURL());
                     matchedBuddyList.add(matchedBuddy);
-                   // Log.i("Noemi","URL: " + matchedUser.getImageURL());
+
+                    // Log.i("Noemi","URL: " + matchedUser.getImageURL());
                 }
 
                 //Log.i("Noemi",matchedBuddyList.toString());
-                adapter = new BuddyAdapter(matchedBuddyList);
+                adapter = new BuddyAdapter(matchedBuddyList,BuddiesFragment.this);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -278,6 +294,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
         });
 
     }
+
 
     public static BuddiesFragment getInstance(){
         return new BuddiesFragment();
@@ -295,4 +312,37 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> {
             matcher.setMatchCounter(matcher.getMatchCounter()+1);
         }
     }
+
+
+    @Override
+    public void buddyChatClicked(int position) {
+        buddy = matchedBuddyList.get(position);
+        Log.i("Noemi","Navigate into Chat room.");
+        Intent intent = new Intent(getContext(), ChatActivity.class);
+        intent.putExtra(Constants.BUDDY_NAME_INTENT_EXTRA, buddy.getFirstName());
+        intent.putExtra(Constants.BUDDY_ID_INTENT_EXTRA, buddy.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void buddyNameClicked(int position) {
+        buddy = matchedBuddyList.get(position);
+        Log.i("Noemi","Navigate to the buddy's profile screen.");
+
+    }
+
+    @Override
+    public void buddyPictureClicked(int position) {
+        buddy = matchedBuddyList.get(position);
+        Log.i("Noemi","I have to navigate to the buddy's profile page.");
+
+    }
+
+    @Override
+    public void buddyTrashClicked(int position) {
+        buddy = matchedBuddyList.get(position);
+        Log.i("Noemi","Remove buddy from list.");
+    }
+
+
 }

@@ -5,9 +5,7 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import androidx.cardview.widget.CardView;
-
-import com.example.myfitnessbuddy.Constants;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.CriteriasGoalsFragmentBinding;
 import com.example.myfitnessbuddy.events.PassingTraineeCriteriasEvent;

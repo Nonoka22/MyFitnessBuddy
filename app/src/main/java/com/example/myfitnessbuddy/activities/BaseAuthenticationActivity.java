@@ -34,7 +34,7 @@ public abstract class BaseAuthenticationActivity<T extends ViewDataBinding> exte
         //phone number verification comes here...
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNumber,        // Phone number to verify
+                "+40" + phoneNumber,        // Phone number to verify
                 60,                 // Timeout duration
                 TimeUnit.SECONDS,   // Unit of timeout
                 this,               // Activity (for callback binding)

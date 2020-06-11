@@ -7,6 +7,7 @@ import android.widget.Button;
 
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.ActivityLoginBinding;
+import com.example.myfitnessbuddy.utils.CometChatUtil;
 import com.google.firebase.auth.FirebaseAuth;
 
 
@@ -44,5 +45,7 @@ public class LoginActivity extends BaseAuthenticationActivity<ActivityLoginBindi
     }
 
     @Override
-    protected void signInSuccessful() {}
+    protected void signInSuccessful() {
+        CometChatUtil.loginCometChatUser(firebaseAuth.getCurrentUser().getUid());
+    }
 }

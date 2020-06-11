@@ -1,7 +1,10 @@
-package com.example.myfitnessbuddy;
+package com.example.myfitnessbuddy.utils;
 
 public final class Constants {
+   public static final String APP_ID = "19849702b6dcf8b";
+   public static final String AUTH_KEY = "7e626d45afda64cb5eb8bdb79ab0c73eb8aa2786";
    public static final String ADD = "add";
+   public static final String REGION = "eu";
    public static final String REPLACE = "replace";
    public static final String HOME = "Home";
    public static final String PROFILE = "Profile";
@@ -72,5 +75,7 @@ public final class Constants {
    public static final String TRAINER_INTRODUCTION_FRAGMENT = "TrainerIntroduction";
    public static final String INTRODUCTION = "introduction";
    public static final String IMAGE_URL = "imageURL";
-
+   public static final String BUDDY_NAME_INTENT_EXTRA = "buddyName";
+   public static final String BUDDY_ID_INTENT_EXTRA = "buddyId";
+   public static final String CURRENT_USER_ID_INTENT_EXTRA = "currentUserId";
 }

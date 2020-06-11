@@ -2,7 +2,6 @@ package com.example.myfitnessbuddy.activities;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 
@@ -10,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
-import com.example.myfitnessbuddy.Constants;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.ActivityCriteriasBinding;
 import com.example.myfitnessbuddy.databinding.TraineeCriteriasTablayoutBinding;

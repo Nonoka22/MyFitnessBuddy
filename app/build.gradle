@@ -11,8 +11,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "PUB_KEY", PUB_KEY
-        buildConfigField "String", "SUB_KEY", SUB_KEY
     }
     buildTypes {
         release {
@@ -23,6 +21,11 @@ android {
 
     dataBinding {
         enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -51,7 +54,11 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.71828'
 
-    implementation 'com.pubnub:pubnub-gson:4.31.0'
+    implementation 'com.cometchat:pro-android-chat-sdk:2.0.4'
+
+    implementation 'com.github.stfalcon:chatkit:0.3.3'
+
+    implementation 'com.google.firebase:firebase-messaging:20.2.0'
 
     //noinspection GradleCompatible
     implementation 'com.android.support:design:28.0.0'

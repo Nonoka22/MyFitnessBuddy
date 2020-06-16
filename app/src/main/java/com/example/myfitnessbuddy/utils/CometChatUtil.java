@@ -50,11 +50,13 @@ public class CometChatUtil {
             @Override
             public void onSuccess(User user) {
                 Log.i("Noemi","createUser"+ user.toString());
+                //login CometChatUser
+                loginCometChatUser(userId);
             }
 
             @Override
             public void onError(CometChatException e) {
-                Log.i("Noemi","createUser"+ e.getMessage());
+                Log.i("Noemi","createUser fail :"+ e.getMessage());
             }
         });
     }

@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.myfitnessbuddy.models.Token;
 import com.example.myfitnessbuddy.utils.CometChatUtil;
 import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
@@ -18,6 +19,9 @@ import com.example.myfitnessbuddy.fragments.interior.HomeFragment;
 import com.example.myfitnessbuddy.fragments.interior.UserProfileFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -50,6 +54,8 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
         actionBarDrawerToggle.syncState();
 
         setFragment(Constants.ADD,new HomeFragment(),containerId,toolbar,Constants.HOME);
+
+        updateToken();
     }
 
     @Override
@@ -73,4 +79,13 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
 
         return true;
     }
+
+    private void updateToken() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String refreshToken = FirebaseInstanceId.getInstance().getToken();
+        Token token = new Token(refreshToken);
+
+        FirebaseDatabase.getInstance().getReference().child(Constants.TOKENS).child(firebaseUser.getUid()).setValue(token);
+    }
+
 }

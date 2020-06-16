@@ -1,49 +1,77 @@
 package com.example.myfitnessbuddy.adapters;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myfitnessbuddy.OnNotificationClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.NotificationRowBinding;
-import com.example.myfitnessbuddy.models.Notifications;
+import com.example.myfitnessbuddy.models.NotificationData;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class NotificationAdapter extends ArrayAdapter<Notifications> {
+public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
-    private int resource;
+   private List<NotificationData> notifications;
+   private NotificationRowBinding binding;
+   private OnNotificationClickedListener listener;
 
-    public NotificationAdapter(@NonNull Context context, int resource, @NonNull ArrayList<Notifications> objects) {
-        super(context, resource, objects);
-        this.resource = resource;
+    public NotificationAdapter(List<NotificationData> notifications, OnNotificationClickedListener listener) {
+        this.notifications = notifications;
+        this.listener = listener;
     }
 
-    @SuppressLint("ViewHolder")
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        String title = getItem(position).getTitle();
-        String subtitle = getItem(position).getSubtitle();
-        String description = getItem(position).getDescription();
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.notification_row,parent,false);
+        ViewHolder viewHolder = new ViewHolder(binding.getRoot());
 
-        NotificationRowBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), resource, parent, false);
-        convertView = binding.getRoot();
+        Log.i("Noemi", "oncreatviewholder");
 
-        TextView notificationTitle = binding.notificationTitle;
-        TextView notificationSubtitle = binding.notificationSubtitle;
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.notificationClicked(viewHolder.getAdapterPosition());
+            }
+        });
 
-        notificationTitle.setText(title);
-        notificationSubtitle.setText(subtitle);
+        return viewHolder;
+    }
 
-        return convertView;
+    @Override
+    public void onBindViewHolder(@NonNull NotificationAdapter.ViewHolder holder, int position) {
+        NotificationData notification = notifications.get(position);
+        holder.bindViewHolder(notification);
+    }
+
+    @Override
+    public int getItemCount() {
+        return notifications.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView title;
+        TextView text;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            title = binding.notificationTitle;
+            text = binding.notificationSubtitle;
+        }
+
+        void bindViewHolder(NotificationData notification){
+            title.setText(notification.getTitle());
+            text.setText(notification.getMessage());
+        }
     }
 }

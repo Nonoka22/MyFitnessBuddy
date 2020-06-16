@@ -46,6 +46,7 @@ public class LoginActivity extends BaseAuthenticationActivity<ActivityLoginBindi
 
     @Override
     protected void signInSuccessful() {
+        Log.i("Noemi","Login cometchat: " + firebaseAuth.getCurrentUser().getUid());
         CometChatUtil.loginCometChatUser(firebaseAuth.getCurrentUser().getUid());
     }
 }

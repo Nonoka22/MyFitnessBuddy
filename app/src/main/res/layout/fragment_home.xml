@@ -7,8 +7,8 @@
         android:layout_height="match_parent">
 
 
-        <ListView
-            android:id="@+id/notificationsListView"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notificationsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="55dp"

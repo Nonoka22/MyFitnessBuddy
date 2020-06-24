@@ -9,8 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.example.myfitnessbuddy.APIService;
 import com.example.myfitnessbuddy.MyResponse;
+
 import com.example.myfitnessbuddy.OnBuddyClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.activities.ChatActivity;
@@ -74,6 +76,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
     private List<BuddyRelationshipStatus> activeBuddies;
     private MatchedBuddy buddy;
     private String currentUserId;
+
 
     @Override
     protected int getFragmentLayout() {
@@ -279,12 +282,14 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                                         databaseReference.child(Constants.MATCHES).push().setValue(match);
                                         Log.i("Noemi","SAved to database: " + trainerId);
 
+
                                         //send notification to Trainer:
                                         String trainerToken = dataSnapshot.child(Constants.TOKENS).child(trainerId).child(Constants.TOKEN_NODE).getValue().toString();
                                         String userToken = dataSnapshot.child(Constants.TOKENS).child(currentUserId).child(Constants.TOKEN_NODE).getValue().toString();
                                         sendNotifications(trainerToken,Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINER_MESSAGE + currentUserId);
                                         //this one is not sent
                                         //sendNotifications(userToken,Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINEE_MESSAGE + trainerId);
+
                                     }
                                     else {
                                         Log.i("Noemi","Matcher is not set...");

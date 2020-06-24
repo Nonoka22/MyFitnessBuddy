@@ -55,14 +55,6 @@ public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatA
             });
         }
 
-//        tabLayout.addOnTabSelectedListener(
-//                new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
-//                    @Override
-//                    public void onTabSelected(TabLayout.Tab tab) {
-//                        super.onTabSelected(tab);
-//                        int numTab = tab.getPosition();
-//                        viewPager.setCurrentItem(numTab);
-//                    }});
     }
 
     protected void setFragment(String action,Fragment fragment, int container, Toolbar toolbar,String title){

@@ -50,7 +50,6 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private String currentUserId;
-    private APIService apiService;
     private NotificationAdapter adapter;
 
     @Override
@@ -68,11 +67,10 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
         List<String> ids = new ArrayList<>();
         List<String> acceptedIds = new ArrayList<>();
         List<String> declinedIds = new ArrayList<>();
+        List<String> removedIds = new ArrayList<>();
 
         RecyclerView recyclerView = binding.notificationsRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        apiService = Client.getClient(Constants.BASE_URL).create(APIService.class);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -100,6 +98,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                 ids.clear();
                 acceptedIds.clear();
                 declinedIds.clear();
+                removedIds.clear();
 
                 for(DataSnapshot snapshot : dataSnapshot.child(Constants.MATCHES).getChildren()){
                     if(userType.equals(Constants.TRAINEE)){
@@ -115,14 +114,25 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                                else if (relStatus.equals(Constants.DECLINED)){
                                    declinedIds.add(trainerId);
                                }
+                               else if (relStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)){
+                                   removedIds.add(trainerId);
+                               }
                         }
                     }
                     else if(userType.equals(Constants.TRAINER)){
-                        if(snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId) &&
-                                (snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString().equals(Constants.NOT_ACCEPTED_STATUS)
-                        || snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString().equals(Constants.TRAINEE_ACCEPTED_STATUS))){
-                            Log.i("Noemi","Traine ids notif: " + snapshot.child(Constants.TRAINEE_ID).getValue().toString());
-                            ids.add(snapshot.child(Constants.TRAINEE_ID).getValue().toString());
+                        if(snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId)){
+                            String relStatus = snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
+                            String traineeId = snapshot.child(Constants.TRAINEE_ID).getValue().toString();
+
+                            if(relStatus.equals(Constants.NOT_ACCEPTED_STATUS)
+                                    || relStatus.equals(Constants.TRAINEE_ACCEPTED_STATUS)){
+                                Log.i("Noemi","Traine ids notif: " + snapshot.child(Constants.TRAINEE_ID).getValue().toString());
+                                ids.add(snapshot.child(Constants.TRAINEE_ID).getValue().toString());
+                            }
+                            else if (relStatus.equals(Constants.REMOVED_BY_TRAINEE_STATUS)){
+                                removedIds.add(traineeId);
+                            }
+
                         }
                     }
 
@@ -142,6 +152,20 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                     }
                 }
 
+                if(!removedIds.isEmpty()){
+                    for(String s : removedIds){
+                        if(userType.equals(Constants.TRAINEE)){
+                            traineeNotifications.add(new NotificationData(Constants.DECLINE_TITLE,Constants.REMOVED_MESSAGE + s,Constants.NOTIFYING_TYPE,s));
+                            notifications = traineeNotifications;
+                        }
+                        else if(userType.equals(Constants.TRAINER)){
+                            trainerNotifications.add(new NotificationData(Constants.DECLINE_TITLE,Constants.REMOVED_MESSAGE + s,Constants.NOTIFYING_TYPE,s));
+                            notifications = trainerNotifications;
+                        }
+                    }
+
+                }
+
                 if(!ids.isEmpty()){
                     for(String s : ids){
                         if(userType.equals(Constants.TRAINEE)){
@@ -154,6 +178,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                         }
                     }
                 }
+
 
                 if(userType.equals(Constants.TRAINEE)){
                     notifications = traineeNotifications;
@@ -193,7 +218,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                }
                 //send notification to the trainee, that the match was accepted
                 String userToken = dataSnapshot.child(Constants.TOKENS).child(matchedId).child(Constants.TOKEN_NODE).getValue().toString();
-                sendNotifications(userToken,Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE, currentUserId);
+                sendNotifications(userToken,Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE);
             }
 
             @Override
@@ -219,7 +244,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                 }
                 //send notification to trainee, that the match was declined
                 String userToken = dataSnapshot.child(Constants.TOKENS).child(matchedId).child(Constants.TOKEN_NODE).getValue().toString();
-                sendNotifications(userToken,Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE, currentUserId);
+                sendNotifications(userToken,Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE);
 
             }
             @Override
@@ -253,7 +278,14 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                                 snapshot.child(Constants.RELATIONSHIP_STATUS).getRef().setValue(Constants.DONE_STATUS);
                             }
 
-                            if(relaStatus.equals(Constants.DECLINED)){
+                            if(relaStatus.equals(Constants.DECLINED) || relaStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)){
+                                snapshot.child(Constants.RELATIONSHIP_STATUS).getRef().setValue(Constants.DELETED_STATUS);
+                            }
+                        }
+                        else if(snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId) &&
+                                snapshot.child(Constants.TRAINEE_ID).getValue().toString().equals(matchedId)){
+                            String relaStatus = snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
+                            if(relaStatus.equals(Constants.REMOVED_BY_TRAINEE_STATUS)){
                                 snapshot.child(Constants.RELATIONSHIP_STATUS).getRef().setValue(Constants.DELETED_STATUS);
                             }
                         }
@@ -281,23 +313,4 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
 
     }
 
-    private void sendNotifications(String token, String title, String message, String matchedId) {
-        NotificationData data = new NotificationData(title,message,Constants.MATCHING_TYPE, matchedId);
-        NotificationSender sender = new NotificationSender(data, token);
-        apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
-            @Override
-            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                if(response.code() == 200){
-                    if(response.body().succes != 1){
-                        Log.i("Noemi", "Sending Notification Failed");
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MyResponse> call, Throwable t) {
-
-            }
-        });
-    }
 }

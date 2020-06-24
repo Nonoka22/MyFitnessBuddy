@@ -17,7 +17,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
+import com.example.myfitnessbuddy.APIService;
+import com.example.myfitnessbuddy.MyResponse;
+import com.example.myfitnessbuddy.models.Client;
 import com.example.myfitnessbuddy.models.Criterias;
+import com.example.myfitnessbuddy.models.NotificationData;
+import com.example.myfitnessbuddy.models.NotificationSender;
 import com.example.myfitnessbuddy.models.TraineeCriterias;
 import com.example.myfitnessbuddy.models.TrainerCriterias;
 import com.example.myfitnessbuddy.models.User;
@@ -36,6 +41,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static android.app.Activity.RESULT_OK;
 
 public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
@@ -50,6 +59,7 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
     protected Uri imageUri;
     protected User user = new User();
     protected Criterias criterias;
+    private APIService apiService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +69,7 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
         }
         View view = binding.getRoot();
 
+        apiService = Client.getClient(Constants.BASE_URL).create(APIService.class);
         initFragmentImpl();
 
         return view;
@@ -158,6 +169,26 @@ public abstract class BaseFragment<T extends ViewDataBinding> extends Fragment {
 
     protected User getUser(){
         return user;
+    }
+
+    protected void sendNotifications(String token, String title, String message) {
+        NotificationData data = new NotificationData(title,message);
+        NotificationSender sender = new NotificationSender(data, token);
+        apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
+            @Override
+            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                if(response.code() == 200){
+                    if(response.body().succes != 1){
+                        Log.i("Noemi", "Sending Notification Failed");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MyResponse> call, Throwable t) {
+
+            }
+        });
     }
 
 }

@@ -1,8 +1,6 @@
 package com.example.myfitnessbuddy.utils;
 
 public final class Constants {
-   public static final String APP_ID = "19849702b6dcf8b";
-   public static final String AUTH_KEY = "7e626d45afda64cb5eb8bdb79ab0c73eb8aa2786";
    public static final String ADD = "add";
    public static final String REGION = "eu";
    public static final String REPLACE = "replace";
@@ -58,6 +56,7 @@ public final class Constants {
    public static final String PRICE = "price";
    public static final String HOURS = "hours";
    public static final String COST = "cost";
+   public static final String GYM = "gym";
    public static final String NUTRITIONIST_NEEDED = "nutritionistNeeded";
    public static final String TRAINER_TYPE = "trainerType";
    public static final String GOAL_FRAGMENT = "Goal";
@@ -102,8 +101,8 @@ public final class Constants {
    public static final String DECLINE_MESSAGE = "You were declined by ";
    public static final String DONE_STATUS = "Done";
    public static final String DELETED_STATUS = "Deleted";
-
-
-
+   public static final String REMOVED_MESSAGE = "You were deleted by ";
+   public static final String REMOVED_BY_TRAINER_STATUS = "Removed By Trainer";
+   public static final String REMOVED_BY_TRAINEE_STATUS = "Removed By Trainee";
 
 }

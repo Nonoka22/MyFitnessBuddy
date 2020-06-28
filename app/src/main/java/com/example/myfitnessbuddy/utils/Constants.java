@@ -102,8 +102,25 @@ public final class Constants {
    public static final String DECLINE_MESSAGE = "You were declined by ";
    public static final String DONE_STATUS = "Done";
    public static final String DELETED_STATUS = "Deleted";
-
-
-
-
+   public static final String PHONE_NUMBER = "phoneNumber";
+   public static final String KNOWN_PHONE_NUMBER_TITLE = "Hey there!";
+   public static final String MINOR_TITLE = "Oh-oh!";
+   public static final String TRAINER_CANNOT_CHAT_TITLE = "Sorry!";
+   public static final String REMOVED_MESSAGE = "You were deleted by ";
+   public static final String REMOVED_BY_TRAINER_STATUS = "Removed By Trainer";
+   public static final String REMOVED_BY_TRAINEE_STATUS = "Removed By Trainee";
+   public static final String FIRST_NAME = "firstName";
+   public static final String UPDATE_FIRST_NAME = "Update First Name";
+   public static final String UPDATE_LAST_NAME = "Update Last Name";
+   public static final String UPDATE_CITY = "Update City";
+   public static final String UPDATE_INTRODUCTION = "Update Introduction";
+   public static final String UPDATE_PRICE = "Update Price";
+   public static final String UPDATE_TRAINER_TYPE = "Update Trainer Type";
+   public static final String UPDATE_PROFILE_PIC = "Update Profile Pic";
+   public static final String UPDATE_SPECIALTY_LIST = "Update Specialty List";
+   public static final String UPDATE_GYM = "Update Gym";
+   public static final String UPDATE_GOAL = "Update Goal";
+   public static final String UPDATE_NUTRI_NEEDED= "Update Nutri Needed";
+   public static final String UPDATE_CRITERIA_LIST = "Update Criteria List";
+   public static final String GYMS = "Gyms" ;
 }

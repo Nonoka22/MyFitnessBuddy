@@ -6,7 +6,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/activityCriterias">
+        android:id="@+id/activityCriterias"
+        android:background="@drawable/crop">
 
         <ViewStub
             android:id="@+id/viewStubCriterias"

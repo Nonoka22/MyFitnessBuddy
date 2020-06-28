@@ -66,12 +66,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             super(itemView);
 
             title = binding.notificationTitle;
-            text = binding.notificationSubtitle;
+           //title;
         }
 
         void bindViewHolder(NotificationData notification){
             title.setText(notification.getTitle());
-            text.setText(notification.getMessage());
+           // text.setText(notification.getMessage());
         }
     }
 }

@@ -2,6 +2,8 @@ package com.example.myfitnessbuddy.fragments.interior;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -19,6 +21,7 @@ import com.example.myfitnessbuddy.events.NotificationEvent;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
 import com.example.myfitnessbuddy.fragments.dialogs.NotificationDetailDialog;
 import com.example.myfitnessbuddy.models.Client;
+import com.example.myfitnessbuddy.models.NotificationBuddy;
 import com.example.myfitnessbuddy.models.NotificationData;
 import com.example.myfitnessbuddy.models.NotificationSender;
 import com.example.myfitnessbuddy.utils.Constants;
@@ -50,7 +53,6 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private String currentUserId;
-    private APIService apiService;
     private NotificationAdapter adapter;
 
     @Override
@@ -65,14 +67,15 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
         databaseReference = firebaseDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserId = firebaseAuth.getCurrentUser().getUid();
-        List<String> ids = new ArrayList<>();
-        List<String> acceptedIds = new ArrayList<>();
-        List<String> declinedIds = new ArrayList<>();
+        List<NotificationBuddy> ids = new ArrayList<>();
+        List<NotificationBuddy> acceptedIds = new ArrayList<>();
+        List<NotificationBuddy> declinedIds = new ArrayList<>();
+        List<NotificationBuddy> removedIds = new ArrayList<>();
 
+        TextView emptyHome = binding.emptyHomeTV;
         RecyclerView recyclerView = binding.notificationsRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        apiService = Client.getClient(Constants.BASE_URL).create(APIService.class);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -100,56 +103,86 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                 ids.clear();
                 acceptedIds.clear();
                 declinedIds.clear();
+                removedIds.clear();
 
                 for(DataSnapshot snapshot : dataSnapshot.child(Constants.MATCHES).getChildren()){
                     if(userType.equals(Constants.TRAINEE)){
                         if(snapshot.child(Constants.TRAINEE_ID).getValue().toString().equals(currentUserId)){
                             String relStatus = snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
-                            String trainerId = snapshot.child(Constants.TRAINER_ID).getValue().toString();
+                            NotificationBuddy notificationBuddy = new NotificationBuddy();
+                            notificationBuddy.setId(snapshot.child(Constants.TRAINER_ID).getValue().toString());
+                            notificationBuddy.setName(dataSnapshot.child(Constants.USERS).child(snapshot.child(Constants.TRAINER_ID).getValue().toString()).child(Constants.FIRST_NAME).getValue().toString());
+
                                if(relStatus.equals(Constants.NOT_ACCEPTED_STATUS)){
-                                   ids.add(trainerId);
+                                   ids.add(notificationBuddy);
                                }
                                else if(relStatus.equals(Constants.ACCEPTED_STATUS)){
-                                   acceptedIds.add(trainerId);
+                                   acceptedIds.add(notificationBuddy);
                                }
                                else if (relStatus.equals(Constants.DECLINED)){
-                                   declinedIds.add(trainerId);
+                                   declinedIds.add(notificationBuddy);
+                               }
+                               else if (relStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)){
+                                   removedIds.add(notificationBuddy);
                                }
                         }
                     }
                     else if(userType.equals(Constants.TRAINER)){
-                        if(snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId) &&
-                                (snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString().equals(Constants.NOT_ACCEPTED_STATUS)
-                        || snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString().equals(Constants.TRAINEE_ACCEPTED_STATUS))){
-                            Log.i("Noemi","Traine ids notif: " + snapshot.child(Constants.TRAINEE_ID).getValue().toString());
-                            ids.add(snapshot.child(Constants.TRAINEE_ID).getValue().toString());
+                        if(snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId)){
+                            String relStatus = snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
+                            NotificationBuddy nB = new NotificationBuddy();
+                            nB.setId(snapshot.child(Constants.TRAINEE_ID).getValue().toString());
+                            nB.setName(dataSnapshot.child(Constants.USERS).child(snapshot.child(Constants.TRAINEE_ID).getValue().toString()).child(Constants.FIRST_NAME).getValue().toString());
+
+                            if(relStatus.equals(Constants.NOT_ACCEPTED_STATUS)
+                                    || relStatus.equals(Constants.TRAINEE_ACCEPTED_STATUS)){
+                                Log.i("Noemi","Traine ids notif: " + snapshot.child(Constants.TRAINEE_ID).getValue().toString());
+                                ids.add(nB);
+                            }
+                            else if (relStatus.equals(Constants.REMOVED_BY_TRAINEE_STATUS)){
+                                removedIds.add(nB);
+                            }
+
                         }
                     }
 
                 }
 
                 if(!acceptedIds.isEmpty()){
-                    for(String s : acceptedIds){
-                        traineeNotifications.add(new NotificationData(Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE + s,Constants.NOTIFYING_TYPE,s));
+                    for(NotificationBuddy s : acceptedIds){
+                        traineeNotifications.add(new NotificationData(Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE + s.getName(),Constants.NOTIFYING_TYPE,s.getId()));
                         notifications = traineeNotifications;
                     }
                 }
 
                 if(!declinedIds.isEmpty()){
-                    for(String s : declinedIds){
-                        traineeNotifications.add(new NotificationData(Constants.DECLINE_TITLE,Constants.DECLINE_MESSAGE + s,Constants.NOTIFYING_TYPE,s));
+                    for(NotificationBuddy s : declinedIds){
+                        traineeNotifications.add(new NotificationData(Constants.DECLINE_TITLE,Constants.DECLINE_MESSAGE + s.getName(),Constants.NOTIFYING_TYPE,s.getId()));
                         notifications = traineeNotifications;
                     }
                 }
 
-                if(!ids.isEmpty()){
-                    for(String s : ids){
+                if(!removedIds.isEmpty()){
+                    for(NotificationBuddy s : removedIds){
                         if(userType.equals(Constants.TRAINEE)){
-                            traineeNotifications.add(new NotificationData(Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINEE_MESSAGE + s,Constants.NOTIFYING_TYPE,s));
+                            traineeNotifications.add(new NotificationData(Constants.DECLINE_TITLE,Constants.REMOVED_MESSAGE + s.getName(),Constants.NOTIFYING_TYPE,s.getId()));
                             notifications = traineeNotifications;
                         }
                         else if(userType.equals(Constants.TRAINER)){
-                            trainerNotifications.add(new NotificationData(Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINER_MESSAGE + s,Constants.MATCHING_TYPE,s));
+                            trainerNotifications.add(new NotificationData(Constants.DECLINE_TITLE,Constants.REMOVED_MESSAGE + s.getName(),Constants.NOTIFYING_TYPE,s.getId()));
+                            notifications = trainerNotifications;
+                        }
+                    }
+                }
+
+                if(!ids.isEmpty()){
+                    for(NotificationBuddy s : ids){
+                        if(userType.equals(Constants.TRAINEE)){
+                            traineeNotifications.add(new NotificationData(Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINEE_MESSAGE + s.getName(),Constants.NOTIFYING_TYPE,s.getId()));
+                            notifications = traineeNotifications;
+                        }
+                        else if(userType.equals(Constants.TRAINER)){
+                            trainerNotifications.add(new NotificationData(Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINER_MESSAGE + s.getName(),Constants.MATCHING_TYPE,s.getId()));
                             notifications = trainerNotifications;
                         }
                     }
@@ -163,8 +196,12 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                 }
 
                 adapter = new NotificationAdapter(notifications,HomeFragment.this);
-                recyclerView.setAdapter(adapter);
-
+                if(adapter.getItemCount() == 0){
+                    emptyHome.setVisibility(View.VISIBLE);
+                }
+                else{
+                    recyclerView.setAdapter(adapter);
+                }
             }
 
             @Override
@@ -192,8 +229,8 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                    }
                }
                 //send notification to the trainee, that the match was accepted
-                String userToken = dataSnapshot.child(Constants.TOKENS).child(matchedId).child(Constants.TOKEN_NODE).getValue().toString();
-                sendNotifications(userToken,Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE, currentUserId);
+//                String userToken = dataSnapshot.child(Constants.TOKENS).child(matchedId).child(Constants.TOKEN_NODE).getValue().toString();
+//                sendNotifications(userToken,Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE, currentUserId);
             }
 
             @Override
@@ -218,8 +255,8 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                     }
                 }
                 //send notification to trainee, that the match was declined
-                String userToken = dataSnapshot.child(Constants.TOKENS).child(matchedId).child(Constants.TOKEN_NODE).getValue().toString();
-                sendNotifications(userToken,Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE, currentUserId);
+//                String userToken = dataSnapshot.child(Constants.TOKENS).child(matchedId).child(Constants.TOKEN_NODE).getValue().toString();
+//                sendNotifications(userToken,Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE, currentUserId);
 
             }
             @Override
@@ -253,7 +290,14 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                                 snapshot.child(Constants.RELATIONSHIP_STATUS).getRef().setValue(Constants.DONE_STATUS);
                             }
 
-                            if(relaStatus.equals(Constants.DECLINED)){
+                            if(relaStatus.equals(Constants.DECLINED) || relaStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)){
+                                snapshot.child(Constants.RELATIONSHIP_STATUS).getRef().setValue(Constants.DELETED_STATUS);
+                            }
+                        }
+                        else if(snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId) &&
+                                snapshot.child(Constants.TRAINEE_ID).getValue().toString().equals(matchedId)){
+                            String relaStatus = snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
+                            if(relaStatus.equals(Constants.REMOVED_BY_TRAINEE_STATUS)){
                                 snapshot.child(Constants.RELATIONSHIP_STATUS).getRef().setValue(Constants.DELETED_STATUS);
                             }
                         }
@@ -281,23 +325,4 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
 
     }
 
-    private void sendNotifications(String token, String title, String message, String matchedId) {
-        NotificationData data = new NotificationData(title,message,Constants.MATCHING_TYPE, matchedId);
-        NotificationSender sender = new NotificationSender(data, token);
-        apiService.sendNotification(sender).enqueue(new Callback<MyResponse>() {
-            @Override
-            public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                if(response.code() == 200){
-                    if(response.body().succes != 1){
-                        Log.i("Noemi", "Sending Notification Failed");
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MyResponse> call, Throwable t) {
-
-            }
-        });
-    }
 }

@@ -1,9 +1,10 @@
 package com.example.myfitnessbuddy.fragments.registration;
 
+import android.app.DatePickerDialog;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.fragment.app.FragmentManager;
 
@@ -14,16 +15,22 @@ import com.example.myfitnessbuddy.events.PassingUserArgumentsEvent;
 import com.example.myfitnessbuddy.events.SetNextFragmentEvent;
 import com.example.myfitnessbuddy.events.SetPrevFragmentEvent;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
-import com.example.myfitnessbuddy.fragments.dialogs.DatePicker;
+import com.example.myfitnessbuddy.fragments.dialogs.MessageDialog;
+import com.example.myfitnessbuddy.utils.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Calendar;
+
 public class FragmentRegisterBirthday extends BaseFragment<RegisterBirthdayFragmentBinding> {
 
-    private EditText fieldBirthday;
+    private TextView fieldBirthday;
     private String birthDate;
+    private DatePickerDialog.OnDateSetListener dateSetListener;
+    private TextView error;
+    private boolean isMinor = false;
 
     @Override
     protected int getFragmentLayout() {
@@ -35,13 +42,20 @@ public class FragmentRegisterBirthday extends BaseFragment<RegisterBirthdayFragm
         fieldBirthday = binding.fieldRegisterDateOfBirth;
         ImageView nextButton = binding.nextButtonBirthday;
         ImageView prevButton = binding.prevButtonBirthday;
+        error = binding.errorRegisterDate;
 
         fieldBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager dialogFragment = getChildFragmentManager();
-                DatePicker datePickerDialog = new DatePicker();
-                datePickerDialog.show(dialogFragment, "dialog");
+
+                int year = 2002;
+                int month = 0;
+                int day = 1;
+
+                DatePickerDialog dialog = new DatePickerDialog(getContext(),R.style.Theme_AppCompat_DayNight_DarkActionBar,
+                        dateSetListener,year,month,day);
+                dialog.show();
+
             }
         });
 
@@ -49,12 +63,18 @@ public class FragmentRegisterBirthday extends BaseFragment<RegisterBirthdayFragm
             @Override
             public void onClick(View v) {
                 birthDate = fieldBirthday.getText().toString();
-                if(!birthDate.isEmpty()){
-                    Toast.makeText(getActivity(), birthDate, Toast.LENGTH_SHORT).show();
+                if(!birthDate.isEmpty() && !isMinor){
+                    error.setVisibility(View.GONE);
 
                     EventBus.getDefault().post(new PassingUserArgumentsEvent("BirthDate",birthDate));
                     EventBus.getDefault().post(new SetNextFragmentEvent());
 
+                }
+
+                else if(isMinor){
+                    FragmentManager dialogFragment = getChildFragmentManager();
+                    MessageDialog dialog = new MessageDialog(Constants.MINOR_TITLE,"Sorry! You cannot join as a minor. :(");
+                    dialog.show(dialogFragment, "dialog");
                 }
             }
         });
@@ -65,6 +85,19 @@ public class FragmentRegisterBirthday extends BaseFragment<RegisterBirthdayFragm
                 EventBus.getDefault().post(new SetPrevFragmentEvent());
             }
         });
+
+        dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month = month + 1;
+                String date = year + "/" + month + "/" + dayOfMonth;
+
+                if(Calendar.getInstance().get(Calendar.YEAR) - year < 18){
+                    isMinor = true;
+                }
+                fieldBirthday.setText(date);
+            }
+        };
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -1,6 +1,7 @@
 package com.example.myfitnessbuddy.activities;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -88,4 +89,13 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
         FirebaseDatabase.getInstance().getReference().child(Constants.TOKENS).child(firebaseUser.getUid()).setValue(token);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //call super
+        Log.i("Noemi","superinterior");
+        super.onActivityResult(requestCode, resultCode, data);
+
+        UserProfileFragment fragment = (UserProfileFragment) getSupportFragmentManager().getFragments().get(0);
+        fragment.onActivityResult(requestCode, resultCode, data);
+    }
 }

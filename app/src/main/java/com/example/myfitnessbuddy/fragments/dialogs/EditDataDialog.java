@@ -463,7 +463,7 @@ public class EditDataDialog extends DialogFragment implements OnDeleteListItemCl
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                listener.profilePicUpdated(imageUrl);
+                                listener.profilePicUpdated(imageUrl,data);
                                 dismiss();
                             }
                         },4000);

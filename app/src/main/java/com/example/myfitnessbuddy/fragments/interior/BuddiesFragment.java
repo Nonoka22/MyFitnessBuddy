@@ -425,14 +425,15 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
     public void buddyNameClicked(int position) {
         buddy = matchedBuddyList.get(position);
         Log.i("Noemi","Navigate to the buddy's profile screen.");
-        startActivity(new Intent(getContext(), BuddyProfileActivity.class));
+        openBuddyProfile();
     }
 
     @Override
     public void buddyPictureClicked(int position) {
         buddy = matchedBuddyList.get(position);
         Log.i("Noemi","I have to navigate to the buddy's profile page.");
-        startActivity(new Intent(getContext(), BuddyProfileActivity.class));
+
+        openBuddyProfile();
     }
 
     @Override
@@ -445,6 +446,12 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
         dialog.show(dialogFragment, "dialog");
 
 
+    }
+
+    private void openBuddyProfile(){
+        Intent intent = new Intent(getContext(), BuddyProfileActivity.class);
+        intent.putExtra(Constants.BUDDY_ID,buddy.getId());
+        startActivity(intent);
     }
 
     private void deleteBuddy(){

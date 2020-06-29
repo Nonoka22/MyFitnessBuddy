@@ -10,6 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.myfitnessbuddy.fragments.interior.TraineeUserProfileFragment;
+import com.example.myfitnessbuddy.fragments.interior.TrainerUserProfileFragment;
 import com.example.myfitnessbuddy.models.Token;
 import com.example.myfitnessbuddy.utils.CometChatUtil;
 import com.example.myfitnessbuddy.utils.Constants;
@@ -17,11 +19,14 @@ import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.ActivityInteriorBinding;
 import com.example.myfitnessbuddy.fragments.interior.BuddiesFragment;
 import com.example.myfitnessbuddy.fragments.interior.HomeFragment;
-import com.example.myfitnessbuddy.fragments.interior.UserProfileFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,6 +37,13 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
     NavigationView navigationView;
     int containerId;
 
+    private FirebaseAuth firebaseAuth;
+    private String currentUserId;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private DatabaseReference currentUserReference;
+    private String userType;
+
     @Override
     protected int getActivityLayout() {
         return R.layout.activity_interior;
@@ -39,6 +51,25 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
 
     @Override
     protected void initActivityImpl() {
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUserId= firebaseAuth.getCurrentUser().getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        databaseReference = firebaseDatabase.getReference();
+        currentUserReference = databaseReference.child(Constants.USERS).child(currentUserId);
+
+        currentUserReference.child(Constants.USER_TYPE).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userType = dataSnapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         drawerLayout = binding.drawer;
         toolbar = binding.toolbar.toolbar;
         toolbar.setTitle(Constants.HOME);
@@ -67,7 +98,13 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
                 setFragment(Constants.REPLACE,HomeFragment.getInstance(),containerId,toolbar,Constants.HOME);
                 break;
             case R.id.nav_profile:
-                setFragment(Constants.REPLACE,UserProfileFragment.getInstance() ,containerId,toolbar,Constants.PROFILE);
+                if(userType.equals(Constants.TRAINEE)){
+                    setFragment(Constants.REPLACE, TraineeUserProfileFragment.getInstance() ,containerId,toolbar,Constants.PROFILE);
+                }
+                else if(userType.equals(Constants.TRAINER)){
+                    setFragment(Constants.REPLACE, TrainerUserProfileFragment.getInstance() ,containerId,toolbar,Constants.PROFILE);
+                }
+
                 break;
             case R.id.nav_buddies:
                 setFragment(Constants.REPLACE,BuddiesFragment.getInstance(),containerId,toolbar,Constants.BUDDIES);
@@ -95,7 +132,15 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
         Log.i("Noemi","superinterior");
         super.onActivityResult(requestCode, resultCode, data);
 
-        UserProfileFragment fragment = (UserProfileFragment) getSupportFragmentManager().getFragments().get(0);
-        fragment.onActivityResult(requestCode, resultCode, data);
+
+        if(userType.equals(Constants.TRAINEE)){
+            TraineeUserProfileFragment fragment = (TraineeUserProfileFragment) getSupportFragmentManager().getFragments().get(0);
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+        else if(userType.equals(Constants.TRAINER)){
+            TrainerUserProfileFragment fragment = (TrainerUserProfileFragment) getSupportFragmentManager().getFragments().get(0);
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+
     }
 }

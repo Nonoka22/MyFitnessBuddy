@@ -123,4 +123,8 @@ public final class Constants {
    public static final String UPDATE_NUTRI_NEEDED= "Update Nutri Needed";
    public static final String UPDATE_CRITERIA_LIST = "Update Criteria List";
    public static final String GYMS = "Gyms" ;
+   public static final String LAST_NAME = "lastName";
+   public static final String GYM = "gym";
+   public static final String BUDDY_ID = "BuddyId";
+
 }

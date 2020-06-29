@@ -14,5 +14,5 @@ public interface OnUpdateClickedListener {
     void nutriNeededUpdated(boolean nutriNeeded);
     void gymUpdated(String gym);
     void criteriaUpdated(List<String> criteria);
-    void profilePicUpdated(String imageUrl);
+    void profilePicUpdated(String imageUrl, String oldImageUrl);
 }

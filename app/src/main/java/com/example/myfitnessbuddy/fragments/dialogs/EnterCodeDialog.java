@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class EnterCodeDialog extends DialogFragment implements View.OnClickListener{
     private EditText verificationCode;
+    private TextView error;
 
     @Nullable
     @Override
@@ -28,8 +30,9 @@ public class EnterCodeDialog extends DialogFragment implements View.OnClickListe
         PopupWindowBinding binding = DataBindingUtil.inflate(
                 inflater, R.layout.popup_window, container, false);
         View view = binding.getRoot();
-
         setCancelable(false);
+
+        error = binding.errorMessageVerifCode;
         Button buttonSignIn = binding.signInButton;
         verificationCode = binding.fieldLoginVerifCode;
         buttonSignIn.setOnClickListener(this);
@@ -42,10 +45,10 @@ public class EnterCodeDialog extends DialogFragment implements View.OnClickListe
 
         if(!code.isEmpty()){
             EventBus.getDefault().post(new CodeEvent(code));
-            dismiss();
         }
         else{
-            Toast.makeText(getContext(), "Please enter the verification code", Toast.LENGTH_SHORT).show();
+            error.setText("Please enter the verification code");
+            error.setVisibility(View.VISIBLE);
         }
 
     }

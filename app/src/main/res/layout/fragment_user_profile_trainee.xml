@@ -189,6 +189,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llGoal"
                         android:padding="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -223,6 +224,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llCity"
                         android:padding="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -257,6 +259,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llNutritionist"
                         android:padding="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -291,6 +294,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llIntroduction"
                         android:padding="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -325,6 +329,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llPrice"
                         android:padding="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -359,6 +364,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llTrainerType"
                         android:padding="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -394,6 +400,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/llCriteriaList"
                         android:padding="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

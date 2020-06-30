@@ -53,17 +53,17 @@ public class LoginActivity extends BaseAuthenticationActivity<ActivityLoginBindi
             public void onClick(View v) {
                 phoneNumber = binding.fieldLoginPhone.getText().toString();
 
-                ConnectivityManager cm =
-                        (ConnectivityManager)getCurrentActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                boolean isConnected = activeNetwork != null &&
-                        activeNetwork.isConnectedOrConnecting();
-
-                if(!isConnected){
-                    MessageDialog messageDialog = new MessageDialog("Network issue","Please check your connection");
-                    messageDialog.show(dialogFragment, "dialog");
-                }else{
+//                ConnectivityManager cm =
+//                        (ConnectivityManager)getCurrentActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+//
+//                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+//                boolean isConnected = activeNetwork != null &&
+//                        activeNetwork.isConnectedOrConnecting();
+//
+//                if(!isConnected){
+//                    MessageDialog messageDialog = new MessageDialog("Network issue","Please check your connection");
+//                    messageDialog.show(dialogFragment, "dialog");
+              //  }else{
                     databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -99,7 +99,7 @@ public class LoginActivity extends BaseAuthenticationActivity<ActivityLoginBindi
                             Log.i("Noemi","Database error: " + databaseError);
                         }
                     });
-                }
+               // }
             }
         });
     }

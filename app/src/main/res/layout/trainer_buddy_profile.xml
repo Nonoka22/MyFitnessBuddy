@@ -291,6 +291,36 @@
                             android:dividerHeight="0dp" />
 
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/bPssStoriesTitle"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:text="Success stories"
+                        android:textSize="20sp"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/bPssStoriesHint"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:text="(Tap on the 'before' picture to see the result. Tap on 'after' picture to close it.)"
+                        android:textSize="12sp"
+                        android:gravity="center"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_gravity="center"
+                        android:id="@+id/successStoryRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"/>
+
                 </LinearLayout>
 
             </LinearLayout>

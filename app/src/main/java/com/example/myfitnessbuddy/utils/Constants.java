@@ -126,5 +126,6 @@ public final class Constants {
    public static final String LAST_NAME = "lastName";
    public static final String GYM = "gym";
    public static final String BUDDY_ID = "BuddyId";
+   public static final String STORIES = "Stories";
 
 }

@@ -4,19 +4,26 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.ViewStubProxy;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myfitnessbuddy.OnSuccessStoryUploaded;
 import com.example.myfitnessbuddy.OnUpdateClickedListener;
 import com.example.myfitnessbuddy.R;
+import com.example.myfitnessbuddy.adapters.SuccessStoryAdapter;
 import com.example.myfitnessbuddy.databinding.FragmentUserProfileTrainerBinding;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
+import com.example.myfitnessbuddy.fragments.dialogs.AddSuccessStoriesDialog;
 import com.example.myfitnessbuddy.fragments.dialogs.EditDataDialog;
+import com.example.myfitnessbuddy.models.SuccessStory;
 import com.example.myfitnessbuddy.models.TrainerCriterias;
 import com.example.myfitnessbuddy.models.User;
 import com.example.myfitnessbuddy.utils.Constants;
@@ -35,7 +42,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfileTrainerBinding> implements OnUpdateClickedListener {
+public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfileTrainerBinding> implements OnUpdateClickedListener, OnSuccessStoryUploaded {
 
     private FirebaseAuth firebaseAuth;
     private String currentUserId;
@@ -44,19 +51,25 @@ public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfile
     private DatabaseReference currentUserReference;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
-    ViewStubProxy viewStub;
-    private TextView firstName, lastName, birthDate, phoneNumber,gender,introduction,city, goal, nutriNeeded, price, gym;
-    private ImageView profPic,editFirstName,editSpecilatyList,editGym,editLastName, editCity, editGoal, editIntroduction, editNutriNeeded, editPrice, editTrainerType, editCriteriasList;
-    private ListView trainerTypeListView,criteriaListView,specialtyListView;
-    //private ViewStubProxy viewStub;
+    private TextView firstName, lastName, birthDate, phoneNumber,gender,introduction,city, price, gym, ssTitle, ssHint;
+    private ImageView profPic,editFirstName,editSpecilatyList,editGym,editLastName, editCity, editIntroduction, editPrice, editTrainerType;
+    private ListView trainerTypeListView,specialtyListView;
+    private Button addSuccessStoryButton;
+    private RecyclerView successStoryRecyclerView;
+    private SuccessStoryAdapter sSAdapter;
+    private LinearLayout llCity,llGym,llIntroduction,llPrice,llSpecialtes,llTrainerType;
+
     private User user;
     private List<String> trainerType = new ArrayList<>();
-    private List<String> criterias = new ArrayList<>();
+    private List<SuccessStory> successStories = new ArrayList<>();
+    private SuccessStory successStory = new SuccessStory();
     private List<String> specialties = new ArrayList<>();
     private List<String> allSpecialties = new ArrayList<>();
     private List<String> gyms = new ArrayList<>();
     private List<String> cities = new ArrayList<>();
-    private List<String> goals = new ArrayList<>();
+
+    public TrainerUserProfileFragment() {
+    }
 
     @Override
     protected int getFragmentLayout() {
@@ -82,6 +95,8 @@ public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfile
         gym = binding.uPGym;
         price = binding.uPPrice;
         profPic = binding.uPProfilePic;
+        ssTitle = binding.uPssStoriesTitle;
+        ssHint = binding.uPssStoriesHint;
         editFirstName = binding.editFirstName;
         editLastName = binding.editLastName;
         editCity = binding.editCity;
@@ -92,6 +107,15 @@ public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfile
         editTrainerType = binding.editTrainerType;
         trainerTypeListView = binding.trainerTypeListView;
         specialtyListView = binding.specialtyListView;
+        successStoryRecyclerView = binding.successStoryRecyclerView;
+        successStoryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        addSuccessStoryButton = binding.addSuccessStoryButton;
+        llCity =binding.llCity;
+        llGym = binding.llGym;
+        llIntroduction = binding.llIntroduction;
+        llPrice = binding.llPrice;
+        llSpecialtes = binding.llSpecialtyList;
+        llTrainerType = binding.llTrainerType;
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -100,140 +124,179 @@ public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfile
 
                 DataSnapshot dSnap = dataSnapshot.child(Constants.USERS).child(currentUserId);
 
-
                 firstName.setText(user.getFirstName());
                 lastName.setText(user.getLastName());
                 birthDate.setText(user.getBirthDate());
                 phoneNumber.setText(user.getPhoneNumber());
                 gender.setText(user.getGender());
-                introduction.setText(user.getIntroduction());
-                String imageURL = user.getImageURL();
-                Picasso.get()
-                        .load(imageURL)
-                        .placeholder(R.mipmap.ic_launcher)
-                        .fit()
-                        .into(profPic);
-
-                TrainerCriterias trainerCriterias = dSnap.child(Constants.CRITERIAS).getValue(TrainerCriterias.class);
-                city.setText(trainerCriterias.getCity());
-
-                gym.setText(trainerCriterias.getGym());
-
-                price.setText(trainerCriterias.getPrice().getCost() + "/" + trainerCriterias.getPrice().getHours() + "lej/hour");
-
-                trainerType = trainerCriterias.getTrainerType();
-                Log.i("Noemi","TrainerType: " + trainerType.toString());
-                ArrayAdapter<String> adapterTT = new ArrayAdapter<>(getContext(), R.layout.small_list_item, trainerType);
-                trainerTypeListView.setAdapter(adapterTT);
-
-                specialties = trainerCriterias.getSpecialties();
-                ArrayAdapter<String> adapterS = new ArrayAdapter<>(getContext(), R.layout.small_list_item, specialties);
-                specialtyListView.setAdapter(adapterS);
-
-                for(DataSnapshot snapshot :dataSnapshot.child(Constants.GYMS).child(trainerCriterias.getCity()).getChildren()){
-                    gyms.add(snapshot.getValue().toString());
-                }
-
-                editGym.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentManager dialogFragment = getChildFragmentManager();
-                        EditDataDialog dialog = new EditDataDialog(Constants.UPDATE_GYM,gyms,TrainerUserProfileFragment.this);
-                        dialog.show(dialogFragment, "edit dialog");
-                    }
-                });
-
-                for(DataSnapshot snapshot: dataSnapshot.child(Constants.GOALS).getChildren()){
-                    for(DataSnapshot snap : snapshot.getChildren()){
-                        if(!allSpecialties.contains(snap.getValue().toString())){
-                            allSpecialties.add(snap.getValue().toString());
-                        }
-                    }
-                }
-
-                editSpecilatyList.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FragmentManager dialogFragment = getChildFragmentManager();
-                        EditDataDialog dialog = new EditDataDialog(Constants.UPDATE_SPECIALTY_LIST,specialties,allSpecialties,TrainerUserProfileFragment.this);
-                        dialog.show(dialogFragment, "edit dialog");
-                    }
-                });
 
                 editFirstName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager dialogFragment = getChildFragmentManager();
-                    EditDataDialog dialog = new EditDataDialog(user.getFirstName(),Constants.UPDATE_FIRST_NAME,TrainerUserProfileFragment.this);
-                    dialog.show(dialogFragment, "edit dialog");
-                }
-            });
+                    @Override
+                    public void onClick(View v) {
+                        FragmentManager dialogFragment = getChildFragmentManager();
+                        EditDataDialog dialog = new EditDataDialog(user.getFirstName(),Constants.UPDATE_FIRST_NAME,TrainerUserProfileFragment.this);
+                        dialog.show(dialogFragment, "edit dialog");
+                    }
+                });
 
                 editLastName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager dialogFragment = getChildFragmentManager();
-                    EditDataDialog dialog = new EditDataDialog(user.getLastName(),Constants.UPDATE_LAST_NAME,TrainerUserProfileFragment.this);
-                    dialog.show(dialogFragment, "edit dialog");
+                    @Override
+                    public void onClick(View v) {
+                        FragmentManager dialogFragment = getChildFragmentManager();
+                        EditDataDialog dialog = new EditDataDialog(user.getLastName(),Constants.UPDATE_LAST_NAME,TrainerUserProfileFragment.this);
+                        dialog.show(dialogFragment, "edit dialog");
+                    }
+                });
+
+                if(dataSnapshot.child(Constants.USERS).child(Constants.IMAGE_URL).exists()){
+                    introduction.setText(user.getIntroduction());
+                    String imageURL = user.getImageURL();
+                    Picasso.get()
+                            .load(imageURL)
+                            .placeholder(R.mipmap.ic_launcher)
+                            .fit()
+                            .into(profPic);
+
+                    TrainerCriterias trainerCriterias = dSnap.child(Constants.CRITERIAS).getValue(TrainerCriterias.class);
+                    city.setText(trainerCriterias.getCity());
+
+                    gym.setText(trainerCriterias.getGym());
+
+                    price.setText(trainerCriterias.getPrice().getCost() + "/" + trainerCriterias.getPrice().getHours() + "lej/hour");
+
+                    trainerType = trainerCriterias.getTrainerType();
+                    Log.i("Noemi","TrainerType: " + trainerType.toString());
+                    ArrayAdapter<String> adapterTT = new ArrayAdapter<>(getContext(), R.layout.small_list_item, trainerType);
+                    trainerTypeListView.setAdapter(adapterTT);
+
+                    specialties = trainerCriterias.getSpecialties();
+                    ArrayAdapter<String> adapterS = new ArrayAdapter<>(getContext(), R.layout.small_list_item, specialties);
+                    specialtyListView.setAdapter(adapterS);
+
+
+                    successStories.clear();
+                    for(DataSnapshot snapshot : dataSnapshot.child(Constants.STORIES).child(currentUserId).getChildren()){
+                        //Log.i("Noemi", String.valueOf(snapshot.getValue()));
+                        successStory = snapshot.getValue(SuccessStory.class);
+                        successStories.add(successStory);
+                    }
+
+                    if(successStories.isEmpty()){
+                        ssHint.setVisibility(View.GONE);
+                        ssTitle.setVisibility(View.GONE);
+                    }
+
+                    sSAdapter = new SuccessStoryAdapter(successStories);
+                    successStoryRecyclerView.setAdapter(sSAdapter);
+
+                    for(DataSnapshot snapshot :dataSnapshot.child(Constants.GYMS).child(trainerCriterias.getCity()).getChildren()){
+                        gyms.add(snapshot.getValue().toString());
+                    }
+
+                    editGym.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentManager dialogFragment = getChildFragmentManager();
+                            EditDataDialog dialog = new EditDataDialog(Constants.UPDATE_GYM,gyms,TrainerUserProfileFragment.this);
+                            dialog.show(dialogFragment, "edit dialog");
+                        }
+                    });
+
+                    for(DataSnapshot snapshot: dataSnapshot.child(Constants.GOALS).getChildren()){
+                        for(DataSnapshot snap : snapshot.getChildren()){
+                            if(!allSpecialties.contains(snap.getValue().toString())){
+                                allSpecialties.add(snap.getValue().toString());
+                            }
+                        }
+                    }
+
+                    editSpecilatyList.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentManager dialogFragment = getChildFragmentManager();
+                            EditDataDialog dialog = new EditDataDialog(Constants.UPDATE_SPECIALTY_LIST,specialties,allSpecialties,TrainerUserProfileFragment.this);
+                            dialog.show(dialogFragment, "edit dialog");
+                        }
+                    });
+
+
+                    profPic.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentManager dialogFragment = getChildFragmentManager();
+                            EditDataDialog dialog = new EditDataDialog(user.getImageURL(),Constants.UPDATE_PROFILE_PIC,TrainerUserProfileFragment.this);
+                            dialog.show(dialogFragment, "edit prof pic dialog");
+                        }
+                    });
+
+
+                    for(DataSnapshot snapshot: dataSnapshot.child(Constants.GYMS).getChildren()){
+                        cities.add(snapshot.getKey());
+                    }
+
+                    editCity.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentManager dialogFragment = getChildFragmentManager();
+                            EditDataDialog dialog = new EditDataDialog(Constants.UPDATE_CITY, cities,TrainerUserProfileFragment.this);
+                            dialog.show(dialogFragment, "edit dialog");
+                        }
+                    });
+
+                    editIntroduction.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentManager dialogFragment = getChildFragmentManager();
+                            EditDataDialog dialog = new EditDataDialog(user.getIntroduction(),Constants.UPDATE_INTRODUCTION,TrainerUserProfileFragment.this);
+                            dialog.show(dialogFragment, "edit dialog");
+                        }
+                    });
+
+                    editPrice.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentManager dialogFragment = getChildFragmentManager();
+                            EditDataDialog dialog = new EditDataDialog(price.getText().toString(),Constants.UPDATE_PRICE,TrainerUserProfileFragment.this);
+                            dialog.show(dialogFragment, "edit dialog");
+                        }
+                    });
+
+                    editTrainerType.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FragmentManager dialogFragment = getChildFragmentManager();
+                            EditDataDialog dialog = new EditDataDialog(Constants.UPDATE_TRAINER_TYPE,trainerType,TrainerUserProfileFragment.this);
+                            dialog.show(dialogFragment, "edit dialog");
+                        }
+                    });
                 }
-            });
-
-                profPic.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager dialogFragment = getChildFragmentManager();
-                    EditDataDialog dialog = new EditDataDialog(user.getImageURL(),Constants.UPDATE_PROFILE_PIC,TrainerUserProfileFragment.this);
-                    dialog.show(dialogFragment, "edit prof pic dialog");
+                else {
+                    llCity.setVisibility(View.GONE);
+                    llGym.setVisibility(View.GONE);
+                    llIntroduction.setVisibility(View.GONE);
+                    llPrice.setVisibility(View.GONE);
+                    llSpecialtes.setVisibility(View.GONE);
+                    llTrainerType.setVisibility(View.GONE);
+                    profPic.setVisibility(View.GONE);
+                    addSuccessStoryButton.setVisibility(View.GONE);
+                    ssTitle.setVisibility(View.GONE);
+                    ssHint.setVisibility(View.GONE);
                 }
-            });
-
-
-                for(DataSnapshot snapshot: dataSnapshot.child(Constants.GYMS).getChildren()){
-                cities.add(snapshot.getKey());
-            }
-
-                editCity.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager dialogFragment = getChildFragmentManager();
-                    EditDataDialog dialog = new EditDataDialog(Constants.UPDATE_CITY, cities,TrainerUserProfileFragment.this);
-                    dialog.show(dialogFragment, "edit dialog");
-                }
-            });
-
-                editIntroduction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager dialogFragment = getChildFragmentManager();
-                    EditDataDialog dialog = new EditDataDialog(user.getIntroduction(),Constants.UPDATE_INTRODUCTION,TrainerUserProfileFragment.this);
-                    dialog.show(dialogFragment, "edit dialog");
-                }
-            });
-
-                editPrice.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager dialogFragment = getChildFragmentManager();
-                    EditDataDialog dialog = new EditDataDialog(price.getText().toString(),Constants.UPDATE_PRICE,TrainerUserProfileFragment.this);
-                    dialog.show(dialogFragment, "edit dialog");
-                }
-            });
-
-                editTrainerType.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FragmentManager dialogFragment = getChildFragmentManager();
-                    EditDataDialog dialog = new EditDataDialog(Constants.UPDATE_TRAINER_TYPE,trainerType,TrainerUserProfileFragment.this);
-                    dialog.show(dialogFragment, "edit dialog");
-                }
-            });
-
 
         }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        addSuccessStoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager dialogFragment = getChildFragmentManager();
+                AddSuccessStoriesDialog dialog = new AddSuccessStoriesDialog(TrainerUserProfileFragment.this);
+                dialog.show(dialogFragment, "success dialog");
             }
         });
     }
@@ -339,7 +402,13 @@ public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfile
         Log.i("Noemi","userprof");
         super.onActivityResult(requestCode, resultCode, data);
 
-        EditDataDialog fragment = (EditDataDialog) getChildFragmentManager().getFragments().get(0);
-        fragment.onActivityResult(requestCode, resultCode, data);
+        getChildFragmentManager().getFragments().get(0).onActivityResult(requestCode, resultCode, data);
+
     }
+
+    @Override
+    public void successStoryUploaded(SuccessStory successStory) {
+        databaseReference.child(Constants.STORIES).child(currentUserId).push().setValue(successStory);
+    }
+
 }

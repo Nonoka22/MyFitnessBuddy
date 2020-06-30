@@ -1,5 +1,8 @@
 package com.example.myfitnessbuddy.activities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.myfitnessbuddy.adapters.SectionStatePagerAdapter;
+import com.example.myfitnessbuddy.fragments.dialogs.MessageDialog;
 import com.example.myfitnessbuddy.models.CustomViewPager;
 import com.example.myfitnessbuddy.utils.Constants;
 import com.google.android.material.tabs.TabLayout;
@@ -26,6 +30,7 @@ import static com.example.myfitnessbuddy.SwipeDirection.none;
 public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatActivity {
 
     protected V binding;
+    FragmentManager dialogFragment = getSupportFragmentManager();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,7 +38,23 @@ public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatA
         if(binding == null){
             binding = DataBindingUtil.setContentView(this,getActivityLayout());
         }
-        initActivityImpl();
+
+        ConnectivityManager cm =
+                (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+
+        if(!isConnected) {
+            MessageDialog messageDialog = new MessageDialog("Network issue", "Please check your connection!");
+            messageDialog.show(dialogFragment, "dialog");
+        }
+        else{
+            initActivityImpl();
+        }
+
     }
 
     protected abstract int getActivityLayout();
@@ -54,15 +75,7 @@ public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatA
                 }
             });
         }
-
-//        tabLayout.addOnTabSelectedListener(
-//                new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
-//                    @Override
-//                    public void onTabSelected(TabLayout.Tab tab) {
-//                        super.onTabSelected(tab);
-//                        int numTab = tab.getPosition();
-//                        viewPager.setCurrentItem(numTab);
-//                    }});
+        
     }
 
     protected void setFragment(String action,Fragment fragment, int container, Toolbar toolbar,String title){

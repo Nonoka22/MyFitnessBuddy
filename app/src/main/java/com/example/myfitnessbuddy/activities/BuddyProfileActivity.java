@@ -11,11 +11,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewStubProxy;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myfitnessbuddy.R;
+import com.example.myfitnessbuddy.adapters.SuccessStoryAdapter;
 import com.example.myfitnessbuddy.databinding.ActivityBuddyProfileBinding;
 import com.example.myfitnessbuddy.databinding.TraineeBuddyProfileBinding;
 import com.example.myfitnessbuddy.databinding.TrainerBuddyProfileBinding;
+import com.example.myfitnessbuddy.models.SuccessStory;
 import com.example.myfitnessbuddy.models.TraineeCriterias;
 import com.example.myfitnessbuddy.models.TrainerCriterias;
 import com.example.myfitnessbuddy.models.User;
@@ -39,13 +43,17 @@ public class BuddyProfileActivity extends BaseActivity<ActivityBuddyProfileBindi
     private String currentUserId;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private TextView firstName, lastName,gender,introduction,city, goal, nutriNeeded, price, gym;
+    private TextView firstName, lastName,gender,introduction,city, goal, nutriNeeded, price, gym, ssTitle,ssHint;
     private ImageView profPic;
     private ListView trainerTypeListView,specialtyListView;
+    private RecyclerView ssRecyclerView;
     private ViewStubProxy viewStub;
     private User user;
     private List<String> trainerType = new ArrayList<>();
     private List<String> specialties = new ArrayList<>();
+    private List<SuccessStory> successStories = new ArrayList<>();
+    private SuccessStory successStory = new SuccessStory();
+    private SuccessStoryAdapter sSAdapter;
     String buddyId;
     String userType;
 
@@ -135,10 +143,29 @@ public class BuddyProfileActivity extends BaseActivity<ActivityBuddyProfileBindi
                             profPic = binding.bPProfilePic;
                             trainerTypeListView = binding.trainerTypeListView;
                             specialtyListView = binding.specialtyListView;
+                            ssTitle = binding.bPssStoriesTitle;
+                            ssHint = binding.bPssStoriesHint;
+                            ssRecyclerView = binding.successStoryRecyclerView;
+                            ssRecyclerView.setLayoutManager(new LinearLayoutManager(BuddyProfileActivity.this));
                         }
                     });
                     viewStub.getViewStub().setLayoutResource(R.layout.trainer_buddy_profile);
                     viewStub.getViewStub().inflate();
+
+                    successStories.clear();
+                    for(DataSnapshot snapshot : dataSnapshot.child(Constants.STORIES).child(buddyId).getChildren()){
+                        //Log.i("Noemi", String.valueOf(snapshot.getValue()));
+                        successStory = snapshot.getValue(SuccessStory.class);
+                        successStories.add(successStory);
+                    }
+
+                    if(successStories.isEmpty()){
+                        ssHint.setVisibility(View.GONE);
+                        ssTitle.setVisibility(View.GONE);
+                    }
+
+                    sSAdapter = new SuccessStoryAdapter(successStories);
+                    ssRecyclerView.setAdapter(sSAdapter);
 
                     firstName.setText(user.getFirstName());
                     lastName.setText(user.getLastName());

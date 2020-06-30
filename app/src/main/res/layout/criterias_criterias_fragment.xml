@@ -7,18 +7,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <TextView
             android:id="@+id/textSpecialty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="395dp"
+            android:layout_height="50dp"
             android:gravity="center"
             android:text="@string/which_criteria_text_view"
+            android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@+id/recyclerViewCriterias"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="(Order the list according to your needs. Tap and hold an item to  be able to move it.)"
+            app:layout_constraintBottom_toTopOf="@+id/nextButtonCriterias"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewCriterias" />
 
         <ImageView
             android:id="@+id/nextButtonCriterias"
@@ -28,14 +40,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerViewCriterias"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
             app:srcCompat="@drawable/nextbtn" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewCriterias"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/nextButtonCriterias"
+            app:layout_constraintBottom_toTopOf="@+id/textView5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textSpecialty" />

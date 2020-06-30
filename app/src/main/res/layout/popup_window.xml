@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
 
@@ -18,8 +18,8 @@
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="326dp"
+            android:layout_height="19dp"
             android:text="Please enter the verification code you just received!"
             android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@+id/fieldLoginVerifCode"
@@ -34,24 +34,37 @@
             android:ems="10"
             android:hint="Verification Code"
             android:inputType="number"
-            app:layout_constraintBottom_toTopOf="@+id/signInButton"
+            app:layout_constraintBottom_toTopOf="@+id/errorMessageVerifCode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.567"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
+        <TextView
+            android:id="@+id/errorMessageVerifCode"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="Error message."
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/signInButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fieldLoginVerifCode" />
+
         <Button
             android:id="@+id/signInButton"
             android:layout_width="88dp"
             android:layout_height="48dp"
-            android:text="Sign In"
             android:alpha="0.7"
             android:background="@drawable/rounded_button"
+            android:text="Sign In"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:textColor="@android:color/white"
-            app:layout_constraintTop_toBottomOf="@+id/fieldLoginVerifCode" />
+            app:layout_constraintTop_toBottomOf="@+id/errorMessageVerifCode" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

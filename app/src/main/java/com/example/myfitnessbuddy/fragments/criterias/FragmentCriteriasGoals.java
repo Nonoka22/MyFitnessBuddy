@@ -2,6 +2,7 @@ package com.example.myfitnessbuddy.fragments.criterias;
 
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -22,6 +23,7 @@ public class FragmentCriteriasGoals extends BaseFragment<CriteriasGoalsFragmentB
 
     private String selectedGoal;
     private int count = 0;
+    private TextView error;
 
     @Override
     protected int getFragmentLayout() {
@@ -33,6 +35,7 @@ public class FragmentCriteriasGoals extends BaseFragment<CriteriasGoalsFragmentB
         List<ToggleButton> toggleButtons = new ArrayList<>(Arrays.asList(binding.agilityTB, binding.athleticTB, binding.composotionTB, binding.enduranceTB, binding.fizioTB
                 , binding.flexibilityTB, binding.muscleTB, binding.painfreeTB, binding.staminaTB, binding.weightTB));
 
+        error = binding.errorMessageCriteria;
 
         for (final ToggleButton tb : toggleButtons){
             tb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -43,7 +46,8 @@ public class FragmentCriteriasGoals extends BaseFragment<CriteriasGoalsFragmentB
                         tb.setAlpha((float) 0.5);
                         selectedGoal = tb.getText().toString();
                         if(count > 1){
-                            Toast.makeText(getActivity(), "Only 1 can be selected.", Toast.LENGTH_SHORT).show();
+                            error.setText("Only 1 goal can be selected.");
+                            error.setVisibility(View.VISIBLE);
                             --count;
                             tb.setChecked(false);
                             tb.setAlpha((float) 1);
@@ -61,7 +65,8 @@ public class FragmentCriteriasGoals extends BaseFragment<CriteriasGoalsFragmentB
             @Override
             public void onClick(View v) {
                 if(count < 1){
-                    Toast.makeText(getActivity(), "It is mandatory.", Toast.LENGTH_SHORT).show();
+                    error.setText("You must select at least one goal.");
+                    error.setVisibility(View.VISIBLE);
                 }
                 else{
                     EventBus.getDefault().post(new PassingTraineeCriteriasEvent(Constants.GOAL_FRAGMENT, selectedGoal));

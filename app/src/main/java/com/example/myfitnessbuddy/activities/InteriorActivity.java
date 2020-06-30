@@ -113,6 +113,7 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
                 FirebaseAuth.getInstance().signOut();
                 CometChatUtil.logoutCometChat();
                 startActivity(new Intent(InteriorActivity.this, MainActivity.class));
+                finish();
         }
 
         return true;

@@ -596,7 +596,6 @@ public class EditDataDialog extends DialogFragment implements OnDeleteListItemCl
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i("Noemi","Here I am. req");
-
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {

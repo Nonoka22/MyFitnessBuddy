@@ -87,7 +87,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                 traineeNotifications.clear();
 
                 //if there is no introduction saved in the database, then the first notification will appear.
-                if(!dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.INTRODUCTION).exists()){
+                if(!dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.IMAGE_URL).exists()){
                     //the first notification will be default, it will differ according to the userType
                     if(userType.equals(Constants.TRAINEE)){
                         traineeNotifications.add(new NotificationData(Constants.FIRST_NOTIFICATION_TITLE,"Before you may start using the app," +

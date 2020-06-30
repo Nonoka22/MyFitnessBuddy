@@ -30,7 +30,7 @@ public abstract class BaseAuthenticationActivity<T extends ViewDataBinding> exte
 
     protected String codeSent;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    FragmentManager dialogFragment = getSupportFragmentManager();
+    //FragmentManager dialogFragment = getSupportFragmentManager();
 
     protected void sendVerificationCode(String phoneNumber) {
         Log.i("Noemi","Phone number verification started");
@@ -53,8 +53,6 @@ public abstract class BaseAuthenticationActivity<T extends ViewDataBinding> exte
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
-//            MessageDialog messageDialog = new MessageDialog("Invalid phone number","It seems like you entered an incorrect phone number.");
-//            messageDialog.show(dialogFragment, "dialog");
             if(e.getClass().getCanonicalName().equals("FirebaseNetworkException")){
                 MessageDialog messageDialog = new MessageDialog("Ooops!","It seems like you are having network issues. Please check your connection!");
                 messageDialog.show(dialogFragment, "dialog");
@@ -87,7 +85,6 @@ public abstract class BaseAuthenticationActivity<T extends ViewDataBinding> exte
                             signInSuccessful();
                             Log.i("Noemi","Login successful");
                             startActivity(new Intent(getCurrentActivity(), InteriorActivity.class));
-
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid

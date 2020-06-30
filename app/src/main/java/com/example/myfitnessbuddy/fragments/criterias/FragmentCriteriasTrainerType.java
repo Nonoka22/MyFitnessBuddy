@@ -3,6 +3,7 @@ package com.example.myfitnessbuddy.fragments.criterias;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.example.myfitnessbuddy.utils.Constants;
@@ -19,6 +20,9 @@ import java.util.Arrays;
 
 public class FragmentCriteriasTrainerType extends BaseFragment<CriteriasTrainertypeFragmentBinding> {
 
+    private int count = 0;
+    private TextView error;
+
     @Override
     protected int getFragmentLayout() {
         return R.layout.criterias_trainertype_fragment;
@@ -29,6 +33,7 @@ public class FragmentCriteriasTrainerType extends BaseFragment<CriteriasTrainert
         ImageView nextButton = binding.nextButtonTrainerType;
         ToggleButton persTrainer = binding.personalTrainerTraineeTB;
         ToggleButton groupIns = binding.groupInstructorTraineeTB;
+        error = binding.errorMessageCriteria;
 
         ArrayList<ToggleButton> toggleButtons = new ArrayList<>(Arrays.asList(persTrainer, groupIns));
         final ArrayList<String> selectedButtons = new ArrayList<>();
@@ -38,10 +43,12 @@ public class FragmentCriteriasTrainerType extends BaseFragment<CriteriasTrainert
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(isChecked){
+                        ++count;
                         tb.setAlpha((float) 0.5);
                         selectedButtons.add(tb.getText().toString());
                     }
                     else {
+                        --count;
                         tb.setAlpha((float) 1);
                         selectedButtons.remove(tb.getText().toString());
                     }
@@ -52,8 +59,14 @@ public class FragmentCriteriasTrainerType extends BaseFragment<CriteriasTrainert
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new PassingTraineeCriteriasEvent(Constants.TRAINER_TYPE_FRAGMENT,selectedButtons));
-                EventBus.getDefault().post(new SetNextFragmentEvent());
+                if(count == 0){
+                    error.setText("You must select at least one type!");
+                    error.setVisibility(View.VISIBLE);
+                }
+                else{
+                    EventBus.getDefault().post(new PassingTraineeCriteriasEvent(Constants.TRAINER_TYPE_FRAGMENT,selectedButtons));
+                    EventBus.getDefault().post(new SetNextFragmentEvent());
+                }
             }
         });
     }

@@ -14,7 +14,6 @@ import com.example.myfitnessbuddy.OnBuddyClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.BuddyRowBinding;
 import com.example.myfitnessbuddy.models.MatchedBuddy;
-import com.example.myfitnessbuddy.utils.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -107,7 +106,9 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
             || matchedBuddy.getStatus().equals(Constants.TRAINEE_ACCEPTED_STATUS)){
                 imageViewChat.setEnabled(false);
             }
+
         }
+
     }
 
 

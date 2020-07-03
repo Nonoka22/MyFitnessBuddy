@@ -4,7 +4,7 @@ buildscript {
     repositories {
         google()
         jcenter()
-
+        maven{ url 'https://maven.google.com' }
         
     }
     dependencies {
@@ -24,6 +24,7 @@ allprojects {
             url "https://jitpack.io"
             }
         maven { url "https://dl.bintray.com/cometchat/pro" }
+        maven{ url 'https://maven.google.com' }
     }
 }
 

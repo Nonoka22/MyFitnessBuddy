@@ -14,6 +14,7 @@ import com.example.myfitnessbuddy.OnBuddyClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.BuddyRowBinding;
 import com.example.myfitnessbuddy.models.MatchedBuddy;
+import com.example.myfitnessbuddy.utils.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

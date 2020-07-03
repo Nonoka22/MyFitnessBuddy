@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:alpha="0.8"
         android:background="@color/cardview_light_background">
 
 
@@ -13,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Notification title"
-            android:textSize="21dp"
+            android:textSize="27sp"
             android:textColor="@color/colorBlack"
             android:layout_margin="5dp"
             android:textStyle="bold"
@@ -22,12 +23,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notification subtitle"
-            android:textSize="13dp"
+            android:text="Notification title"
+            android:textSize="13sp"
             android:textColor="@color/colorBlack"
             android:layout_margin="5dp"
-            android:textStyle="italic"
-            android:id="@+id/notificationSubtitle" />
+            android:textStyle="bold"
+            android:id="@+id/notificationText" />
 
 
     </LinearLayout>

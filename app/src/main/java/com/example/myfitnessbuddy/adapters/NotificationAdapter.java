@@ -10,10 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.OnNotificationClickedListener;
+import com.example.myfitnessbuddy.interfaces.OnNotificationClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.NotificationRowBinding;
 import com.example.myfitnessbuddy.models.NotificationData;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -66,12 +68,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             super(itemView);
 
             title = binding.notificationTitle;
-            text = binding.notificationSubtitle;
+            text = binding.notificationText;
         }
 
         void bindViewHolder(NotificationData notification){
             title.setText(notification.getTitle());
-            text.setText(notification.getMessage());
+            text.setText(StringUtils.abbreviate(notification.getMessage(), 15));
         }
     }
 }

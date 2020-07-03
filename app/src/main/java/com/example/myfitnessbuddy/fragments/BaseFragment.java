@@ -17,8 +17,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
-import com.example.myfitnessbuddy.APIService;
-import com.example.myfitnessbuddy.MyResponse;
+import com.example.myfitnessbuddy.interfaces.APIService;
+import com.example.myfitnessbuddy.utils.MyResponse;
 import com.example.myfitnessbuddy.models.Client;
 import com.example.myfitnessbuddy.models.Criterias;
 import com.example.myfitnessbuddy.models.NotificationData;

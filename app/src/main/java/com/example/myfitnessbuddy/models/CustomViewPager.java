@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.myfitnessbuddy.SwipeDirection;
+import com.example.myfitnessbuddy.utils.SwipeDirection;
 
 public class CustomViewPager extends ViewPager {
 

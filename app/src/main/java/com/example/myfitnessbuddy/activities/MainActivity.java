@@ -49,6 +49,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         if (user != null) {
             // User is signed in
             startActivity(new Intent(MainActivity.this, InteriorActivity.class));
+            finish();
 
         } else {
             // No user is signed in

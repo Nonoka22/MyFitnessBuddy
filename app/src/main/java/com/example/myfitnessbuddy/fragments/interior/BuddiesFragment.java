@@ -4,18 +4,23 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.OnBuddyClickedListener;
+import com.example.myfitnessbuddy.interfaces.OnBuddyClickedListener;
 import com.example.myfitnessbuddy.R;
+import com.example.myfitnessbuddy.activities.BuddyProfileActivity;
 import com.example.myfitnessbuddy.activities.ChatActivity;
 import com.example.myfitnessbuddy.adapters.BuddyAdapter;
 import com.example.myfitnessbuddy.databinding.FragmentBuddiesBinding;
+import com.example.myfitnessbuddy.events.DeleteBuddyEvent;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
+import com.example.myfitnessbuddy.fragments.dialogs.DeleteBuddyDialog;
+import com.example.myfitnessbuddy.fragments.dialogs.MessageDialog;
 import com.example.myfitnessbuddy.models.BuddyRelationshipStatus;
 import com.example.myfitnessbuddy.models.Match;
 import com.example.myfitnessbuddy.models.MatchedBuddy;
@@ -31,6 +36,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +58,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
     private Matcher matcher;
     private boolean matchedWithTrainer;
     private RecyclerView recyclerView;
+    private TextView emptyBuddies;
     private List<MatchedBuddy> matchedBuddyList;
    // private List<String> matchedBuddyIds;
     private BuddyAdapter adapter;
@@ -63,6 +72,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
     private List<BuddyRelationshipStatus> activeBuddies;
     private MatchedBuddy buddy;
     private String currentUserId;
+    private int matchCounter;
 
     @Override
     protected int getFragmentLayout() {
@@ -73,6 +83,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
     protected void initFragmentImpl() {
 
         recyclerView = binding.recyclerViewBuddies;
+        emptyBuddies = binding.emptyBuddiesTV;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         matchedBuddyList = new ArrayList<>();
       //  matchedBuddyIds = new ArrayList<>();
@@ -103,7 +114,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                         findBuddies.setEnabled(false);
                     }
 
-                    Log.i("Noemi","Trainee ");
+                   // Log.i("Noemi","Trainee ");
 
                     //get the trainerIds, which the user already matched with for the listing...
                     for(DataSnapshot dataSnap : dataSnapshot.child(Constants.MATCHES).getChildren()) {
@@ -115,6 +126,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                             brs.setBuddyId(dataSnap.child(Constants.TRAINER_ID).getValue().toString());
                             brs.setStatus(dataSnap.child(Constants.RELATIONSHIP_STATUS).getValue().toString());
 
+                           // Log.i("Noemi","buddy: " + brs.getBuddyId());
                             buddies.add(brs);
 
                             if(!relStatus.equals(Constants.DECLINED) && !relStatus.equals(Constants.DELETED_STATUS)
@@ -122,8 +134,6 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                                 activeBuddies.add(brs);
                             }
 
-                            //matchedBuddyIds.add(dataSnap.child(Constants.TRAINER_ID).getValue().toString());
-                            //Log.i("Noemi",matchedBuddyIds.toString());
                         }
                         else if(dataSnap.child(Constants.RELATIONSHIP_STATUS).equals(Constants.DECLINED)){
 
@@ -133,6 +143,8 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                     findBuddies.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            matchCounter = 0;
+                           // Log.i("Noemi","Find buddies button clicked");
                             //make sure, the criteriasList is empty
                             criteriasList.clear();
 
@@ -141,10 +153,14 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                                 criteriasList.add(snap0.getValue().toString());
                             }
 
+                          //  Log.i("Noemi",criteriasList.toString());
+
                             //get the location of the user, where he/she wants to train...
                             location = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.CITY).getValue().toString();
+                           // Log.i("Noemi",location);
 
-                            //check in TrainerLocations if, the there are trainers and if they match the user's criterias
+
+                            //check in TrainerLocations if, the there are trainers and if they match the user's criteria
                             for(DataSnapshot snapshot : dataSnapshot.child(Constants.TRAINER_LOCATIONS).child(location).getChildren()){//location
 
                                 //initialize matcher and boolean match checker
@@ -159,6 +175,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                                 for(BuddyRelationshipStatus s : buddies){
                                     if(s.getBuddyId().equals(trainerId)){
                                         matchedWithTrainer = true;
+                                        break;
                                     }
                                 }
 
@@ -196,9 +213,10 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                                                 float traineeCost = traineeX * Float.parseFloat(dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.PRICE).child(Constants.COST).getValue().toString());
 
                                                 //the hour and cost the trainer selected
+                                                Log.i("Noemi",dataSnapshot.child(Constants.USERS).child(trainerId).getValue(String.class));
                                                 float trainerHour = Float.parseFloat(dataSnapshot.child(Constants.USERS).child(trainerId).child(Constants.CRITERIAS).child(Constants.PRICE).child(Constants.HOURS).getValue().toString());
-                                                float trainerX = (float) 1/traineeHour;
-                                                float trainerCost = traineeX * Float.parseFloat(dataSnapshot.child(Constants.USERS).child(trainerId).child(Constants.CRITERIAS).child(Constants.PRICE).child(Constants.COST).getValue().toString());
+                                                float trainerX = (float) 1/trainerHour;
+                                                float trainerCost = trainerX * Float.parseFloat(dataSnapshot.child(Constants.USERS).child(trainerId).child(Constants.CRITERIAS).child(Constants.PRICE).child(Constants.COST).getValue().toString());
 
 //
                                                 //if the trainer is cheaper or equal or max 10 leis more expensive than the user's price it is a match
@@ -210,6 +228,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                                             case Constants.NUTRITIONIST_CRITERIA:
                                                 Log.i("Noemi","Nutritionist crit.");
                                                 //check if user needs nutritionist or not..
+                                                Log.i("Noemi",dataSnapshot.toString());
                                                 needsNutritionist = (boolean) dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.CRITERIAS).child(Constants.NUTRITIONIST_NEEDED).getValue();
 
                                                 if(needsNutritionist){//needsNutritionist
@@ -263,6 +282,8 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
 
                                 if(matcher != null){
                                     if(matcher.isFirstCriteria() && matcher.isSecondCriteria()){
+                                        ++matchCounter;
+
                                         //save the match into the Matches table
                                         Match match = new Match(currentUserId,trainerId,matcher.getMatchCounter(),Constants.NOT_ACCEPTED_STATUS);
                                         databaseReference.child(Constants.MATCHES).push().setValue(match);
@@ -271,14 +292,22 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                                         //send notification to Trainer:
                                         String trainerToken = dataSnapshot.child(Constants.TOKENS).child(trainerId).child(Constants.TOKEN_NODE).getValue().toString();
                                         String userToken = dataSnapshot.child(Constants.TOKENS).child(currentUserId).child(Constants.TOKEN_NODE).getValue().toString();
-                                        sendNotifications(trainerToken,Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINER_MESSAGE + currentUserId);
+                                        String trainerName = dataSnapshot.child(Constants.USERS).child(trainerId).child(Constants.FIRST_NAME).getValue().toString();
+                                        String userName = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.FIRST_NAME).getValue().toString();
+                                        sendNotifications(trainerToken,Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINER_MESSAGE + userName);
                                         //this one is not sent
-                                        //sendNotifications(userToken,Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINEE_MESSAGE + trainerId);
+                                        sendNotifications(userToken,Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINEE_MESSAGE + trainerName);
                                     }
                                     else {
                                         Log.i("Noemi","Matcher is not set...");
                                     }
                                 }
+                            }
+                            if(matchCounter == 0){
+                                //there were no matches
+                                FragmentManager dialogFragment = getFragmentManager();
+                                MessageDialog messageDialog = new MessageDialog("Sorry..","We have not found new buddies.");
+                                messageDialog.show(dialogFragment,"dialog");
                             }
                         }
                     });
@@ -298,7 +327,6 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
 
                             activeBuddies.add(brs);
 
-                            //matchedBuddyIds.add(dataSnap.child(Constants.TRAINEE_ID).getValue().toString());
                         }
                     }
                 }
@@ -320,9 +348,17 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                     matchedBuddyList.add(matchedBuddy);
                 }
 
-                //Log.i("Noemi",matchedBuddyList.toString());
+                Log.i("Noemi",matchedBuddyList.toString());
+
                 adapter = new BuddyAdapter(matchedBuddyList,BuddiesFragment.this);
-                recyclerView.setAdapter(adapter);
+                if(adapter.getItemCount() == 0){
+                    Log.i("Noemi","Adapter is empty...");
+                    emptyBuddies.setVisibility(View.VISIBLE);
+                }
+                else{
+                    Log.i("Noemi","Adapter not empty");
+                    recyclerView.setAdapter(adapter);
+                }
             }
 
             @Override
@@ -330,11 +366,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
 
             }
         });
-
-
-
     }
-
 
     public static BuddiesFragment getInstance(){
         return new BuddiesFragment();
@@ -354,34 +386,57 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
     }
 
     @Override
-    public void buddyChatClicked(int position) {
+    public void buddyChatClicked(int position, String status) {
         buddy = matchedBuddyList.get(position);
-        Log.i("Noemi","Navigate into Chat room.");
-        Intent intent = new Intent(getContext(), ChatActivity.class);
-        intent.putExtra(Constants.BUDDY_NAME_INTENT_EXTRA, buddy.getFirstName());
-        intent.putExtra(Constants.BUDDY_ID_INTENT_EXTRA, buddy.getId());
-        startActivity(intent);
+        //Log.i("Noemi","Navigate into Chat room.");
+        if(status.equals(Constants.NOT_ACCEPTED_STATUS)
+                || status.equals(Constants.TRAINEE_ACCEPTED_STATUS)){
+            FragmentManager dialogFragment = getFragmentManager();
+            MessageDialog dialog;
+            if(userType.equals(Constants.TRAINEE)){
+                dialog = new MessageDialog("Sorry! ","You cannot chat with the trainer, until he accepts the match.");
+            }
+            else {
+                dialog = new MessageDialog(Constants.TRAINER_CANNOT_CHAT_TITLE,"First you have to accept the match.");
+            }
+            dialog.show(dialogFragment, "dialog");
+        }else{
+            Intent intent = new Intent(getContext(), ChatActivity.class);
+            intent.putExtra(Constants.BUDDY_NAME_INTENT_EXTRA, buddy.getFirstName());
+            intent.putExtra(Constants.BUDDY_ID_INTENT_EXTRA, buddy.getId());
+            startActivity(intent);
+        }
     }
 
     @Override
     public void buddyNameClicked(int position) {
         buddy = matchedBuddyList.get(position);
         Log.i("Noemi","Navigate to the buddy's profile screen.");
-
+        openBuddyProfile();
     }
 
     @Override
     public void buddyPictureClicked(int position) {
         buddy = matchedBuddyList.get(position);
         Log.i("Noemi","I have to navigate to the buddy's profile page.");
-
+        openBuddyProfile();
     }
 
     @Override
     public void buddyTrashClicked(int position) {
         buddy = matchedBuddyList.get(position);
         Log.i("Noemi","Remove buddy from list.");
-        deleteBuddy(); // in profiles branch, this is changed(there is a dialog fragment, that will appear asking the user, if he/she really wants to delete the buddy.
+
+        FragmentManager dialogFragment = getFragmentManager();
+        DeleteBuddyDialog dialog = new DeleteBuddyDialog(buddy.getFirstName());
+        dialog.show(dialogFragment, "dialog");
+
+    }
+
+    private void openBuddyProfile(){
+        Intent intent = new Intent(getContext(), BuddyProfileActivity.class);
+        intent.putExtra(Constants.BUDDY_ID,buddy.getId());
+        startActivity(intent);
     }
 
     private void deleteBuddy(){
@@ -393,7 +448,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
         }
     }
 
-    private void delete(String currentUID, String buddyId, String traineeId, String trainerId, String removedByStatus){
+    public void delete(String currentUID, String buddyId, String traineeId, String trainerId, String removedByStatus){
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -413,6 +468,23 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
 
             }
         });
+    }
+
+    @Subscribe
+    public void onMessageEvent(DeleteBuddyEvent event) {
+        deleteBuddy();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
 

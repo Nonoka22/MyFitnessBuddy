@@ -1,4 +1,4 @@
-package com.example.myfitnessbuddy;
+package com.example.myfitnessbuddy.interfaces;
 
 public interface OnNotificationClickedListener {
     void acceptButtonClicked(String matchedId);

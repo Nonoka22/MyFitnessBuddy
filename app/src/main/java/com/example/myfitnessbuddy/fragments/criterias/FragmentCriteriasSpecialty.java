@@ -2,6 +2,7 @@ package com.example.myfitnessbuddy.fragments.criterias;
 
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -21,6 +22,7 @@ import java.util.List;
 public class FragmentCriteriasSpecialty extends BaseFragment<CriteriasSpecialtyFragmentBinding> {
 
     private int count = 0;
+    private TextView error;
 
     @Override
     protected int getFragmentLayout() {
@@ -34,6 +36,8 @@ public class FragmentCriteriasSpecialty extends BaseFragment<CriteriasSpecialtyF
                 binding.cardioTB, binding.bodybuilderTB, binding.functionalTB, binding.fiziotherapistTB, binding.weightmanagementTB, binding.recoveryTB,
                 binding.seniorTB, binding.youthTB, binding.performanceTB, binding.zumbaTB, binding.flexibilityspecialistTB));
 
+        error = binding.errorMessageCriteria;
+
         final ArrayList<String> selectedButtons = new ArrayList<>();
 
         for (final ToggleButton tb : toggleButtons){
@@ -45,7 +49,8 @@ public class FragmentCriteriasSpecialty extends BaseFragment<CriteriasSpecialtyF
                         ++count;
                         selectedButtons.add(tb.getText().toString());
                         if(count > 5){
-                            Toast.makeText(getActivity(), "Only 5 can be selected.", Toast.LENGTH_SHORT).show();
+                            error.setText("Only 5 specialty can be selected.");
+                            error.setVisibility(View.VISIBLE);
                             --count;
                             tb.setChecked(false);
                             tb.setAlpha((float) 1);
@@ -65,7 +70,8 @@ public class FragmentCriteriasSpecialty extends BaseFragment<CriteriasSpecialtyF
             @Override
             public void onClick(View v) {
                 if(count < 1){
-                    Toast.makeText(getActivity(), "At least 1 has to be selected.", Toast.LENGTH_SHORT).show();
+                    error.setText("At least 1 specialty has to be selected.");
+                    error.setVisibility(View.VISIBLE);
                 }
                 else{
                     EventBus.getDefault().post(new PassingTrainerCriteriasEvent(Constants.SPECIALTIES_FRAGMENT,selectedButtons));

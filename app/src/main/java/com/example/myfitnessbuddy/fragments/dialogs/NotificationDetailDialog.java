@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.myfitnessbuddy.OnNotificationClickedListener;
+import com.example.myfitnessbuddy.interfaces.OnNotificationClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.NotificationDetailDialogBinding;
 import com.example.myfitnessbuddy.events.NotificationEvent;

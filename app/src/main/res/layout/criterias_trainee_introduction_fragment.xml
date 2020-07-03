@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -9,11 +8,12 @@
 
         <TextView
             android:id="@+id/textSpecialty"
-            android:layout_width="234dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
             android:text="@string/trainer_introduction_text_view"
             android:textSize="20sp"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/editTextIntroductionTrainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -21,8 +21,11 @@
 
         <EditText
             android:id="@+id/editTextIntroductionTrainer"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:textColorHint="@color/black"
+            android:hint="Introduction"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,11 +43,13 @@
 
             <Button
                 android:id="@+id/chooseImageTrainee"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/choose_image"
-                tools:layout_editor_absoluteX="142dp"
-                tools:layout_editor_absoluteY="311dp" />
+                android:layout_width="130dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:alpha="0.7"
+                android:background="@drawable/rounded_button"
+                android:text="Choose image"
+                android:textColor="@android:color/white" />
 
             <ProgressBar
                 android:id="@+id/traineeImageProgressBar"
@@ -56,20 +61,38 @@
         <ImageView
             android:id="@+id/trainerUploadImageView"
             android:layout_width="0dp"
-            android:layout_height="200dp"
-            app:layout_constraintBottom_toTopOf="@+id/traineeSaveDataButton"
+            android:layout_height="300dp"
+            app:layout_constraintBottom_toTopOf="@+id/errorMessageCriteria"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
-        <Button
-            android:id="@+id/traineeSaveDataButton"
-            android:layout_width="99dp"
-            android:layout_height="48dp"
-            android:text="@string/save_data"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <TextView
+            android:id="@+id/errorMessageCriteria"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="Error message."
+            android:background="@color/white"
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/traineeSaveDataButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/trainerUploadImageView" />
+
+        <Button
+            android:id="@+id/traineeSaveDataButton"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:alpha="0.7"
+            android:background="@drawable/rounded_button"
+            android:text="Save Data"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/errorMessageCriteria" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

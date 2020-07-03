@@ -3,7 +3,7 @@ package com.example.myfitnessbuddy.fragments.registration;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.RegisterNameFragmentBinding;
@@ -21,6 +21,7 @@ public class FragmentRegisterName extends BaseFragment<RegisterNameFragmentBindi
     private  EditText fieldLastName;
     private String firstName;
     private String lastName;
+    private TextView error;
 
     @Override
     protected int getFragmentLayout() {
@@ -33,6 +34,7 @@ public class FragmentRegisterName extends BaseFragment<RegisterNameFragmentBindi
         fieldLastName = binding.fieldRegisterLastName;
         ImageView nextButton = binding.nextButtonName;
         ImageView prevButton = binding.prevButtonName;
+        error = binding.errorRegisterName;
 
 
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -41,11 +43,14 @@ public class FragmentRegisterName extends BaseFragment<RegisterNameFragmentBindi
                 firstName = fieldFirstName.getText().toString();
                 lastName = fieldLastName.getText().toString();
                 if(!firstName.isEmpty()&&!lastName.isEmpty()){
-                    Toast.makeText(getActivity(), firstName, Toast.LENGTH_SHORT).show();
 
                     EventBus.getDefault().post(new PassingUserArgumentsEvent("Name",firstName,lastName));
                     EventBus.getDefault().post(new SetNextFragmentEvent());
 
+                }
+                else{
+                    error.setText("You must enter first and last name");
+                    error.setVisibility(View.VISIBLE);
                 }
             }
         });

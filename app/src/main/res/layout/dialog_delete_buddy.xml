@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minWidth="250dp"
+        android:minHeight="250dp"
+        android:layout_gravity="center"
+        android:background="#AAB3AF">
+
+        <TextView
+            android:id="@+id/deleteBuddyDialogTitle"
+            android:layout_width="match_parent"
+            android:layout_height="27dp"
+            android:gravity="center"
+            android:text="Hello!"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/deleteBuddyDialogText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/deleteBuddyDialogText"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:gravity="center"
+            android:text="Text"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deleteBuddyDialogTitle" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout7"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/deleteBuddyDialogText">
+
+            <Button
+                android:id="@+id/deleteBuddyYesButton"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:alpha="0.7"
+                android:background="@drawable/rounded_button"
+                android:text="yes"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/deleteBuddyNoButton"
+                android:layout_width="88dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="40dp"
+                android:alpha="0.7"
+                android:background="@drawable/rounded_button"
+                android:text="no"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

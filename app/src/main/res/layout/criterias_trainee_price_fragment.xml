@@ -10,75 +10,105 @@
 
         <TextView
             android:id="@+id/textSpecialty"
-            android:layout_width="270dp"
-            android:layout_height="27dp"
-            android:text="@string/location_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="How much are you willing to pay for the training?"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+
         <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            android:id="@+id/linearLayout10"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            app:layout_constraintBottom_toTopOf="@+id/errorMessageCriteria"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textSpecialty">
 
-            <NumberPicker
-                android:id="@+id/numberPickerTrainee"
-                android:layout_width="64dp"
-                android:layout_height="180dp"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="106dp"
-                tools:layout_editor_absoluteY="187dp" />
-
-            <TextView
-                android:id="@+id/textView8"
+            <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/hour_text_view"
-                android:textSize="20sp"
-                tools:layout_editor_absoluteX="263dp"
-                tools:layout_editor_absoluteY="305dp" />
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <NumberPicker
+                    android:id="@+id/numberPickerTrainee"
+                    android:layout_width="64dp"
+                    android:layout_height="180dp"
+                    android:padding="10dp"
+                    android:background="#80000000"
+                    android:textColor="@color/white"
+                    tools:layout_editor_absoluteX="106dp"
+                    tools:layout_editor_absoluteY="187dp" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="@string/hour_text_view"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    tools:layout_editor_absoluteX="263dp"
+                    tools:layout_editor_absoluteY="305dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <EditText
+                    android:id="@+id/editTextPriceTrainee"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textColor="@color/white"
+                    android:hint="50"
+                    android:padding="10dp"
+                    tools:layout_editor_absoluteX="106dp"
+                    tools:layout_editor_absoluteY="449dp" />
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:text="@string/lei_text_view"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    tools:layout_editor_absoluteX="282dp"
+                    tools:layout_editor_absoluteY="449dp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/errorMessageCriteria"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
             android:gravity="center"
+            android:text="Error message."
+            android:textColor="@android:color/holo_red_dark"
+            android:visibility="gone"
+            android:background="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/nextButtonTraineePrice"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
-
-            <EditText
-                android:id="@+id/editTextPriceTrainee"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:padding="10dp"
-                tools:layout_editor_absoluteX="106dp"
-                tools:layout_editor_absoluteY="449dp" />
-
-            <TextView
-                android:id="@+id/textView11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/lei_text_view"
-                android:textSize="20sp"
-                tools:layout_editor_absoluteX="282dp"
-                tools:layout_editor_absoluteY="449dp" />
-
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout10" />
 
         <ImageView
             android:id="@+id/nextButtonTraineePrice"
@@ -88,7 +118,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintTop_toBottomOf="@+id/errorMessageCriteria"
             app:srcCompat="@drawable/nextbtn" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

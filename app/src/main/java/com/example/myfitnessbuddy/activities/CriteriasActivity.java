@@ -135,7 +135,7 @@ public class CriteriasActivity extends BaseActivity<ActivityCriteriasBinding> {
 
                 setPagerAdapter(viewPager, tabLayout, fragmentList);
             }
-        },3000);
+        },1000);
     }
 
     @Subscribe

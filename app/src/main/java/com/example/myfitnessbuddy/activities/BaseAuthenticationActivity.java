@@ -6,10 +6,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.myfitnessbuddy.events.CodeEvent;
 import com.example.myfitnessbuddy.fragments.dialogs.EnterCodeDialog;
+import com.example.myfitnessbuddy.fragments.dialogs.MessageDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -50,6 +50,10 @@ public abstract class BaseAuthenticationActivity<T extends ViewDataBinding> exte
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
+            if(e.getClass().getCanonicalName().equals("FirebaseNetworkException")){
+                MessageDialog messageDialog = new MessageDialog("Ooops!","It seems like you are having network issues. Please check your connection!");
+                messageDialog.show(dialogFragment, "dialog");
+            }
             Log.i("Noemi", e.toString());
         }
 
@@ -57,7 +61,6 @@ public abstract class BaseAuthenticationActivity<T extends ViewDataBinding> exte
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             Log.i("Noemi", "Phone Verification Completed. Code is sent...");
-            FragmentManager dialogFragment = getSupportFragmentManager();
             EnterCodeDialog enterCodeDialog = new EnterCodeDialog();
             enterCodeDialog.show(dialogFragment, "dialog");
             codeSent = s;
@@ -78,13 +81,17 @@ public abstract class BaseAuthenticationActivity<T extends ViewDataBinding> exte
                             signInSuccessful();
                             Log.i("Noemi","Login successful");
                             startActivity(new Intent(getCurrentActivity(), InteriorActivity.class));
-
                         } else {
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
+                                //open message dialog that informs user about this
+                                MessageDialog messageDialog = new MessageDialog("Invalid code","It seems like you entered the wrong verification code.");
+                                messageDialog.show(dialogFragment, "dialog");
                                 Log.i("Noemi","Incorrect verification code");
                             }
                             else if(task.getException() != null){
+                                MessageDialog messageDialog = new MessageDialog("Unexpected error","Something unexpected happened.");
+                                messageDialog.show(dialogFragment, "dialog");
                                 Log.i("Noemi","Something happened..." + task.getException());
                             }
                         }

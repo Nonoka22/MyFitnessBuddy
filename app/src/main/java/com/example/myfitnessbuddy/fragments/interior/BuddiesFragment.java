@@ -6,11 +6,10 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.APIService;
-import com.example.myfitnessbuddy.MyResponse;
 import com.example.myfitnessbuddy.OnBuddyClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.activities.ChatActivity;
@@ -18,33 +17,23 @@ import com.example.myfitnessbuddy.adapters.BuddyAdapter;
 import com.example.myfitnessbuddy.databinding.FragmentBuddiesBinding;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
 import com.example.myfitnessbuddy.models.BuddyRelationshipStatus;
-import com.example.myfitnessbuddy.models.Client;
 import com.example.myfitnessbuddy.models.Match;
 import com.example.myfitnessbuddy.models.MatchedBuddy;
 import com.example.myfitnessbuddy.models.Matcher;
-import com.example.myfitnessbuddy.models.NotificationData;
-import com.example.myfitnessbuddy.models.NotificationSender;
 import com.example.myfitnessbuddy.models.Price;
-import com.example.myfitnessbuddy.models.Token;
 import com.example.myfitnessbuddy.models.TraineeCriterias;
 import com.example.myfitnessbuddy.models.TrainerCriterias;
 import com.example.myfitnessbuddy.models.User;
 import com.example.myfitnessbuddy.utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implements OnBuddyClickedListener {
 
@@ -392,39 +381,32 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
     public void buddyTrashClicked(int position) {
         buddy = matchedBuddyList.get(position);
         Log.i("Noemi","Remove buddy from list.");
+        deleteBuddy(); // in profiles branch, this is changed(there is a dialog fragment, that will appear asking the user, if he/she really wants to delete the buddy.
+    }
 
+    private void deleteBuddy(){
+        if(userType.equals(Constants.TRAINEE)){
+            delete(currentUserId,buddy.getId(),currentUserId,buddy.getId(),Constants.REMOVED_BY_TRAINEE_STATUS);
+        }
+        else {
+            delete(currentUserId,buddy.getId(),buddy.getId(),currentUserId,Constants.REMOVED_BY_TRAINER_STATUS);
+        }
+    }
+
+    private void delete(String currentUID, String buddyId, String traineeId, String trainerId, String removedByStatus){
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i("Noemi","Current user: " + currentUserId);
-                if(dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.USER_TYPE).getValue().toString().equals(Constants.TRAINEE)){
-                    for(DataSnapshot snapshot : dataSnapshot.child(Constants.MATCHES).getChildren()){
-                        if(snapshot.child(Constants.TRAINEE_ID).getValue().toString().equals(currentUserId) &&
-                                snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(buddy.getId())){
-                            String relaStatus = snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
-                            snapshot.child(Constants.RELATIONSHIP_STATUS).getRef().setValue(Constants.REMOVED_BY_TRAINEE_STATUS);
-                            //send notification informing user, that he/she is removed
-                            String trainerToken = dataSnapshot.child(Constants.TOKENS).child(buddy.getId()).child(Constants.TOKEN_NODE).getValue().toString();
-                            sendNotifications(trainerToken,Constants.DECLINE_TITLE,Constants.REMOVED_MESSAGE + currentUserId);
+                for(DataSnapshot snapshot : dataSnapshot.child(Constants.MATCHES).getChildren()){
+                    if(snapshot.child(Constants.TRAINEE_ID).getValue().toString().equals(traineeId) &&
+                            snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(trainerId)){
+                        snapshot.child(Constants.RELATIONSHIP_STATUS).getRef().setValue(removedByStatus);
+                        //send notification informing user, that he/she is removed
+                        String token = dataSnapshot.child(Constants.TOKENS).child(buddyId).child(Constants.TOKEN_NODE).getValue().toString();
+                        sendNotifications(token,Constants.DECLINE_TITLE,Constants.REMOVED_MESSAGE + currentUID);
 
-                        }
                     }
                 }
-                else if(dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.USER_TYPE).getValue().toString().equals(Constants.TRAINER)){
-                    Log.i("Noemi" , "Here we go: " + currentUserId);
-                    for(DataSnapshot snapshot : dataSnapshot.child(Constants.MATCHES).getChildren()){
-                        if(snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId) &&
-                                snapshot.child(Constants.TRAINEE_ID).getValue().toString().equals(buddy.getId())){
-                            String relaStatus = snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
-                            snapshot.child(Constants.RELATIONSHIP_STATUS).getRef().setValue(Constants.REMOVED_BY_TRAINER_STATUS);
-                            //send notification informing user, that he/she is removed
-//                            String traineeToken = dataSnapshot.child(Constants.TOKENS).child(buddy.getId()).child(Constants.TOKEN_NODE).getValue().toString();
-//                            sendNotifications(traineeToken,Constants.DECLINE_TITLE,Constants.REMOVED_MESSAGE + currentUserId, buddy.getId());
-
-                        }
-                    }
-                }
-
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -432,5 +414,6 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
             }
         });
     }
+
 
 }

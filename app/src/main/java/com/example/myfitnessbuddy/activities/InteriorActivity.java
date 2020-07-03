@@ -18,7 +18,6 @@ import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.ActivityInteriorBinding;
 import com.example.myfitnessbuddy.fragments.interior.BuddiesFragment;
 import com.example.myfitnessbuddy.fragments.interior.HomeFragment;
-import com.example.myfitnessbuddy.fragments.interior.UserProfileFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -63,7 +62,6 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.child(firebaseUser.getUid()).getValue(User.class);
                 updateToken();
-                subscribeToTopic();
             }
 
             @Override
@@ -93,15 +91,11 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
             case R.id.nav_home:
                 setFragment(Constants.REPLACE,HomeFragment.getInstance(),containerId,toolbar,Constants.HOME);
                 break;
-            case R.id.nav_profile:
-                setFragment(Constants.REPLACE,UserProfileFragment.getInstance() ,containerId,toolbar,Constants.PROFILE);
-                break;
             case R.id.nav_buddies:
                 setFragment(Constants.REPLACE,BuddiesFragment.getInstance(),containerId,toolbar,Constants.BUDDIES);
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
-                usnsubscribeFromTopic();
                 CometChatUtil.logoutCometChat();
                 startActivity(new Intent(InteriorActivity.this, MainActivity.class));
         }
@@ -114,18 +108,5 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
         Token token = new Token(refreshToken);
 
         databaseReference.child(Constants.TOKENS).child(firebaseUser.getUid()).setValue(token);
-    }
-
-    private void subscribeToTopic(){
-
-        String topic = BuildConfig.APP_ID + user.getFirstName() + firebaseUser.getUid();
-
-        FirebaseMessaging.getInstance().subscribeToTopic(topic);
-    }
-
-    private void usnsubscribeFromTopic(){
-        String topic = BuildConfig.APP_ID + user.getFirstName() + firebaseUser.getUid();
-
-        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic);
     }
 }

@@ -104,5 +104,7 @@ public final class Constants {
    public static final String REMOVED_MESSAGE = "You were deleted by ";
    public static final String REMOVED_BY_TRAINER_STATUS = "Removed By Trainer";
    public static final String REMOVED_BY_TRAINEE_STATUS = "Removed By Trainee";
+   public static final String FIRST_NAME = "firstName";
+
 
 }

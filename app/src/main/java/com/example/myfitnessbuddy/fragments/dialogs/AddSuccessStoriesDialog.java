@@ -21,10 +21,9 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
-import com.example.myfitnessbuddy.OnBuddyClickedListener;
-import com.example.myfitnessbuddy.OnSuccessStoryUploaded;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.DialogAddSuccessStoriesBinding;
+import com.example.myfitnessbuddy.interfaces.APIService;
 import com.example.myfitnessbuddy.models.SuccessStory;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,9 +51,9 @@ public class AddSuccessStoriesDialog extends DialogFragment {
     private String imageUrl;
     private SuccessStory successStory;
 
-    private OnSuccessStoryUploaded listener;
+    private APIService.OnSuccessStoryUploaded listener;
 
-    public AddSuccessStoriesDialog(OnSuccessStoryUploaded listener) {
+    public AddSuccessStoriesDialog(APIService.OnSuccessStoryUploaded listener) {
         this.listener = listener;
     }
 

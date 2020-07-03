@@ -25,7 +25,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
-import static com.example.myfitnessbuddy.SwipeDirection.none;
+import static com.example.myfitnessbuddy.utils.SwipeDirection.none;
 
 public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatActivity {
 
@@ -75,7 +75,7 @@ public abstract class BaseActivity<V extends ViewDataBinding> extends AppCompatA
                 }
             });
         }
-        
+
     }
 
     protected void setFragment(String action,Fragment fragment, int container, Toolbar toolbar,String title){

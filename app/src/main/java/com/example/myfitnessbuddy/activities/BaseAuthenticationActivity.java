@@ -6,7 +6,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.myfitnessbuddy.events.CodeEvent;
 import com.example.myfitnessbuddy.fragments.dialogs.EnterCodeDialog;
@@ -14,7 +13,6 @@ import com.example.myfitnessbuddy.fragments.dialogs.MessageDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -30,7 +28,6 @@ public abstract class BaseAuthenticationActivity<T extends ViewDataBinding> exte
 
     protected String codeSent;
     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    //FragmentManager dialogFragment = getSupportFragmentManager();
 
     protected void sendVerificationCode(String phoneNumber) {
         Log.i("Noemi","Phone number verification started");
@@ -64,7 +61,6 @@ public abstract class BaseAuthenticationActivity<T extends ViewDataBinding> exte
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
             super.onCodeSent(s, forceResendingToken);
             Log.i("Noemi", "Phone Verification Completed. Code is sent...");
-            //FragmentManager dialogFragment = getSupportFragmentManager();
             EnterCodeDialog enterCodeDialog = new EnterCodeDialog();
             enterCodeDialog.show(dialogFragment, "dialog");
             codeSent = s;
@@ -89,7 +85,6 @@ public abstract class BaseAuthenticationActivity<T extends ViewDataBinding> exte
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                                 // The verification code entered was invalid
                                 //open message dialog that informs user about this
-                                //FragmentManager dialogFragment = getSupportFragmentManager();
                                 MessageDialog messageDialog = new MessageDialog("Invalid code","It seems like you entered the wrong verification code.");
                                 messageDialog.show(dialogFragment, "dialog");
                                 Log.i("Noemi","Incorrect verification code");

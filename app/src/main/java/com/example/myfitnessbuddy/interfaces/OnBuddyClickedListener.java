@@ -1,4 +1,4 @@
-package com.example.myfitnessbuddy;
+package com.example.myfitnessbuddy.interfaces;
 
 public interface OnBuddyClickedListener {
     void buddyChatClicked(int position, String status);

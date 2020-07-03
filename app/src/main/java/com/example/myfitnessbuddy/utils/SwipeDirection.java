@@ -1,4 +1,4 @@
-package com.example.myfitnessbuddy;
+package com.example.myfitnessbuddy.utils;
 
 public enum SwipeDirection {
     all,left,right,none;

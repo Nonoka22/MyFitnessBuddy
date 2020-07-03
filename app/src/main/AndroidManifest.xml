@@ -46,7 +46,8 @@
         <activity
             android:name=".activities.CriteriasActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:noHistory="true"/>
         <activity
             android:name=".activities.InteriorActivity"
             android:configChanges="orientation"

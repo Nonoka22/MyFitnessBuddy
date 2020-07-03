@@ -14,13 +14,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Notification title"
-            android:textSize="21dp"
+            android:textSize="27sp"
             android:textColor="@color/colorBlack"
             android:layout_margin="5dp"
             android:textStyle="bold"
             android:id="@+id/notificationTitle" />
 
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notification title"
+            android:textSize="13sp"
+            android:textColor="@color/colorBlack"
+            android:layout_margin="5dp"
+            android:textStyle="bold"
+            android:id="@+id/notificationText" />
 
 
     </LinearLayout>

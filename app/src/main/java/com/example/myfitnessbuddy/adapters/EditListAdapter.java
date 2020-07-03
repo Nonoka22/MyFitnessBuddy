@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.OnDeleteListItemClicked;
+import com.example.myfitnessbuddy.interfaces.OnDeleteListItemClicked;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.EditListItemRowBinding;
 

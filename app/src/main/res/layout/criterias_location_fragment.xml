@@ -21,7 +21,7 @@
         <LinearLayout
             android:id="@+id/linearLayout13"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:background="#4CAF50"
             app:layout_constraintBottom_toTopOf="@+id/nextButtonLocation"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,7 +31,7 @@
             <Spinner
                 android:id="@+id/traineeCitySpinner"
                 android:layout_width="300dp"
-                android:layout_height="30dp" />
+                android:layout_height="40dp" />
         </LinearLayout>
 
         <ImageView

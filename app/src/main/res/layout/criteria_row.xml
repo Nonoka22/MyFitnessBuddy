@@ -10,7 +10,7 @@
             android:layout_marginBottom="5dp"
             android:id="@+id/criteriaItem"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:textSize="22sp"
             android:gravity="center"
             android:background="#4CAF50"

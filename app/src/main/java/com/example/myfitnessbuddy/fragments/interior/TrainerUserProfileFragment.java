@@ -1,5 +1,6 @@
 package com.example.myfitnessbuddy.fragments.interior;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -15,14 +16,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.OnSuccessStoryUploaded;
-import com.example.myfitnessbuddy.OnUpdateClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.adapters.SuccessStoryAdapter;
 import com.example.myfitnessbuddy.databinding.FragmentUserProfileTrainerBinding;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
 import com.example.myfitnessbuddy.fragments.dialogs.AddSuccessStoriesDialog;
 import com.example.myfitnessbuddy.fragments.dialogs.EditDataDialog;
+import com.example.myfitnessbuddy.interfaces.APIService;
 import com.example.myfitnessbuddy.models.SuccessStory;
 import com.example.myfitnessbuddy.models.TrainerCriterias;
 import com.example.myfitnessbuddy.models.User;
@@ -42,8 +42,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfileTrainerBinding> implements OnUpdateClickedListener, OnSuccessStoryUploaded {
+public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfileTrainerBinding> implements APIService.OnUpdateClickedListener, APIService.OnSuccessStoryUploaded {
 
+    private Context mContext;
     private FirebaseAuth firebaseAuth;
     private String currentUserId;
     private FirebaseDatabase firebaseDatabase;
@@ -148,7 +149,7 @@ public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfile
                     }
                 });
 
-                if(dataSnapshot.child(Constants.USERS).child(Constants.IMAGE_URL).exists()){
+                if(dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.IMAGE_URL).exists()){
                     introduction.setText(user.getIntroduction());
                     String imageURL = user.getImageURL();
                     Picasso.get()
@@ -166,11 +167,11 @@ public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfile
 
                     trainerType = trainerCriterias.getTrainerType();
                     Log.i("Noemi","TrainerType: " + trainerType.toString());
-                    ArrayAdapter<String> adapterTT = new ArrayAdapter<>(getContext(), R.layout.small_list_item, trainerType);
+                    ArrayAdapter<String> adapterTT = new ArrayAdapter<>(mContext, R.layout.small_list_item, trainerType);
                     trainerTypeListView.setAdapter(adapterTT);
 
                     specialties = trainerCriterias.getSpecialties();
-                    ArrayAdapter<String> adapterS = new ArrayAdapter<>(getContext(), R.layout.small_list_item, specialties);
+                    ArrayAdapter<String> adapterS = new ArrayAdapter<>(mContext, R.layout.small_list_item, specialties);
                     specialtyListView.setAdapter(adapterS);
 
 
@@ -305,7 +306,11 @@ public class TrainerUserProfileFragment extends BaseFragment<FragmentUserProfile
         return new TrainerUserProfileFragment();
     }
 
-
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
     @Override
     public void firstNameUpdated(String firstName) {
         Log.i("Noemi","First name: "+ firstName);

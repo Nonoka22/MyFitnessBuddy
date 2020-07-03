@@ -25,13 +25,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.OnDeleteListItemClicked;
-import com.example.myfitnessbuddy.OnUpdateClickedListener;
+import com.example.myfitnessbuddy.interfaces.APIService;
+import com.example.myfitnessbuddy.interfaces.OnDeleteListItemClicked;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.adapters.CriteriaAdapter;
 import com.example.myfitnessbuddy.adapters.EditListAdapter;
@@ -40,22 +39,15 @@ import com.example.myfitnessbuddy.utils.Constants;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -71,7 +63,7 @@ public class EditDataDialog extends DialogFragment implements OnDeleteListItemCl
     private List<String> helperList = new ArrayList<>();
     private ArrayAdapter<String> dataListAdapter;
 
-    private OnUpdateClickedListener listener;
+    private APIService.OnUpdateClickedListener listener;
 
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -96,24 +88,24 @@ public class EditDataDialog extends DialogFragment implements OnDeleteListItemCl
     public EditDataDialog() {
     }
 
-    public EditDataDialog(String dataType, OnUpdateClickedListener listener) {
+    public EditDataDialog(String dataType, APIService.OnUpdateClickedListener listener) {
         this.dataType = dataType;
         this.listener = listener;
     }
 
-    public EditDataDialog(String data, String dataType, OnUpdateClickedListener listener) {
+    public EditDataDialog(String data, String dataType, APIService.OnUpdateClickedListener listener) {
         this.data = data;
         this.dataType = dataType;
         this.listener = listener;
     }
 
-    public EditDataDialog(String dataType, List<String> dataList, OnUpdateClickedListener listener) {
+    public EditDataDialog(String dataType, List<String> dataList, APIService.OnUpdateClickedListener listener) {
         this.dataType = dataType;
         this.dataList = dataList;
         this.listener = listener;
     }
 
-    public EditDataDialog(String dataType, List<String> dataList, List<String> helperList, OnUpdateClickedListener listener) {
+    public EditDataDialog(String dataType, List<String> dataList, List<String> helperList, APIService.OnUpdateClickedListener listener) {
         this.dataType = dataType;
         this.dataList = dataList;
         this.helperList = helperList;

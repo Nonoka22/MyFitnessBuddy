@@ -1,5 +1,6 @@
 package com.example.myfitnessbuddy.fragments.interior;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -10,14 +11,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.ViewStubProxy;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.myfitnessbuddy.OnUpdateClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.FragmentUserProfileTraineeBinding;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
 import com.example.myfitnessbuddy.fragments.dialogs.EditDataDialog;
+import com.example.myfitnessbuddy.interfaces.APIService;
 import com.example.myfitnessbuddy.models.TraineeCriterias;
 import com.example.myfitnessbuddy.models.User;
 import com.example.myfitnessbuddy.utils.Constants;
@@ -36,8 +36,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TraineeUserProfileFragment extends BaseFragment<FragmentUserProfileTraineeBinding> implements OnUpdateClickedListener {
+public class TraineeUserProfileFragment extends BaseFragment<FragmentUserProfileTraineeBinding> implements APIService.OnUpdateClickedListener {
 
+    private Context mContext;
     private FirebaseAuth firebaseAuth;
     private String currentUserId;
     private FirebaseDatabase firebaseDatabase;
@@ -147,11 +148,11 @@ public class TraineeUserProfileFragment extends BaseFragment<FragmentUserProfile
                     nutriNeeded.setText(String.valueOf(traineeCriterias.isNutritionistNeeded()));
 
                     trainerType = traineeCriterias.getTrainerType();
-                    ArrayAdapter<String> adapterTT = new ArrayAdapter<>(getContext(), R.layout.small_list_item, trainerType);
+                    ArrayAdapter<String> adapterTT = new ArrayAdapter<>(mContext, R.layout.small_list_item, trainerType);
                     trainerTypeListView.setAdapter(adapterTT);
 
                     criterias = traineeCriterias.getCriterias();
-                    ArrayAdapter<String> adapterC = new ArrayAdapter<>(getContext(), R.layout.small_list_item, criterias);
+                    ArrayAdapter<String> adapterC = new ArrayAdapter<>(mContext, R.layout.small_list_item, criterias);
                     criteriaListView.setAdapter(adapterC);
 
                     for(DataSnapshot snapshot: dataSnapshot.child(Constants.GOALS).getChildren()){
@@ -254,6 +255,12 @@ public class TraineeUserProfileFragment extends BaseFragment<FragmentUserProfile
 
             }
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 
     public static TraineeUserProfileFragment getInstance(){

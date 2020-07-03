@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.OnBuddyClickedListener;
+import com.example.myfitnessbuddy.interfaces.OnBuddyClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.BuddyRowBinding;
 import com.example.myfitnessbuddy.models.MatchedBuddy;

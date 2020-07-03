@@ -3,10 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,10 +47,22 @@
             android:hint="Phone number"
             android:inputType="phone"
             android:textColorHint="@android:color/background_dark"
-            app:layout_constraintBottom_toTopOf="@+id/sendCodeButton"
+            app:layout_constraintBottom_toTopOf="@+id/errorMessageLogin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewLoginDescription" />
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/errorMessageLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Error message."
+            android:textColor="@android:color/holo_red_dark"
+            app:layout_constraintBottom_toTopOf="@+id/sendCodeButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fieldLoginPhone" />
 
         <Button
             android:id="@+id/sendCodeButton"
@@ -67,7 +75,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fieldLoginPhone" />
+            app:layout_constraintTop_toBottomOf="@+id/errorMessageLogin" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

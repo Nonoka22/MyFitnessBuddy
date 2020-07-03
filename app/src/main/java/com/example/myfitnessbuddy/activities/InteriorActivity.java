@@ -1,6 +1,7 @@
 package com.example.myfitnessbuddy.activities;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -9,7 +10,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.myfitnessbuddy.BuildConfig;
+import com.example.myfitnessbuddy.fragments.interior.TraineeUserProfileFragment;
+import com.example.myfitnessbuddy.fragments.interior.TrainerUserProfileFragment;
 import com.example.myfitnessbuddy.models.Token;
 import com.example.myfitnessbuddy.models.User;
 import com.example.myfitnessbuddy.utils.CometChatUtil;
@@ -41,6 +43,13 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
     DatabaseReference databaseReference;
     User user;
 
+    private FirebaseAuth firebaseAuth;
+    private String currentUserId;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private DatabaseReference currentUserReference;
+    private String userType;
+
     @Override
     protected int getActivityLayout() {
         return R.layout.activity_interior;
@@ -48,9 +57,25 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
 
     @Override
     protected void initActivityImpl() {
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUserId= firebaseAuth.getCurrentUser().getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        currentUserReference = databaseReference.child(Constants.USERS).child(currentUserId);
+
+        currentUserReference.child(Constants.USER_TYPE).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userType = dataSnapshot.getValue().toString();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         drawerLayout = binding.drawer;
         toolbar = binding.toolbar.toolbar;
         toolbar.setTitle(Constants.HOME);
@@ -91,6 +116,15 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
             case R.id.nav_home:
                 setFragment(Constants.REPLACE,HomeFragment.getInstance(),containerId,toolbar,Constants.HOME);
                 break;
+            case R.id.nav_profile:
+                if(userType.equals(Constants.TRAINEE)){
+                    setFragment(Constants.REPLACE, TraineeUserProfileFragment.getInstance() ,containerId,toolbar,Constants.PROFILE);
+                }
+                else if(userType.equals(Constants.TRAINER)){
+                    setFragment(Constants.REPLACE, TrainerUserProfileFragment.getInstance() ,containerId,toolbar,Constants.PROFILE);
+                }
+
+                break;
             case R.id.nav_buddies:
                 setFragment(Constants.REPLACE,BuddiesFragment.getInstance(),containerId,toolbar,Constants.BUDDIES);
                 break;
@@ -98,6 +132,7 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
                 FirebaseAuth.getInstance().signOut();
                 CometChatUtil.logoutCometChat();
                 startActivity(new Intent(InteriorActivity.this, MainActivity.class));
+                finish();
         }
 
         return true;
@@ -108,5 +143,23 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
         Token token = new Token(refreshToken);
 
         databaseReference.child(Constants.TOKENS).child(firebaseUser.getUid()).setValue(token);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //call super
+        Log.i("Noemi","superinterior");
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+        if(userType.equals(Constants.TRAINEE)){
+            TraineeUserProfileFragment fragment = (TraineeUserProfileFragment) getSupportFragmentManager().getFragments().get(0);
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+        else if(userType.equals(Constants.TRAINER)){
+            TrainerUserProfileFragment fragment = (TrainerUserProfileFragment) getSupportFragmentManager().getFragments().get(0);
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+
     }
 }

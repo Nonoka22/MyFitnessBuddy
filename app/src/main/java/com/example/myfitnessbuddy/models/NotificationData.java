@@ -15,6 +15,12 @@ public class NotificationData {
         this.message = message;
     }
 
+    public NotificationData(String title, String message, String notificationType) {
+        this.title = title;
+        this.message = message;
+        this.notificationType = notificationType;
+    }
+
     public NotificationData(String title, String message, String notificationType, String receiver) {
         this.title = title;
         this.message = message;

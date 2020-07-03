@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
@@ -21,6 +22,7 @@ public class FragmentCriteriasTrainerIntroduction extends BaseFragment<Criterias
 
     private ImageView imageView;
     private ProgressBar progressBar;
+    private TextView error;
 
     @Override
     protected int getFragmentLayout() {
@@ -31,6 +33,7 @@ public class FragmentCriteriasTrainerIntroduction extends BaseFragment<Criterias
     protected void initFragmentImpl() {
 
         Button saveDataButton = binding.trainerSaveDataButton;
+        error = binding.errorMessageCriteria;
         final EditText introduction = binding.editTextIntroductionTrainer;
         Button uploadImageButton = binding.chooseImageButton;
         progressBar = binding.trainerImageProgressBar;
@@ -54,8 +57,14 @@ public class FragmentCriteriasTrainerIntroduction extends BaseFragment<Criterias
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        EventBus.getDefault().post(new PassingTrainerCriteriasEvent(Constants.TRAINER_INTRODUCTION_FRAGMENT, imageUrl ,intro));
-                        EventBus.getDefault().post(new SaveCriteriasEvent());
+                        if(imageView.getDrawable() != null){
+                            EventBus.getDefault().post(new PassingTrainerCriteriasEvent(Constants.TRAINER_INTRODUCTION_FRAGMENT, imageUrl ,intro));
+                            EventBus.getDefault().post(new SaveCriteriasEvent());
+                        }
+                        else {
+                            error.setText("You must provide a profile picture!");
+                            error.setVisibility(View.VISIBLE);
+                        }
                     }
                 },5000);
             }

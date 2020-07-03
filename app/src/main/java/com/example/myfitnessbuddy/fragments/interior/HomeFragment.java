@@ -2,15 +2,15 @@ package com.example.myfitnessbuddy.fragments.interior;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.APIService;
-import com.example.myfitnessbuddy.MyResponse;
-import com.example.myfitnessbuddy.OnNotificationClickedListener;
+import com.example.myfitnessbuddy.interfaces.OnNotificationClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.activities.CriteriasActivity;
 import com.example.myfitnessbuddy.adapters.NotificationAdapter;
@@ -18,10 +18,8 @@ import com.example.myfitnessbuddy.databinding.FragmentHomeBinding;
 import com.example.myfitnessbuddy.events.NotificationEvent;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
 import com.example.myfitnessbuddy.fragments.dialogs.NotificationDetailDialog;
-import com.example.myfitnessbuddy.models.Client;
 import com.example.myfitnessbuddy.models.NotificationBuddy;
 import com.example.myfitnessbuddy.models.NotificationData;
-import com.example.myfitnessbuddy.models.NotificationSender;
 import com.example.myfitnessbuddy.utils.Constants;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,10 +32,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements OnNotificationClickedListener {
@@ -68,6 +62,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
         List<NotificationBuddy> declinedIds = new ArrayList<>();
         List<NotificationBuddy> removedIds = new ArrayList<>();
 
+        TextView emptyHome = binding.emptyHomeTV;
         RecyclerView recyclerView = binding.notificationsRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -79,15 +74,15 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                 notifications.clear();
 
                 //if there is no introduction saved in the database, then the first notification will appear.
-                if(!dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.INTRODUCTION).exists()){
+                if(!dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.IMAGE_URL).exists()){
                     //the first notification will be default, it will differ according to the userType
                     if(userType.equals(Constants.TRAINEE)){
                         notifications.add(new NotificationData(Constants.FIRST_NOTIFICATION_TITLE,"Before you may start using the app," +
-                                " you must provide some information, so that we can create matches with trainers according to your expectations.",Constants.NOTIFYING_TYPE,""));
+                                " you must provide some information, so that we can create matches with trainers according to your expectations.",Constants.NOTIFYING_TYPE));
                     }
                     else if (userType.equals(Constants.TRAINER)){
                         notifications.add(new NotificationData(Constants.FIRST_NOTIFICATION_TITLE,"Before you may start using the app," +
-                                " you must provide some information, so that we can create matches with trainees.",Constants.NOTIFYING_TYPE,""));
+                                " you must provide some information, so that we can create matches with trainees.",Constants.NOTIFYING_TYPE));
                     }
 
                 }
@@ -121,7 +116,6 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                     else if(userType.equals(Constants.TRAINER)){
                         if(snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId)){
                             String relStatus = snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
-                            String traineeId = snapshot.child(Constants.TRAINEE_ID).getValue().toString();
                             NotificationBuddy nB = new NotificationBuddy();
                             nB.setId(snapshot.child(Constants.TRAINEE_ID).getValue().toString());
                             nB.setName(dataSnapshot.child(Constants.USERS).child(nB.getId()).child(Constants.FIRST_NAME).getValue().toString());
@@ -175,8 +169,13 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                 }
 
                 adapter = new NotificationAdapter(notifications,HomeFragment.this);
-                recyclerView.setAdapter(adapter);
-
+                if(adapter.getItemCount() == 0){
+                    emptyHome.setVisibility(View.VISIBLE);
+                }
+                else{
+                    recyclerView.setAdapter(adapter);
+                    emptyHome.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -233,8 +232,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
             startActivity(intent);
         }
         else{
-            //only the trainee is able to come to else branch
-            //it should delete the notification from the list for the trainee
+            //it should delete the notification from the list for the user
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

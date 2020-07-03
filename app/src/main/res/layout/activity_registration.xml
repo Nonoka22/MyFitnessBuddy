@@ -3,13 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/registrationblured"
         tools:context=".activities.RegistrationActivity">
 
 
@@ -18,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabSelectedTextColor="@android:color/holo_green_dark"
-            app:tabTextColor="@android:color/black"
+            app:tabTextColor="@color/white"
             app:tabIndicatorHeight="0dp"
             tools:ignore="MissingConstraints">
 

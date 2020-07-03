@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
@@ -16,6 +17,8 @@ import org.greenrobot.eventbus.EventBus;
 
 public class FragmentCriteriasTrainerPrice extends BaseFragment<CriteriasTrainerPriceFragmentBinding> {
 
+    TextView error;
+
     @Override
     protected int getFragmentLayout() {
         return R.layout.criterias_trainer_price_fragment;
@@ -26,6 +29,7 @@ public class FragmentCriteriasTrainerPrice extends BaseFragment<CriteriasTrainer
         ImageView nextButton = binding.nextButtonTrainerPrice;
         final NumberPicker numberPicker = binding.numberPickerTrainer;
         final EditText lei = binding.editTextLeiTrainer;
+        error = binding.errorMessageCriteria;
 
         numberPicker.setMinValue(0);
         numberPicker.setMaxValue(5);
@@ -39,8 +43,14 @@ public class FragmentCriteriasTrainerPrice extends BaseFragment<CriteriasTrainer
                 String selectedHour = pickerValues[selected];
                 String cost = lei.getText().toString();
 
-                EventBus.getDefault().post(new PassingTrainerCriteriasEvent(Constants.TRAINER_PRICE_FRAGMENT,selectedHour,cost));
-                EventBus.getDefault().post(new SetNextFragmentEvent());
+                if(!cost.isEmpty()){
+                    EventBus.getDefault().post(new PassingTrainerCriteriasEvent(Constants.TRAINER_PRICE_FRAGMENT,selectedHour,cost));
+                    EventBus.getDefault().post(new SetNextFragmentEvent());
+                }
+                else{
+                    error.setText("You must enter a price");
+                    error.setVisibility(View.VISIBLE);
+                }
             }
         });
     }

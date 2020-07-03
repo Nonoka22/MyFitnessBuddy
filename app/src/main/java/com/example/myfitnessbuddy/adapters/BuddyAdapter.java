@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myfitnessbuddy.OnBuddyClickedListener;
+import com.example.myfitnessbuddy.interfaces.OnBuddyClickedListener;
 import com.example.myfitnessbuddy.R;
 import com.example.myfitnessbuddy.databinding.BuddyRowBinding;
 import com.example.myfitnessbuddy.models.MatchedBuddy;
@@ -39,7 +39,7 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
         viewHolder.imageViewChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.buddyChatClicked(viewHolder.getAdapterPosition());
+                listener.buddyChatClicked(viewHolder.getAdapterPosition(),matchedBuddies.get(viewHolder.getAdapterPosition()).getStatus());
             }
         });
 
@@ -102,11 +102,6 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
                     .placeholder(R.mipmap.ic_launcher)
                     .fit()
                     .into(imageViewPicture);
-
-            if(matchedBuddy.getStatus().equals(Constants.NOT_ACCEPTED_STATUS)
-            || matchedBuddy.getStatus().equals(Constants.TRAINEE_ACCEPTED_STATUS)){
-                imageViewChat.setEnabled(false);
-            }
 
         }
 

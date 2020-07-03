@@ -101,7 +101,15 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
                     .placeholder(R.mipmap.ic_launcher)
                     .fit()
                     .into(imageViewPicture);
+
+            if(matchedBuddy.getStatus().equals(Constants.NOT_ACCEPTED_STATUS)
+            || matchedBuddy.getStatus().equals(Constants.TRAINEE_ACCEPTED_STATUS)){
+                imageViewChat.setEnabled(false);
+            }
+
         }
 
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.myfitnessbuddy.activities;
 
 import android.app.Activity;
+import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
@@ -72,11 +73,13 @@ public class RegistrationActivity extends BaseAuthenticationActivity<ActivityReg
     protected void signInSuccessful() {
         currentUserId = firebaseAuth.getCurrentUser().getUid();
 
+        Log.i("Noemi","Register cometchat: " + currentUserId);
+
         //cometChatUser can be created here...
         CometChatUtil.createCometChatUser(currentUserId,user.getFirstName());
 
         //login CometChatUser
-        CometChatUtil.loginCometChatUser(currentUserId);
+        //CometChatUtil.loginCometChatUser(userId);
 
         //save user to Firebase database
         usersRef.child(currentUserId).setValue(user);

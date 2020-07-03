@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,7 @@ import com.example.myfitnessbuddy.activities.ChatActivity;
 import com.example.myfitnessbuddy.adapters.BuddyAdapter;
 import com.example.myfitnessbuddy.databinding.FragmentBuddiesBinding;
 import com.example.myfitnessbuddy.fragments.BaseFragment;
+import com.example.myfitnessbuddy.models.BuddyRelationshipStatus;
 import com.example.myfitnessbuddy.models.Match;
 import com.example.myfitnessbuddy.models.MatchedBuddy;
 import com.example.myfitnessbuddy.models.Matcher;
@@ -49,7 +51,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
     private boolean matchedWithTrainer;
     private RecyclerView recyclerView;
     private List<MatchedBuddy> matchedBuddyList;
-    private List<String> matchedBuddyIds;
+   // private List<String> matchedBuddyIds;
     private BuddyAdapter adapter;
     private User user = new User();
     private User trainer = new User();
@@ -57,8 +59,10 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
     private TrainerCriterias trainerCriterias = new TrainerCriterias();
     private MatchedBuddy matchedBuddy;
     private User matchedUser;
+    private List<BuddyRelationshipStatus> buddies;
+    private List<BuddyRelationshipStatus> activeBuddies;
     private MatchedBuddy buddy;
-
+    private String currentUserId;
 
     @Override
     protected int getFragmentLayout() {
@@ -71,13 +75,15 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
         recyclerView = binding.recyclerViewBuddies;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         matchedBuddyList = new ArrayList<>();
-        matchedBuddyIds = new ArrayList<>();
+      //  matchedBuddyIds = new ArrayList<>();
         findBuddies = binding.findBuddiesButton;
+        buddies = new ArrayList<>();
+        activeBuddies = new ArrayList<>();
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        final String currentUserId = firebaseAuth.getCurrentUser().getUid();
+        currentUserId = firebaseAuth.getCurrentUser().getUid();
 
 
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -86,21 +92,43 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
 
                 userType = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.USER_TYPE).getValue().toString();
 
-                matchedBuddyIds.clear();
+               // matchedBuddyIds.clear();
+                buddies.clear();
+                activeBuddies.clear();
 
                 if(userType.equals(Constants.TRAINEE)){
+
+                    findBuddies.setVisibility(View.VISIBLE);
+                    if(!dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.INTRODUCTION).exists()){
+                        findBuddies.setEnabled(false);
+                    }
 
                     Log.i("Noemi","Trainee ");
 
                     //get the trainerIds, which the user already matched with for the listing...
                     for(DataSnapshot dataSnap : dataSnapshot.child(Constants.MATCHES).getChildren()) {
-                        if (dataSnap.child(Constants.TRAINEE_ID).getValue().toString().equals(currentUserId)) {
-                            matchedBuddyIds.add(dataSnap.child(Constants.TRAINER_ID).getValue().toString());
-                            Log.i("Noemi",matchedBuddyIds.toString());
+                        String relStatus = dataSnap.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
+                        if (dataSnap.child(Constants.TRAINEE_ID).getValue().toString().equals(currentUserId)) { //this makes it match multiple time, must change
+
+                            //adding id and status as well:
+                            BuddyRelationshipStatus brs = new BuddyRelationshipStatus();
+                            brs.setBuddyId(dataSnap.child(Constants.TRAINER_ID).getValue().toString());
+                            brs.setStatus(dataSnap.child(Constants.RELATIONSHIP_STATUS).getValue().toString());
+
+                            buddies.add(brs);
+
+                            if(!relStatus.equals(Constants.DECLINED) && !relStatus.equals(Constants.DELETED_STATUS)
+                            && !relStatus.equals(Constants.REMOVED_BY_TRAINEE_STATUS) && !relStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)){
+                                activeBuddies.add(brs);
+                            }
+
+                            //matchedBuddyIds.add(dataSnap.child(Constants.TRAINER_ID).getValue().toString());
+                            //Log.i("Noemi",matchedBuddyIds.toString());
+                        }
+                        else if(dataSnap.child(Constants.RELATIONSHIP_STATUS).equals(Constants.DECLINED)){
+
                         }
                     }
-
-                    findBuddies.setVisibility(View.VISIBLE);
 
                     findBuddies.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -120,7 +148,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                             for(DataSnapshot snapshot : dataSnapshot.child(Constants.TRAINER_LOCATIONS).child(location).getChildren()){//location
 
                                 //initialize matcher and boolean match checker
-
+                                matcher = new Matcher();
                                 matchedWithTrainer = false;
 
                                 //get the current trainer's id
@@ -128,14 +156,12 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                                 Log.i("Noemi",trainerId);
 
                                 //check if the user already matched with the current trainer
-                                for(String st: matchedBuddyIds){
-                                    if(st.equals(trainerId)){
+                                for(BuddyRelationshipStatus s : buddies){
+                                    if(s.getBuddyId().equals(trainerId)){
                                         matchedWithTrainer = true;
                                     }
-
                                 }
 
-                                matcher = new Matcher();
                                 //if the user hasn't matched with the trainer
                                 if(!matchedWithTrainer){
 
@@ -238,10 +264,16 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                                 if(matcher != null){
                                     if(matcher.isFirstCriteria() && matcher.isSecondCriteria()){
                                         //save the match into the Matches table
-                                        Match match = new Match(currentUserId,trainerId,matcher.getMatchCounter());
+                                        Match match = new Match(currentUserId,trainerId,matcher.getMatchCounter(),Constants.NOT_ACCEPTED_STATUS);
                                         databaseReference.child(Constants.MATCHES).push().setValue(match);
                                         Log.i("Noemi","SAved to database: " + trainerId);
 
+                                        //send notification to Trainer:
+                                        String trainerToken = dataSnapshot.child(Constants.TOKENS).child(trainerId).child(Constants.TOKEN_NODE).getValue().toString();
+                                        String userToken = dataSnapshot.child(Constants.TOKENS).child(currentUserId).child(Constants.TOKEN_NODE).getValue().toString();
+                                        sendNotifications(trainerToken,Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINER_MESSAGE + currentUserId);
+                                        //this one is not sent
+                                        //sendNotifications(userToken,Constants.MATCH_NOTIF_TITLE,Constants.MATCH_NOTIF_TRAINEE_MESSAGE + trainerId);
                                     }
                                     else {
                                         Log.i("Noemi","Matcher is not set...");
@@ -254,32 +286,38 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                 else {
                     //The user is a trainer..
                     for(DataSnapshot dataSnap : dataSnapshot.child(Constants.MATCHES).getChildren()) {
-                        if (dataSnap.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId)) {
-                            matchedBuddyIds.add(dataSnap.child(Constants.TRAINEE_ID).getValue().toString());
+                        String relStatus = dataSnap.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
+                        if (dataSnap.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId)
+                                && !relStatus.equals(Constants.DECLINED) && !relStatus.equals(Constants.DELETED_STATUS) &&
+                                !relStatus.equals(Constants.REMOVED_BY_TRAINEE_STATUS) && !relStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)){
+
+                            //adding id and status as well:
+                            BuddyRelationshipStatus brs = new BuddyRelationshipStatus();
+                            brs.setBuddyId(dataSnap.child(Constants.TRAINEE_ID).getValue().toString());
+                            brs.setStatus(dataSnap.child(Constants.RELATIONSHIP_STATUS).getValue().toString());
+
+                            activeBuddies.add(brs);
+
+                            //matchedBuddyIds.add(dataSnap.child(Constants.TRAINEE_ID).getValue().toString());
                         }
                     }
                 }
 
-                Log.i("Noemi","buddy list : " + matchedBuddyIds.toString());
+                Log.i("Noemi","buddy list : " + activeBuddies.toString());
 
                 matchedBuddyList.clear();
-                for(String s : matchedBuddyIds){
 
-                    //for each one of them, check if the user has subscribed yet to their channel
-
+                for(BuddyRelationshipStatus buds : activeBuddies){
                     matchedBuddy = new MatchedBuddy();
                     matchedUser = new User();
-                    matchedUser = dataSnapshot.child(Constants.USERS).child(s).getValue(User.class);
-
-                    Log.i("Noemi","MatchedUser: " + matchedUser.getFirstName());
+                    matchedUser = dataSnapshot.child(Constants.USERS).child(buds.getBuddyId()).getValue(User.class);
 
                     matchedBuddy.setFirstName(matchedUser.getFirstName());
                     matchedBuddy.setLastName(matchedUser.getLastName());
-                    matchedBuddy.setId(s);
+                    matchedBuddy.setId(buds.getBuddyId());
                     matchedBuddy.setImageUrl(matchedUser.getImageURL());
+                    matchedBuddy.setStatus(buds.getStatus());
                     matchedBuddyList.add(matchedBuddy);
-
-                    // Log.i("Noemi","URL: " + matchedUser.getImageURL());
                 }
 
                 //Log.i("Noemi",matchedBuddyList.toString());
@@ -292,6 +330,8 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
 
             }
         });
+
+
 
     }
 
@@ -312,7 +352,6 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
             matcher.setMatchCounter(matcher.getMatchCounter()+1);
         }
     }
-
 
     @Override
     public void buddyChatClicked(int position) {
@@ -342,6 +381,38 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
     public void buddyTrashClicked(int position) {
         buddy = matchedBuddyList.get(position);
         Log.i("Noemi","Remove buddy from list.");
+        deleteBuddy(); // in profiles branch, this is changed(there is a dialog fragment, that will appear asking the user, if he/she really wants to delete the buddy.
+    }
+
+    private void deleteBuddy(){
+        if(userType.equals(Constants.TRAINEE)){
+            delete(currentUserId,buddy.getId(),currentUserId,buddy.getId(),Constants.REMOVED_BY_TRAINEE_STATUS);
+        }
+        else {
+            delete(currentUserId,buddy.getId(),buddy.getId(),currentUserId,Constants.REMOVED_BY_TRAINER_STATUS);
+        }
+    }
+
+    private void delete(String currentUID, String buddyId, String traineeId, String trainerId, String removedByStatus){
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot : dataSnapshot.child(Constants.MATCHES).getChildren()){
+                    if(snapshot.child(Constants.TRAINEE_ID).getValue().toString().equals(traineeId) &&
+                            snapshot.child(Constants.TRAINER_ID).getValue().toString().equals(trainerId)){
+                        snapshot.child(Constants.RELATIONSHIP_STATUS).getRef().setValue(removedByStatus);
+                        //send notification informing user, that he/she is removed
+                        String token = dataSnapshot.child(Constants.TOKENS).child(buddyId).child(Constants.TOKEN_NODE).getValue().toString();
+                        sendNotifications(token,Constants.DECLINE_TITLE,Constants.REMOVED_MESSAGE + currentUID);
+
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 

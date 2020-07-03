@@ -1,7 +1,7 @@
 package com.example.myfitnessbuddy.fragments.dialogs;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,46 +10,97 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.myfitnessbuddy.OnNotificationClickedListener;
 import com.example.myfitnessbuddy.R;
-import com.example.myfitnessbuddy.activities.CriteriasActivity;
+import com.example.myfitnessbuddy.databinding.NotificationDetailDialogBinding;
 import com.example.myfitnessbuddy.events.NotificationEvent;
+import com.example.myfitnessbuddy.utils.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class NotificationDetailDialog extends DialogFragment implements View.OnClickListener{
+public class NotificationDetailDialog extends DialogFragment{
 
     private TextView title;
     private TextView description;
-    //private Notifications notification;
+    private int position;
+    private OnNotificationClickedListener listener;
+    private String matchedId;
+    private String notificationType;
+
+    public NotificationDetailDialog(int position, OnNotificationClickedListener listener, String notificationType) {
+        this.position = position;
+        this.listener = listener;
+        this.notificationType = notificationType;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.notification_detail_dialog,null);
+        NotificationDetailDialogBinding binding = DataBindingUtil.inflate(inflater, R.layout.notification_detail_dialog, container, false);
+        View view = binding.getRoot();
 
-        title = view.findViewById(R.id.notification_detail_title);
-        description = view.findViewById(R.id.notification_detail_description);
-        Button button = view.findViewById(R.id.notification_button);
+        title = binding.notificationDetailTitle;
+        description = binding.notificationDetailDescription;
+        Button okButton = binding.okNotificationButton;
+        Button acceptButton = binding.acceptNotificationButton;
+        Button declineButton = binding.declineNotificationButton;
 
-        button.setOnClickListener(this);
+        if (notificationType.equals(Constants.NOTIFYING_TYPE)){
+            acceptButton.setVisibility(View.GONE);
+            declineButton.setVisibility(View.GONE);
+        }
+        else if(notificationType.equals(Constants.MATCHING_TYPE)){
+            okButton.setVisibility(View.GONE);
+        }
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.okButtonClicked(position,matchedId);
+                dismiss();
+            }
+        });
+
+        acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.acceptButtonClicked(matchedId);
+                dismiss();
+            }
+        });
+
+        declineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.declineButtonClicked(matchedId);
+                dismiss();
+            }
+        });
+
         return view;
     }
 
+
+
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(NotificationEvent event) {
+        Log.i("Noemi","Here");
+        title.setText(event.getNotification().getTitle());
+        description.setText(event.getNotification().getMessage());
+        matchedId = event.getNotification().getMatchedId();
+        Log.i("Noemi", event.getNotification().toString());
+    }
 
     @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(NotificationEvent event) {
-        title.setText(event.getNotification().getTitle());
-        description.setText(event.getNotification().getDescription());
     }
 
     @Override
@@ -58,10 +109,4 @@ public class NotificationDetailDialog extends DialogFragment implements View.OnC
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void onClick(View v) {
-        Intent intent = new Intent(getContext(), CriteriasActivity.class);
-        startActivity(intent);
-        dismiss();
-    }
 }

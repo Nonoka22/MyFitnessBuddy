@@ -1,8 +1,6 @@
 package com.example.myfitnessbuddy.utils;
 
 public final class Constants {
-   public static final String APP_ID = "19849702b6dcf8b";
-   public static final String AUTH_KEY = "7e626d45afda64cb5eb8bdb79ab0c73eb8aa2786";
    public static final String ADD = "add";
    public static final String REGION = "eu";
    public static final String REPLACE = "replace";
@@ -58,6 +56,7 @@ public final class Constants {
    public static final String PRICE = "price";
    public static final String HOURS = "hours";
    public static final String COST = "cost";
+   public static final String GYM = "gym";
    public static final String NUTRITIONIST_NEEDED = "nutritionistNeeded";
    public static final String TRAINER_TYPE = "trainerType";
    public static final String GOAL_FRAGMENT = "Goal";
@@ -78,4 +77,34 @@ public final class Constants {
    public static final String BUDDY_NAME_INTENT_EXTRA = "buddyName";
    public static final String BUDDY_ID_INTENT_EXTRA = "buddyId";
    public static final String CURRENT_USER_ID_INTENT_EXTRA = "currentUserId";
+   public static final String BASE_URL = "https://fcm.googleapis.com";
+   public static final String SERVER_KEY = "AAAA7NRXEKw:APA91bGR-7tYewQYvJaDkcdT9iKZI7FU4ZP_-2Kwrbk9C-JQHVOoV4XtUQRYNrqj3msd2i43hFy_xtqSl5uT59hEJlZiyfYk7X7EgcXUKxuv7GrfztqMzm6WvMCi5KkAsBdxlHV44sHa";
+   public static final String CONTENT_TYPE = "application/json";
+   public static final String TOKENS = "Tokens";
+   public static final String NOTIFICATION_TITLE = "title";
+   public static final String NOTIFICATION_MESSAGE = "message";
+   public static final String TOKEN_NODE = "token";
+   public static final String MATCH_NOTIF_TITLE = "Congratulations!";
+   public static final String MATCH_NOTIF_TRAINER_MESSAGE = "Your training skills are suitable for ";
+   public static final String MATCH_NOTIF_TRAINEE_MESSAGE = "You matched with ";
+   public static final String NOT_ACCEPTED_STATUS = "Not Accepted";
+   public static final String ACCEPTED_STATUS = "Accepted";
+   public static final String TRAINEE_ACCEPTED_STATUS = "AcceptedByTrainee";
+   public static final String DECLINED = "Declined";
+   public static final String RELATIONSHIP_STATUS = "status";
+   public static final String FIRST_NOTIFICATION_TITLE = "Welcome!";
+   public static final String NOTIFYING_TYPE = "Notifying";
+   public static final String MATCHING_TYPE = "MatchingType";
+   public static final String ACCEPTANCE_TITLE = "Yey!";
+   public static final String ACCEPTANCE_MESSAGE = "You were accepted by ";
+   public static final String DECLINE_TITLE = "Sorry! :(";
+   public static final String DECLINE_MESSAGE = "You were declined by ";
+   public static final String DONE_STATUS = "Done";
+   public static final String DELETED_STATUS = "Deleted";
+   public static final String REMOVED_MESSAGE = "You were deleted by ";
+   public static final String REMOVED_BY_TRAINER_STATUS = "Removed By Trainer";
+   public static final String REMOVED_BY_TRAINEE_STATUS = "Removed By Trainee";
+   public static final String FIRST_NAME = "firstName";
+
+
 }

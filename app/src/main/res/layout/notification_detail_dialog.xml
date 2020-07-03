@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-
-    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="vertical"
@@ -14,31 +11,55 @@
         android:background="#AAB3AF">
 
         <TextView
-            android:id="@+id/notification_detail_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/notificationDetailTitle"
+            android:layout_width="188dp"
+            android:layout_height="34dp"
             android:text="First Notification"
             android:textAlignment="center"
             android:textSize="25dp"
-            app:layout_constraintBottom_toTopOf="@+id/notification_detail_description"
+            app:layout_constraintBottom_toTopOf="@+id/notificationDetailDescription"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/notification_detail_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/notificationDetailDescription"
+            android:layout_width="411dp"
+            android:layout_height="42dp"
             android:text="Please complete the quiz so that trainers/trainees can find you more easaly.."
             android:textAlignment="center"
             android:textSize="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/notification_button"
+            app:layout_constraintBottom_toTopOf="@+id/acceptNotificationButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/notification_detail_title" />
+            app:layout_constraintTop_toBottomOf="@+id/notificationDetailTitle" />
 
         <Button
-            android:id="@+id/notification_button"
+            android:id="@+id/acceptNotificationButton"
+            android:layout_width="88dp"
+            android:layout_height="48dp"
+            android:alpha="0.7"
+            android:background="@drawable/rounded_button"
+            android:text="ACCEPT"
+            app:layout_constraintBottom_toTopOf="@+id/declineNotificationButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notificationDetailDescription" />
+
+        <Button
+            android:id="@+id/declineNotificationButton"
+            android:layout_width="88dp"
+            android:layout_height="48dp"
+            android:alpha="0.7"
+            android:background="@drawable/rounded_button"
+            android:text="DECLINE"
+            app:layout_constraintBottom_toTopOf="@+id/okNotificationButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/acceptNotificationButton" />
+
+        <Button
+            android:id="@+id/okNotificationButton"
             android:layout_width="88dp"
             android:layout_height="48dp"
             android:alpha="0.7"
@@ -47,7 +68,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/notification_detail_description" />
+            app:layout_constraintTop_toBottomOf="@+id/declineNotificationButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

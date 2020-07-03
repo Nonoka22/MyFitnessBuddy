@@ -4,14 +4,24 @@ public class Match {
     private String traineeId;
     private String trainerId;
     private int priority;
+    private String status;
 
     public Match() {
     }
 
-    public Match(String traineeId, String trainerId, int priority) {
+    public Match(String traineeId, String trainerId, int priority, String status) {
         this.traineeId = traineeId;
         this.trainerId = trainerId;
         this.priority = priority;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getTraineeId() {

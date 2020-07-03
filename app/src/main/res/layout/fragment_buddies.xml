@@ -10,6 +10,7 @@
         android:id="@+id/buddiesFragment">
 
         <Button
+
             android:id="@+id/findBuddiesButton"
             android:layout_width="180dp"
             android:layout_height="48dp"
@@ -47,6 +48,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/findBuddiesButton" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

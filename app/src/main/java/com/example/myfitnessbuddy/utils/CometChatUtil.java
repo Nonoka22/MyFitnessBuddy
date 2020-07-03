@@ -13,6 +13,7 @@ import com.cometchat.pro.models.CustomMessage;
 import com.cometchat.pro.models.MediaMessage;
 import com.cometchat.pro.models.TextMessage;
 import com.cometchat.pro.models.User;
+import com.example.myfitnessbuddy.BuildConfig;
 import com.example.myfitnessbuddy.models.MessageWrapper;
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
@@ -20,28 +21,30 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class CometChatUtil {
 
     public static void initCometChat(Context context){
-        String appID = Constants.APP_ID;
+        String appID = BuildConfig.APP_ID;
         String region = Constants.REGION;
 
         AppSettings appSettings=new AppSettings.AppSettingsBuilder().subscribePresenceForAllUsers().setRegion(region).build();
 
-        CometChat.init(context, appID,appSettings, new CometChat.CallbackListener<String>() {
+        CometChat.init(context, appID, appSettings, new CometChat.CallbackListener<String>() {
             @Override
             public void onSuccess(String successMessage) {
-                Log.i("Noemi", "Initialization completed successfully");
+                Timber.i("Initialization completed successfully");
             }
             @Override
             public void onError(CometChatException e) {
-                Log.i("Noemi", "Initialization failed with exception: " + e.getMessage());
+                Timber.i("Initialization failed with exception: %s", e.getMessage());
             }
         });
     }
 
     public static void createCometChatUser(String userId,String username){
-        String authKey = Constants.AUTH_KEY;
+        String authKey = BuildConfig.AUTH_KEY;
         User user = new User();
         user.setUid(userId);
         user.setName(username);
@@ -62,7 +65,7 @@ public class CometChatUtil {
     }
 
     public static void loginCometChatUser(String UID){
-        String authKey = Constants.AUTH_KEY;
+        String authKey = BuildConfig.AUTH_KEY;
 
         if (CometChat.getLoggedInUser() == null) {
             CometChat.login(UID, authKey, new CometChat.CallbackListener<User>() {
@@ -77,8 +80,10 @@ public class CometChatUtil {
                     Log.i("Noemi", "Login failed with exception: " + e.getMessage());
                 }
             });
-        } else {
+        }
+        else {
             // User already logged in
+            Log.i("Noemi", "User is already logged in");
         }
     }
 
@@ -114,9 +119,6 @@ public class CometChatUtil {
         });
     }
 
-    private static void addCometChatMessage(TextMessage textMessage, MessagesListAdapter<MessageWrapper> adapter){
-        adapter.addToStart(new MessageWrapper(textMessage),true);
-    }
 
     public static void listenerForRealTimeMessages(MessagesListAdapter<MessageWrapper> adapter){
         String listenerID = "CHAT_ACTIVITY";
@@ -144,6 +146,10 @@ public class CometChatUtil {
         CometChat.removeMessageListener(listenerID);
     }
 
+    private static void addCometChatMessage(TextMessage textMessage, MessagesListAdapter<MessageWrapper> adapter){
+        adapter.addToStart(new MessageWrapper(textMessage),true);
+    }
+
     public static void fetchMissedMessages(String UID,MessagesListAdapter<MessageWrapper> adapter){
         MessagesRequest messagesRequest = new MessagesRequest.MessagesRequestBuilder().setUID(UID).build();
 
@@ -153,8 +159,7 @@ public class CometChatUtil {
                 for (BaseMessage message: list) {
                     if (message instanceof TextMessage) {
                         addCometChatMessage((TextMessage) message , adapter);
-                    } else if (message instanceof MediaMessage) {
-                    }
+                    } else if (message instanceof MediaMessage) {}
                 }
             }
             @Override

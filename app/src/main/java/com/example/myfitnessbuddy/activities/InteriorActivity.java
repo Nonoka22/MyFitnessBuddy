@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.myfitnessbuddy.fragments.interior.TraineeUserProfileFragment;
 import com.example.myfitnessbuddy.fragments.interior.TrainerUserProfileFragment;
 import com.example.myfitnessbuddy.models.Token;
+import com.example.myfitnessbuddy.models.User;
 import com.example.myfitnessbuddy.utils.CometChatUtil;
 import com.example.myfitnessbuddy.utils.Constants;
 import com.example.myfitnessbuddy.R;
@@ -28,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -36,6 +38,10 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
     Toolbar toolbar;
     NavigationView navigationView;
     int containerId;
+    FirebaseUser firebaseUser;
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference databaseReference;
+    User user;
 
     private FirebaseAuth firebaseAuth;
     private String currentUserId;
@@ -76,6 +82,19 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
         navigationView = binding.navigationDrawer;
         containerId = R.id.interior_fragment_container;
 
+        databaseReference.child(Constants.USERS).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                user = dataSnapshot.child(firebaseUser.getUid()).getValue(User.class);
+                updateToken();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         navigationView.setNavigationItemSelectedListener(this);
 
         setSupportActionBar(toolbar);
@@ -87,7 +106,7 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
 
         setFragment(Constants.ADD,new HomeFragment(),containerId,toolbar,Constants.HOME);
 
-        updateToken();
+
     }
 
     @Override
@@ -120,11 +139,10 @@ public class InteriorActivity extends BaseActivity<ActivityInteriorBinding> impl
     }
 
     private void updateToken() {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String refreshToken = FirebaseInstanceId.getInstance().getToken();
         Token token = new Token(refreshToken);
 
-        FirebaseDatabase.getInstance().getReference().child(Constants.TOKENS).child(firebaseUser.getUid()).setValue(token);
+        databaseReference.child(Constants.TOKENS).child(firebaseUser.getUid()).setValue(token);
     }
 
     @Override

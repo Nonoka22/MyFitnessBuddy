@@ -37,13 +37,13 @@ import java.util.List;
 public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements OnNotificationClickedListener {
 
 
-    //create two arrays for the two userTypes to differenciate them
-    private ArrayList<NotificationData> notifications = new ArrayList<>();
+    private ArrayList<NotificationData> notifications = new ArrayList<>();;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private String currentUserId;
     private NotificationAdapter adapter;
+    private String userName;
 
     @Override
     protected int getFragmentLayout() {
@@ -66,13 +66,13 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
         RecyclerView recyclerView = binding.notificationsRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String userType = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.USER_TYPE).getValue().toString();
-
+                userName = dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.FIRST_NAME).getValue().toString();
                 notifications.clear();
+
                 //if there is no introduction saved in the database, then the first notification will appear.
                 if(!dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.IMAGE_URL).exists()){
                     //the first notification will be default, it will differ according to the userType
@@ -96,21 +96,20 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                     if(userType.equals(Constants.TRAINEE)){
                         if(snapshot.child(Constants.TRAINEE_ID).getValue().toString().equals(currentUserId)){
                             String relStatus = snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
-                            NotificationBuddy notificationBuddy = new NotificationBuddy();
-                            notificationBuddy.setId(snapshot.child(Constants.TRAINER_ID).getValue().toString());
-                            notificationBuddy.setName(dataSnapshot.child(Constants.USERS).child(snapshot.child(Constants.TRAINER_ID).getValue().toString()).child(Constants.FIRST_NAME).getValue().toString());
-
+                            NotificationBuddy nB = new NotificationBuddy();
+                            nB.setId(snapshot.child(Constants.TRAINER_ID).getValue().toString());
+                            nB.setName(dataSnapshot.child(Constants.USERS).child(nB.getId()).child(Constants.FIRST_NAME).getValue().toString());
                                if(relStatus.equals(Constants.NOT_ACCEPTED_STATUS)){
-                                   ids.add(notificationBuddy);
+                                   ids.add(nB);
                                }
                                else if(relStatus.equals(Constants.ACCEPTED_STATUS)){
-                                   acceptedIds.add(notificationBuddy);
+                                   acceptedIds.add(nB);
                                }
                                else if (relStatus.equals(Constants.DECLINED)){
-                                   declinedIds.add(notificationBuddy);
+                                   declinedIds.add(nB);
                                }
                                else if (relStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)){
-                                   removedIds.add(notificationBuddy);
+                                   removedIds.add(nB);
                                }
                         }
                     }
@@ -119,8 +118,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                             String relStatus = snapshot.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
                             NotificationBuddy nB = new NotificationBuddy();
                             nB.setId(snapshot.child(Constants.TRAINEE_ID).getValue().toString());
-                            nB.setName(dataSnapshot.child(Constants.USERS).child(snapshot.child(Constants.TRAINEE_ID).getValue().toString()).child(Constants.FIRST_NAME).getValue().toString());
-
+                            nB.setName(dataSnapshot.child(Constants.USERS).child(nB.getId()).child(Constants.FIRST_NAME).getValue().toString());
                             if(relStatus.equals(Constants.NOT_ACCEPTED_STATUS)
                                     || relStatus.equals(Constants.TRAINEE_ACCEPTED_STATUS)){
                                 Log.i("Noemi","Traine ids notif: " + snapshot.child(Constants.TRAINEE_ID).getValue().toString());
@@ -156,6 +154,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                             notifications.add(new NotificationData(Constants.DECLINE_TITLE,Constants.REMOVED_MESSAGE + s.getName(),Constants.NOTIFYING_TYPE,s.getId()));
                         }
                     }
+
                 }
 
                 if(!ids.isEmpty()){
@@ -168,7 +167,6 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                         }
                     }
                 }
-
 
                 adapter = new NotificationAdapter(notifications,HomeFragment.this);
                 if(adapter.getItemCount() == 0){
@@ -191,18 +189,19 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
         return new HomeFragment();
     }
 
+
     @Override
-    public void acceptButtonClicked(int position, String matchedId) { //no idea, why i needed position
+    public void acceptButtonClicked(String matchedId) { //no idea, why i needed position
         //this button will only appear if the user is a trainer
         //set the status in Matches node to Accepted where trainer is currentUser and trainee is the one mentioned in the notification...
-        setStatusByTrainer(matchedId,Constants.ACCEPTED_STATUS,Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE);
+        setStatusByTrainer(matchedId,Constants.ACCEPTED_STATUS,Constants.ACCEPTANCE_TITLE,Constants.ACCEPTANCE_MESSAGE + userName);
     }
 
     @Override
-    public void declineButtonClicked(int position, String matchedId) {
+    public void declineButtonClicked(String matchedId) {
         //this button will only appear if the user is a trainer
         //set the status in Matches node to Declined
-        setStatusByTrainer(matchedId,Constants.DECLINED,Constants.DECLINE_TITLE,Constants.DECLINE_MESSAGE);
+        setStatusByTrainer(matchedId,Constants.DECLINED,Constants.DECLINE_TITLE,Constants.DECLINE_MESSAGE + userName);
     }
 
     public void setStatusByTrainer(String matchedId,String status,String notificationTitle, String notificationMessage){
@@ -217,7 +216,7 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
                 }
                 //send notification to the trainee, that the match was accepted
                 String userToken = dataSnapshot.child(Constants.TOKENS).child(matchedId).child(Constants.TOKEN_NODE).getValue().toString();
-                sendNotifications(userToken,notificationTitle,notificationMessage + currentUserId);
+                sendNotifications(userToken,notificationTitle,notificationMessage + userName);
             }
 
             @Override
@@ -226,7 +225,6 @@ public class HomeFragment extends BaseFragment<FragmentHomeBinding> implements O
             }
         });
     }
-
     @Override
     public void okButtonClicked(int position, String matchedId) {
         if(notifications.get(position).getTitle().equals(Constants.FIRST_NOTIFICATION_TITLE)) {

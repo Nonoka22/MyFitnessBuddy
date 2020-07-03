@@ -110,7 +110,6 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                 if(userType.equals(Constants.TRAINEE)){
 
                     findBuddies.setVisibility(View.VISIBLE);
-
                     if(!dataSnapshot.child(Constants.USERS).child(currentUserId).child(Constants.INTRODUCTION).exists()){
                         findBuddies.setEnabled(false);
                     }
@@ -131,7 +130,7 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                             buddies.add(brs);
 
                             if(!relStatus.equals(Constants.DECLINED) && !relStatus.equals(Constants.DELETED_STATUS)
-                                    && !relStatus.equals(Constants.REMOVED_BY_TRAINEE_STATUS) && !relStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)){
+                            && !relStatus.equals(Constants.REMOVED_BY_TRAINEE_STATUS) && !relStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)){
                                 activeBuddies.add(brs);
                             }
 
@@ -318,8 +317,8 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
                     for(DataSnapshot dataSnap : dataSnapshot.child(Constants.MATCHES).getChildren()) {
                         String relStatus = dataSnap.child(Constants.RELATIONSHIP_STATUS).getValue().toString();
                         if (dataSnap.child(Constants.TRAINER_ID).getValue().toString().equals(currentUserId)
-                                && !relStatus.equals(Constants.DECLINED) && !relStatus.equals(Constants.DELETED_STATUS)
-                        && !relStatus.equals(Constants.REMOVED_BY_TRAINEE_STATUS) && !relStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)) {
+                                && !relStatus.equals(Constants.DECLINED) && !relStatus.equals(Constants.DELETED_STATUS) &&
+                                !relStatus.equals(Constants.REMOVED_BY_TRAINEE_STATUS) && !relStatus.equals(Constants.REMOVED_BY_TRAINER_STATUS)){
 
                             //adding id and status as well:
                             BuddyRelationshipStatus brs = new BuddyRelationshipStatus();
@@ -490,5 +489,3 @@ public class BuddiesFragment extends BaseFragment<FragmentBuddiesBinding> implem
 
 
 }
-
-

@@ -103,6 +103,7 @@ public class BuddyAdapter extends RecyclerView.Adapter<BuddyAdapter.ViewHolder> 
                     .into(imageViewPicture);
 
         }
+
     }
 
 

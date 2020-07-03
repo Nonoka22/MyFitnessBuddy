@@ -69,7 +69,7 @@ public class NotificationDetailDialog extends DialogFragment{
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.acceptButtonClicked(position, matchedId);
+                listener.acceptButtonClicked(matchedId);
                 dismiss();
             }
         });
@@ -77,7 +77,7 @@ public class NotificationDetailDialog extends DialogFragment{
         declineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.declineButtonClicked(position, matchedId);
+                listener.declineButtonClicked(matchedId);
                 dismiss();
             }
         });
